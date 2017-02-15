@@ -10,12 +10,13 @@
 		<httpclient.version>4.5</httpclient.version>
 		<httpcore.version>4.4.1</httpcore.version>
 		<snakeyaml.version>1.14</snakeyaml.version>
-		<sonar.login>sonaruser</sonar.login>
+<!-- 		<sonar.login>sonaruser</sonar.login>
 		<sonar.password>us7USi0Htu93nFY91DPuQLFo6ebKcKXv</sonar.password>
 		<sonar.host.url>http://104.239.145.8:9000</sonar.host.url>
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
-		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath> -->
+		<nexus.proxy>https://nexus.openecomp.org</nexus.proxy>
 	</properties>
 
 	<reporting>
@@ -234,44 +235,41 @@
 			</plugin>
 		</plugins>
 	</build>
-	<profiles>
 
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Official Maven repository</name>
+			<url>http://repo2.maven.org/maven2/</url>
+		</repository>
+		<repository>
+			<id>ecomp-releases</id>
+			<name>Release Repository</name>
+			<url>${nexus.proxy}/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>ecomp-staging</id>
+			<name>Staging Repository</name>
+			<url>${nexus.proxy}/content/repositories/staging/</url>
+		</repository>
+	</repositories>
 
-		<profile>
-			<id>rackspace</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<repositories>
-				<repository>
-					<id>rackspace-public</id>
-					<name>Rackspace</name>
-					<url>https://10.208.197.75:8443/repository/maven-public/</url>
-					<layout>default</layout>
-				</repository>
-			</repositories>
+	<distributionManagement>
+		<repository>
+			<id>ecomp-releases</id>
+			<name>Release Repository</name>
+			<url>${nexus.proxy}/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>ecomp-snapshots</id>
+			<name>Snapshot Repository</name>
+			<url>${nexus.proxy}/content/repositories/snapshots/</url>
+		</snapshotRepository>
 
-			<distributionManagement>
-				<snapshotRepository>
-					<id>rackspace-snapshots</id>
-					<name>Rackspace-Snapshots</name>
-					<url>https://10.208.197.75:8443/repository/maven-snapshots/</url>
-				</snapshotRepository>
-
-				<repository>
-					<id>rackspace-public</id>
-					<name>Rackspace</name>
-					<url>https://10.208.197.75:8443/repository/maven-releases/</url>
-				</repository>
-
-				<site>
+<!-- 				<site>
 					<id>rackspace-public</id>
 					<url>dav:https://ecomp-nexus:8443/repository/sdc-javadoc-repo/${project.version}</url>
-				</site>
+				</site> -->		
 
-				
 			</distributionManagement>
-
-		</profile>
-	</profiles>
 </project>
