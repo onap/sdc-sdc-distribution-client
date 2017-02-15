@@ -1,0 +1,52 @@
+heat_template_version: 2013-05-23
+
+description: Simple template to deploy a stack with two virtual machine instances
+
+parameters:
+  image_name_1:
+    type: string
+    label: Image Name
+    description: SCOIMAGE Specify an image name for instance1
+    default: cirros-0.3.1-x86_64
+  image_name_2:
+    type: string
+    label: Image Name
+    description: SCOIMAGE Specify an image name for instance2
+    default: cirros-0.3.1-x86_64
+  network_id:
+    type: string
+    label: Network ID
+    description: SCONETWORK Network to be used for the compute instance
+    hidden: true
+    constraints:
+      - length: { min: 6, max: 8 }
+        description: Password length must be between 6 and 8 characters.
+      - range: { min: 6, max: 8 }
+        description: Range description
+      - allowed_values:
+        - m1.small
+        - m1.medium
+        - m1.large
+        description: Allowed values description
+      - allowed_pattern: "[a-zA-Z0-9]+"
+        description: Password must consist of characters and numbers only.
+      - allowed_pattern: "[A-Z]+[a-zA-Z0-9]*"
+        description: Password must start with an uppercase character.
+      - custom_constraint: nova.keypair
+        description: Custom description
+
+resources:
+  my_instance1:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image_name_1 }
+      flavor: m1.small
+      networks:
+        - network : { get_param : network_id }
+  my_instance2:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image_name_2 }
+      flavor: m1.tiny
+      networks:
+        - network : { get_param : network_id }
