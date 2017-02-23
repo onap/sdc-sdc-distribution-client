@@ -1,0 +1,7 @@
+Verified+1: ecomp jobbuilder <ecomp-jobbuilder@jenkins.openecomp.org>
+Code-Review+2: Michael Lando <ml636r@att.com>
+Submitted-by: Michael Lando <ml636r@att.com>
+Submitted-at: Thu, 23 Feb 2017 12:55:57 +0000
+Reviewed-on: http://gerrit.openecomp.org/r/1283
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
