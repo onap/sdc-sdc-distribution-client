@@ -10,13 +10,11 @@
 		<httpclient.version>4.5</httpclient.version>
 		<httpcore.version>4.4.1</httpcore.version>
 		<snakeyaml.version>1.14</snakeyaml.version>
-<!-- 		<sonar.login>sonaruser</sonar.login>
-		<sonar.password>us7USi0Htu93nFY91DPuQLFo6ebKcKXv</sonar.password>
-		<sonar.host.url>http://104.239.145.8:9000</sonar.host.url>
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
-		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath> -->
+		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<nexus.proxy>https://nexus.openecomp.org</nexus.proxy>
+		<staging.profile.id>176c31dfe190a</staging.profile.id>
 	</properties>
 
 	<reporting>
@@ -189,6 +187,19 @@
 				</executions>
 			</plugin>
 
+			<!-- Staging Plugin -->
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<nexusUrl>${nexus.proxy}</nexusUrl>
+					<stagingProfileId>${staging.profile.id}</stagingProfileId>
+					<serverId>ecomp-staging</serverId>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -273,3 +284,4 @@
 
 			</distributionManagement>
 </project>
+
