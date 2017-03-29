@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>jython-tosca-parser</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>${jython.tosca.parser.version}</version>
 
 	<dependencies>
 		<dependency>

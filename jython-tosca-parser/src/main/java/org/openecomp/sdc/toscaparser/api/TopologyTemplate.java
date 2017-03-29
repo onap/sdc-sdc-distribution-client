@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
@@ -48,6 +49,10 @@ public class TopologyTemplate {
         JySubstitutionMappings jySubstitutionMappings = jyTopologyTemplate.getJySubstitutionMappings();
         return jySubstitutionMappings != null ? new SubstitutionMappings(jySubstitutionMappings) : null;
     }
+    
+    public Map<String, String> getMetadata() {
+        return jyTopologyTemplate.getJyMetadata();
+    }    
 
     @Override
     public String toString() {
@@ -57,6 +62,7 @@ public class TopologyTemplate {
                 .add("nodeTemplates", getNodeTemplates())
                 .add("groups", getGroups())
                 .add("substitutionMappings", getSubstitutionMappings())
+                .add("metadata", getMetadata())
                 .toString();
     }
 }

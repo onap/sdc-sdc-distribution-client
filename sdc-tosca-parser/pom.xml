@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
 			<artifactId>jython-tosca-parser</artifactId>
-			<version>0.3.1-SNAPSHOT</version>
+			<version>${jython.tosca.parser.version}</version>
 		</dependency>
 
 
