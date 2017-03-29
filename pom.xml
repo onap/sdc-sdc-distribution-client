@@ -44,7 +44,7 @@
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
-		<nexus.proxy>https://nexus.openecomp.org</nexus.proxy>
+		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<staging.profile.id>176c31dfe190a</staging.profile.id>
 		
 	</properties>
