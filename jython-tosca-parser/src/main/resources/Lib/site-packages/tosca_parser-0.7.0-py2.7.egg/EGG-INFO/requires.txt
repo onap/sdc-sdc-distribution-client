@@ -1,0 +1,7 @@
+pbr>=1.8
+Babel>=2.3.4
+cliff>=2.3.0
+PyYAML>=3.10.0
+python-dateutil>=2.4.2
+six>=1.9.0
+requests!=2.12.2,>=2.10.0

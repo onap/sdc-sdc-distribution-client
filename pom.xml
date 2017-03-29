@@ -1,22 +1,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>org.openecomp.sdc</groupId>
-	<artifactId>sdc-distribution-client</artifactId>
+	<artifactId>sdc-main-distribution-client</artifactId>
 	<version>1.1.0-SNAPSHOT</version>
-	<name>SDC Distribution Client</name>
-	<description>An SDC Client to be used by its consumers</description>
-	<properties> 
-		<httpclient.version>4.5</httpclient.version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>jython-tosca-parser</module>
+		<module>sdc-tosca-parser</module>
+		<module>sdc-distribution-client</module>
+		<module>sdc-distribution-ci</module>
+	</modules>
+
+	<properties>
+
+		<!-- ==================== -->
+		<!-- Generic properties -->
+		<!-- ==================== -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- ==================== -->
+		<!-- Versions -->
+		<!-- ==================== -->
+		<!-- Global project version -->
+
+		<!-- Dependencies projects version -->
+		<org.glassfish.jersey.version>2.24</org.glassfish.jersey.version>
+		<functionaljava.version>4.2</functionaljava.version>
+		<httpclient.version>4.4.1</httpclient.version>
+		<commons-logging.version>1.2.1-SNAPSHOT</commons-logging.version>
 		<httpcore.version>4.4.1</httpcore.version>
+		<logback.version>1.1.2</logback.version>
+		<junit.version>4.12</junit.version>
 		<snakeyaml.version>1.14</snakeyaml.version>
+
+		<!-- Repositories -->
+<!-- 		<nexusServerName>mavencentral.it.att.com</nexusServerName> -->
+<!-- 		<nexusServerPort>8084</nexusServerPort> -->
+		
+		
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<nexus.proxy>https://nexus.openecomp.org</nexus.proxy>
 		<staging.profile.id>176c31dfe190a</staging.profile.id>
+		
 	</properties>
-
 	<reporting>
 		<plugins>
 			<plugin>
@@ -37,123 +68,7 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
-
-	<dependencies>
-		<dependency>
-			<groupId>com.att.nsa</groupId>
-			<artifactId>saClientLibrary</artifactId>
-			<version>0.0.1</version>
-			<scope>compile</scope>
-			<exclusions>
-				<exclusion>  <!-- declare the exclusion here -->
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions> 
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.att.nsa</groupId>
-			<artifactId>cambriaClient</artifactId>
-			<version>0.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.3.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.functionaljava</groupId>
-			<artifactId>functionaljava</artifactId>
-			<version>4.2</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>  
-			<version>1.9</version>
-			<scope>compile</scope>
-		</dependency>
-		<!-- http client -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>${httpclient.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpmime</artifactId>
-			<version>${httpclient.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<!-- YAML parser -->
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>${snakeyaml.version}</version>
-			<scope>compile</scope>
-		</dependency>
-
-		<!-- http core -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>${httpcore.version}</version>
-			<scope>compile</scope>
-		</dependency>
-		
-		<!-- TEST -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-			<scope>test</scope>
-			<version>9.2.10.v20150310</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>9.2.10.v20150310</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.10.19</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>15.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<!-- ================================================== -->
-	<!-- Set the JDK compiler version. -->
-	<!-- ================================================== -->
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -206,8 +121,8 @@
 				<version>2.5.1</version>
 				<inherited>true</inherited>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -233,6 +148,10 @@
 					<canUpdateDescription>true</canUpdateDescription>
 					<canUpdateLicense>true</canUpdateLicense>
 					<emptyLineAfterHeader>true</emptyLineAfterHeader>
+					<verbose>false</verbose>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
 				</configuration>
 				<executions>
 					<execution>
@@ -240,13 +159,13 @@
 						<goals>
 							<goal>update-file-header</goal>
 						</goals>
-						<!--phase>process-sources</phase-->
+						<!--phase>process-sources</phase -->
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
-
+	
 	<repositories>
 		<repository>
 			<id>central</id>
@@ -277,11 +196,8 @@
 			<url>${nexus.proxy}/content/repositories/snapshots/</url>
 		</snapshotRepository>
 
-<!-- 				<site>
-					<id>rackspace-public</id>
-					<url>dav:https://ecomp-nexus:8443/repository/sdc-javadoc-repo/${project.version}</url>
-				</site> -->		
+	</distributionManagement>
 
-			</distributionManagement>
+
 </project>
 
