@@ -20,16 +20,12 @@
 
 package org.openecomp.test;
 
-import java.io.IOException;
-
 import org.openecomp.sdc.api.IDistributionClient;
 import org.openecomp.sdc.api.consumer.INotificationCallback;
 import org.openecomp.sdc.api.results.IDistributionClientResult;
 import org.openecomp.sdc.impl.DistributionClientFactory;
-import org.openecomp.sdc.tosca.parser.impl.SdcCsarHelperImpl;
-import org.openecomp.sdc.toscaparser.ToscaParser;
-import org.openecomp.sdc.toscaparser.ToscaParserFactory;
-import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
+import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
@@ -37,24 +33,14 @@ import ch.qos.logback.classic.LoggerContext;
 
 public class ClientTest {
 	public static void main(String[] args) throws Exception {
-		/*	ToscaParserFactory toscaParserFactory = null; 
-		try {
-			toscaParserFactory = new ToscaParserFactory();
-			ToscaParser parser = toscaParserFactory.create();
-			ToscaTemplate toscaTemplate = parser.parse("test.csar");
-			SdcCsarHelperImpl csarHelper = new SdcCsarHelperImpl(toscaTemplate);
+		try (SdcToscaParserFactory toscaParserFactory = SdcToscaParserFactory.getInstance()){
+			//ISdcCsarHelper csarHelper = toscaParserFactory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar-nt-metadata.csar");
+			ISdcCsarHelper csarHelper = toscaParserFactory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar.csar");
 			String serviceSubstitutionMappingsTypeName = csarHelper.getServiceSubstitutionMappingsTypeName();
 			System.out.println("serviceSubstitutionMappingsTypeName is "+serviceSubstitutionMappingsTypeName);
+			String nodeTemplatePropertyLeafValue = csarHelper.getNodeTemplatePropertyLeafValue(csarHelper.getServiceVfList().get(0), "nf_role");
+			System.out.println("property is "+nodeTemplatePropertyLeafValue);
 		} 
-		catch (Exception e){
-			System.out.println(e);
-		}
-		finally{
-			if (toscaParserFactory != null){
-				toscaParserFactory.close();
-			}
-		}*/
-
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		lc.getLogger("org.apache.http").setLevel(Level.INFO);
 

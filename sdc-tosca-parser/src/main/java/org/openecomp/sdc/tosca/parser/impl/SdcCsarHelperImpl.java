@@ -22,14 +22,16 @@ package org.openecomp.sdc.tosca.parser.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.toscaparser.api.Group;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.Property;
 import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
-import org.openecomp.sdc.tosca.parser.impl.Types;
 
 public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
@@ -41,8 +43,18 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	@Override
 	public String getNodeTemplatePropertyLeafValue(NodeTemplate nodeTemplate, String leafValuePath) {
-		//TODO
-		return null;/*getLeafPropertyValue(nodeTemplate, leafValuePath);*/
+		String[] split = leafValuePath.split("#");
+		List<Property> properties = nodeTemplate.getProperties();
+		Optional<Property> findFirst = properties.stream().filter(x -> x.getName().equals(split[0])).findFirst();
+		if (findFirst.isPresent()){
+			Object current = findFirst.get().getValue();
+			/*for (int i = 1; i < split.length; i++) {
+				//if (i )
+			}*/
+			//TODO add nested props
+			return (String)current;
+		}
+		return null;
 	}
 
 	@Override
@@ -61,7 +73,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		List<NodeTemplate> res = new ArrayList<>();
 		List<NodeTemplate> nodeTemplates = toscaTemplate.getNodeTemplates();
 		for (NodeTemplate nodeTemplate : nodeTemplates){
-			if (nodeTemplate.getTypeDefinition().getType().equals(nodeType)){
+			if (nodeType.equals(nodeTemplate.getTypeDefinition().getType())){
 				res.add(nodeTemplate);
 			}
 		}
@@ -77,12 +89,11 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	//Assumed to be unique property for the list
 	private NodeTemplate getNodeTemplateByCustomizationUuid(List<NodeTemplate> nodeTemplates, String customizationId){
-		//TODO Metadata is missing
-		/*for (NodeTemplate nodeTemplate : nodeTemplates){
-			if (nodeTemplate.getMetadata().getMetadataPropertyValue(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID).equals(customizationId)){
+		for (NodeTemplate nodeTemplate : nodeTemplates){
+			if (customizationId.equals(nodeTemplate.getMetadata().get(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID))){
 				return nodeTemplate;
 			}
-		}*/
+		}
 		return null;
 	}
 
@@ -102,15 +113,14 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		return res;
 	}
 
-	//Metadata question
 	/*@Override
 	public String getMetadataPropertyValue(Metadata metadata, String metadataPropertyName) {
-		return metadata.getMetadataPropertyValue(metadataPropertyName);
+		return (String)metadata.get(metadataPropertyName);
 	}*/
 
 	@Override
 	public String getServiceInputLeafValue(String inputLeafValuePath) {
-		toscaTemplate.getTopologyTemplate().getNodeTemplates().get(0).getTypeDefinition().getType();
+		//toscaTemplate.getTopologyTemplate().getNodeTemplates().get(0).getProperties().get(0).
 		return null;//getLeafPropertyValue(toscaTemplate, inputLeafValuePath);
 	}
 
@@ -119,11 +129,10 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		return toscaTemplate.getTopologyTemplate().getSubstitutionMappings().getNodeDefinition().getType();
 	}
 
-	//Metadata question
-	/*@Override
-	public Metadata getServiceMetadata() {
-		return toscaTemplate.getMetadata();
-	}*/
+	@Override
+	public Map<String, String> getServiceMetadata() {
+		return toscaTemplate.getTopologyTemplate().getMetadata();
+	}
 
 	//Get property from group
 	@Override
@@ -147,14 +156,16 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	private List<NodeTemplate> getNodeTemplateBySdcType(TopologyTemplate topologyTemplate, String sdcType){
 		//Need metadata to fetch by type
 		
-/*		List<NodeTemplate> nodeTemplates = topologyTemplate.getNodeTemplates();
+		List<NodeTemplate> nodeTemplates = topologyTemplate.getNodeTemplates();
 		List<NodeTemplate> res = new ArrayList<>();
 		for (NodeTemplate nodeTemplateEntry : nodeTemplates){
-			if (nodeTemplateEntry.getMetadata().getMetadataPropertyValue(SdcPropertyNames.PROPERTY_NAME_TYPE).equals(sdcType)){
+			//TODO switch back to type condition
+			if (nodeTemplateEntry.getTypeDefinition().getType().contains("."+sdcType.toLowerCase()+".")){
+			//if (sdcType.equals(nodeTemplateEntry.getMetadata().get(SdcPropertyNames.PROPERTY_NAME_TYPE))){
 				res.add(nodeTemplateEntry);
 			}
 		}
-*/		return null;
+		return res;
 	}
 
 	@Override

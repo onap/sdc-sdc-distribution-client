@@ -20,6 +20,7 @@ package org.openecomp.sdc.tosca.parser.api;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.toscaparser.api.Group;
@@ -119,9 +120,9 @@ public interface ISdcCsarHelper {
 	 * @param metadata - metadata object.
 	 * @param metadataPropertyName - the name of the metadata property.
 	 * @return metadata property value
-	 */
+	 *//*
 	//public String getMetadataPropertyValue(Metadata metadata, String metadataPropertyName);
-	
+	*/
 	
 	/**
 	 * Get input leaf value for the CSAR service, by full path separated by #.<br>
@@ -150,7 +151,7 @@ public interface ISdcCsarHelper {
 	 * Get the CSAR service metadata
 	 * @return - the service metadata object.
 	 */
-	//public Metadata getServiceMetadata();
+	public Map<String, String> getServiceMetadata();
 	
 	/**
 	 * Get all VFC node templates from a specified VF.
