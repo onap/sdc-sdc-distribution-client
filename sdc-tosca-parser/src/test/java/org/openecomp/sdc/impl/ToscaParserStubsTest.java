@@ -1,5 +1,6 @@
 package org.openecomp.sdc.impl;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,10 @@ public class ToscaParserStubsTest {
 	@BeforeClass
 	public static void init() throws SdcToscaParserException{
 		factory = SdcToscaParserFactory.getInstance();
-		csarHelper = factory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar-allotted-resources-4.csar");
+		//csarHelper = factory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar-allotted-resources-4.csar");
+		String fileStr = ToscaParserStubsTest.class.getClassLoader().getResource("csars/service-ServiceFdnt-csar-allotted-resources-4.csar").getFile();
+		File file = new File(fileStr);
+		csarHelper = factory.getSdcCsarHelper(file.getAbsolutePath());
 	}
 
 
