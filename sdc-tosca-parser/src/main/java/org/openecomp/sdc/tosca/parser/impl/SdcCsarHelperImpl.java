@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
@@ -32,27 +34,34 @@ import org.openecomp.sdc.toscaparser.api.NodeTemplate;
 import org.openecomp.sdc.toscaparser.api.Property;
 import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
+import org.yaml.snakeyaml.Yaml;
 
 public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	private ToscaTemplate toscaTemplate;
-	
+	private static Yaml defaultYaml = new Yaml();
+
+
 	public SdcCsarHelperImpl(ToscaTemplate toscaTemplate) {
 		this.toscaTemplate = toscaTemplate;
 	}
 
 	@Override
+	//Sunny flow  - covered with UT, flat and nested
 	public String getNodeTemplatePropertyLeafValue(NodeTemplate nodeTemplate, String leafValuePath) {
 		String[] split = leafValuePath.split("#");
 		List<Property> properties = nodeTemplate.getProperties();
 		Optional<Property> findFirst = properties.stream().filter(x -> x.getName().equals(split[0])).findFirst();
 		if (findFirst.isPresent()){
-			Object current = findFirst.get().getValue();
-			/*for (int i = 1; i < split.length; i++) {
-				//if (i )
-			}*/
-			//TODO add nested props
-			return (String)current;
+			Property property = findFirst.get();
+			Object current = property.getValue();
+			if (split.length > 1){
+				current = defaultYaml.load((String)current); 
+				for (int i = 1; i < split.length; i++) {
+					current = ((Map<String, Object>)current).get(split[i]);
+				}
+			}
+			return String.valueOf(current);
 		}
 		return null;
 	}
@@ -64,11 +73,13 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	}
 
 	@Override
+	//Sunny flow - covered with UT
 	public List<NodeTemplate> getServiceVfList() {
 		return getNodeTemplateBySdcType(toscaTemplate.getTopologyTemplate(), Types.TYPE_VF);
 	}
-	
+
 	@Override
+	//Sunny flow - covered with UT
 	public List<NodeTemplate> getServiceNodeTemplatesByType(String nodeType) {
 		List<NodeTemplate> res = new ArrayList<>();
 		List<NodeTemplate> nodeTemplates = toscaTemplate.getNodeTemplates();
@@ -113,11 +124,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		return res;
 	}
 
-	/*@Override
-	public String getMetadataPropertyValue(Metadata metadata, String metadataPropertyName) {
-		return (String)metadata.get(metadataPropertyName);
-	}*/
-
 	@Override
 	public String getServiceInputLeafValue(String inputLeafValuePath) {
 		//toscaTemplate.getTopologyTemplate().getNodeTemplates().get(0).getProperties().get(0).
@@ -131,7 +137,9 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	@Override
 	public Map<String, String> getServiceMetadata() {
-		return toscaTemplate.getTopologyTemplate().getMetadata();
+		TopologyTemplate topologyTemplate = toscaTemplate.getTopologyTemplate();
+		System.out.println(topologyTemplate.toString());
+		return topologyTemplate.getMetadata();
 	}
 
 	//Get property from group
@@ -139,10 +147,10 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	public String getGroupPropertyLeafValue(Group group, String propertyName) {
 		return null;//getLeafPropertyValue(group, propertyName);
 	}
-	
+
 	private List<NodeTemplate> getNodeTemplateBySdcType(NodeTemplate nodeTemplate, String sdcType){
 		//Need metadata to fetch by type
-		
+
 		/*List<NodeTemplate> nodeTemplates = nodeTemplate.getNestedNodeTemplates();
 		List<NodeTemplate> res = new ArrayList<>();
 		for (NodeTemplate nodeTemplateEntry : nodeTemplates){
@@ -152,16 +160,16 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		}*/
 		return null;
 	}
-	
+
 	private List<NodeTemplate> getNodeTemplateBySdcType(TopologyTemplate topologyTemplate, String sdcType){
 		//Need metadata to fetch by type
-		
+
 		List<NodeTemplate> nodeTemplates = topologyTemplate.getNodeTemplates();
 		List<NodeTemplate> res = new ArrayList<>();
 		for (NodeTemplate nodeTemplateEntry : nodeTemplates){
 			//TODO switch back to type condition
 			if (nodeTemplateEntry.getTypeDefinition().getType().contains("."+sdcType.toLowerCase()+".")){
-			//if (sdcType.equals(nodeTemplateEntry.getMetadata().get(SdcPropertyNames.PROPERTY_NAME_TYPE))){
+				//if (sdcType.equals(nodeTemplateEntry.getMetadata().get(SdcPropertyNames.PROPERTY_NAME_TYPE))){
 				res.add(nodeTemplateEntry);
 			}
 		}
@@ -189,16 +197,23 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	}
 
 	@Override
+	//TODO constant strings
 	public List<NodeTemplate> getAllottedResources() {
-		//TODO - Need metadata
-		return new ArrayList<>();
+		List<NodeTemplate> nodeTemplates = toscaTemplate.getTopologyTemplate().getNodeTemplates();
+		return nodeTemplates.stream().filter(x -> x.getMetadata() != null && x.getMetadata().get("category").equals("allotted_resources")).collect(Collectors.toList());
 	}
 
 	@Override
+	//Sunny flow - covered with UT
 	public String getTypeOfNodeTemplate(NodeTemplate nodeTemplate) {
 		//Can be done
 		return nodeTemplate.getTypeDefinition().getType();
 	}
-	
-	
+
+	/*//Not part of API, for inner/test use
+	public NodeTemplate getNodeTemplateByName(TopologyTemplate topologyTemplate, String topologyName){
+		List<NodeTemplate> nodeTemplates = topologyTemplate.getNodeTemplates();
+		Optional<NodeTemplate> findFirst = nodeTemplates.stream().filter(x -> x.getName().equals(topologyName)).findFirst();
+		return findFirst.isPresent() ? findFirst.get() : null;
+	}*/
 }

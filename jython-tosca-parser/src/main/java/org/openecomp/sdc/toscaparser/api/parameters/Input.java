@@ -22,6 +22,8 @@ public class Input {
         return jyInput.getJyType();
     }
     
+    
+    
     public boolean isRequired() {
         return jyInput.isJyRequired();
     }
