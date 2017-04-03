@@ -4,6 +4,7 @@ public interface JyInput {
     
     String getJyName();
     String getJyType();
+    String getJyDefault();
     boolean isJyRequired();
     String getJyDescription();
 }
