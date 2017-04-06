@@ -22,14 +22,16 @@ public class Input {
         return jyInput.getJyType();
     }
     
-    
-    
     public boolean isRequired() {
         return jyInput.isJyRequired();
     }
     
     public String getDescription() {
         return jyInput.getJyDescription();
+    }
+    
+    public Object getDefault() {
+        return jyInput.getJyDefault();
     }
 
     @Override
@@ -39,6 +41,7 @@ public class Input {
                 .add("type", getType())
                 .add("required", isRequired())
                 .add("description", getDescription())
+                .add("default", getDefault())
                 .toString();
     }    
 }

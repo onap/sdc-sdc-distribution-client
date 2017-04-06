@@ -23,6 +23,10 @@ public class ToscaTemplate {
 	public String getVersion() {
 		return jyToscaTemplate.getJyVersion();
 	}
+	
+	public Metadata getMetadata() {
+		return jyToscaTemplate.getJyMetadata() != null ? new Metadata(jyToscaTemplate.getJyMetadata()) : null;
+	}
 
 	public String getDescription() {
 		return jyToscaTemplate.getJyDescription();
@@ -37,7 +41,7 @@ public class ToscaTemplate {
 	}
 
 	public List<TopologyTemplate> getNestedTopologyTemplates() {
-		return jyToscaTemplate.getNestedTopologyTemplates()
+		return jyToscaTemplate.getJyNestedTopologyTemplates()
 				.stream()
 				.map(TopologyTemplate::new)
 				.collect(toImmutableList());
@@ -53,6 +57,7 @@ public class ToscaTemplate {
 				.add("version", getVersion())
 				.add("description", getDescription())
 				.add("topologyTemplate", topologyTemplate)
+				.add("nestedTopologyTemplates", getNestedTopologyTemplates())
 				.toString();
 	}
 }

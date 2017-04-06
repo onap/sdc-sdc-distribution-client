@@ -2,13 +2,17 @@ package org.openecomp.sdc.toscaparser.api;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
+import org.openecomp.sdc.toscaparser.jython.JyGroup;
+import org.openecomp.sdc.toscaparser.jython.JyNodeTemplate;
 import org.openecomp.sdc.toscaparser.jython.JySubstitutionMappings;
 import org.openecomp.sdc.toscaparser.jython.JyTopologyTemplate;
+import org.openecomp.sdc.toscaparser.jython.parameters.JyInput;
 
 import com.google.common.base.MoreObjects;
 
@@ -25,24 +29,27 @@ public class TopologyTemplate {
     }
 
     public List<NodeTemplate> getNodeTemplates() {
-        return jyTopologyTemplate.getJyNodeTemplates()
+        List<JyNodeTemplate> jyNodeTemplates = jyTopologyTemplate.getJyNodeTemplates();
+		return jyNodeTemplates != null ? jyNodeTemplates
                 .stream()
                 .map(NodeTemplate::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
 
     public List<Input> getInputs() {
-        return jyTopologyTemplate.getJyInputs()
+        List<JyInput> jyInputs = jyTopologyTemplate.getJyInputs();
+		return jyInputs != null ? jyInputs
                 .stream()
                 .map(Input::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
     
     public List<Group> getGroups() {
-        return jyTopologyTemplate.getJyGroups()
+        List<JyGroup> jyGroups = jyTopologyTemplate.getJyGroups();
+		return jyGroups != null ? jyGroups
                 .stream()
                 .map(Group::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
     
     public SubstitutionMappings getSubstitutionMappings() {
@@ -50,7 +57,7 @@ public class TopologyTemplate {
         return jySubstitutionMappings != null ? new SubstitutionMappings(jySubstitutionMappings) : null;
     }
     
-    public Map<String, String> getMetadata() {
+    public Metadata getMetadata() {
         return jyTopologyTemplate.getJyMetadata();
     }    
 

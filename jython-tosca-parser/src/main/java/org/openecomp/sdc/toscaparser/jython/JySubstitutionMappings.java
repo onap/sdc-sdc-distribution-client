@@ -9,5 +9,6 @@ public interface JySubstitutionMappings {
     
     List<JyNodeTemplate> getJyNodeTemplates();
     List<JyInput> getJyInputs();
+    List<JyGroup> getJyGroups();
     JyNodeType getJyNodeDefinition();
 }
