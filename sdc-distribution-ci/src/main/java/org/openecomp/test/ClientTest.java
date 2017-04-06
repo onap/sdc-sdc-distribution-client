@@ -33,15 +33,7 @@ import ch.qos.logback.classic.LoggerContext;
 
 public class ClientTest {
 	public static void main(String[] args) throws Exception {
-		try (SdcToscaParserFactory toscaParserFactory = SdcToscaParserFactory.getInstance()){
-			//ISdcCsarHelper csarHelper = toscaParserFactory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar-nt-metadata.csar");
-			ISdcCsarHelper csarHelper = toscaParserFactory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar-nt-props.csar");
-			//ISdcCsarHelper csarHelper = toscaParserFactory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\service-ServiceFdnt-csar.csar");
-			String serviceSubstitutionMappingsTypeName = csarHelper.getServiceSubstitutionMappingsTypeName();
-			System.out.println("serviceSubstitutionMappingsTypeName is "+serviceSubstitutionMappingsTypeName);
-			String nodeTemplatePropertyLeafValue = csarHelper.getNodeTemplatePropertyLeafValue(csarHelper.getServiceVfList().get(0), "nf_role#nf_naming#ecomp_generated_naming");
-			System.out.println("property is "+nodeTemplatePropertyLeafValue);
-		} 
+		
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		lc.getLogger("org.apache.http").setLevel(Level.INFO);
 

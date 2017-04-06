@@ -1,8 +1,7 @@
 package org.openecomp.sdc.toscaparser.api;
 
-import java.util.Map;
-
 import org.openecomp.sdc.toscaparser.jython.JyNodeTemplate;
+import org.openecomp.sdc.toscaparser.jython.JySubstitutionMappings;
 
 import com.google.common.base.MoreObjects.ToStringHelper;
 
@@ -15,13 +14,19 @@ public class NodeTemplate extends EntityTemplate {
         this.jyNodeTemplate = jyNodeTemplate;
     }
     
-    public Map<String, String> getMetadata() {
-        return jyNodeTemplate.getJyMetadata();
+    public Metadata getMetadata() {
+    	return jyNodeTemplate.getJyMetadata() != null ? new Metadata(jyNodeTemplate.getJyMetadata()) : null;
+    }
+    
+    public SubstitutionMappings getSubstitutionMappings(){
+    	JySubstitutionMappings jySubstitutionMappings = jyNodeTemplate.getJySubstitutionMappings();
+		return jySubstitutionMappings != null ? new SubstitutionMappings(jySubstitutionMappings) : null;
     }
     
     @Override
     protected ToStringHelper toStringHelper() {
         return super.toStringHelper()
-                .add("metadata", getMetadata());
+                .add("metadata", getMetadata())
+                .add("substitutionMappings", getSubstitutionMappings());
     }    
 }

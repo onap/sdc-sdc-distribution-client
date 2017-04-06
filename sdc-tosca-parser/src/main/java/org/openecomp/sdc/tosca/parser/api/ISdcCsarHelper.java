@@ -20,11 +20,12 @@ package org.openecomp.sdc.tosca.parser.api;
 
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.toscaparser.api.Group;
+import org.openecomp.sdc.toscaparser.api.Metadata;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.parameters.Input;
 
 
 public interface ISdcCsarHelper {
@@ -120,17 +121,18 @@ public interface ISdcCsarHelper {
 	 * @param metadata - metadata object.
 	 * @param metadataPropertyName - the name of the metadata property.
 	 * @return metadata property value
-	 *//*
-	//public String getMetadataPropertyValue(Metadata metadata, String metadataPropertyName);
-	*/
+	 */
+	public String getMetadataPropertyValue(Metadata metadata, String metadataPropertyName);
+	
 	
 	/**
 	 * Get input leaf value for the CSAR service, by full path separated by #.<br>
 	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for an input full path.
+	 * The expected format is "input_name#default[optionally #rest_of_path]"
 	 * @param inputLeafValuePath by full path separated by #.
 	 * @return input leaf value for the service.
 	 */
-	public String getServiceInputLeafValue(String inputLeafValuePath);
+	public String getServiceInputLeafValueOfDefault(String inputLeafValuePath);
 	
 	/**
 	 * Get the type name of the CSAR service's substitution mappings element.<br> 
@@ -151,7 +153,7 @@ public interface ISdcCsarHelper {
 	 * Get the CSAR service metadata
 	 * @return - the service metadata object.
 	 */
-	public Map<String, String> getServiceMetadata();
+	public Metadata getServiceMetadata();
 	
 	/**
 	 * Get all VFC node templates from a specified VF.
@@ -178,13 +180,14 @@ public interface ISdcCsarHelper {
       &nbsp;&nbsp;members: [vIPR_ATM_Ha_Two, vIPR_ATM_Ha_One, vIPR_ATM_OAM_SG, vIPR_ATM_HA_TWO_SG, vIPR_ATM_HA_ONE_SG]<br><br>
       
       calling<br> 
-      getMembersOfGroup(group)<br>
-      will return List of the following Strings: "vIPR_ATM_Ha_Two, vIPR_ATM_Ha_One, vIPR_ATM_OAM_SG, vIPR_ATM_HA_TWO_SG, vIPR_ATM_HA_ONE_SG"<br>
-	 * @param group - group to return the members.
-	 * @return names of all group members.
+      getMembersOfVfModule(NoteTemplate vfNodeTemplate, Group group)<br>
+      will return List of the following Node templates in the vfNodeTemplate: "vIPR_ATM_Ha_Two, vIPR_ATM_Ha_One, vIPR_ATM_OAM_SG, vIPR_ATM_HA_TWO_SG, vIPR_ATM_HA_ONE_SG"<br>
+	 * @param vf - VF to return the node templates from.
+	 * @param vfModule - group to return the members from.
+	 * @return node templates from vf with the names as in members section.
      * 
 	 */
-	public List<String> getMembersOfGroup(Group group);
+	public List<NodeTemplate> getMembersOfVfModule(NodeTemplate vf, Group vfModule);
 	
 	
 	/**
@@ -237,5 +240,11 @@ public interface ISdcCsarHelper {
 	 * @return - node type string.
 	 */
 	public String getTypeOfNodeTemplate(NodeTemplate nodeTemplate);
+	
+	/**
+	 * Get the CSAR service inputs list.
+	 * @return - the service inputs list.
+	 */
+	public List<Input> getServiceInputs();
 	
 }

@@ -2,12 +2,15 @@ package org.openecomp.sdc.toscaparser.api;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import org.openecomp.sdc.toscaparser.api.elements.StatefulEntityType;
+import org.openecomp.sdc.toscaparser.jython.JyCapability;
 import org.openecomp.sdc.toscaparser.jython.JyEntityTemplate;
+import org.openecomp.sdc.toscaparser.jython.JyProperty;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
@@ -36,17 +39,19 @@ public abstract class EntityTemplate {
     }
 
     public List<Property> getProperties() {
-        return jyEntityTemplate.getJyProperties()
+        List<JyProperty> jyProperties = jyEntityTemplate.getJyProperties();
+		return jyProperties != null ? jyProperties
                 .stream()
                 .map(Property::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
 
     public List<Capability> getCapabilities() {
-        return jyEntityTemplate.getJyCapabilities()
+        List<JyCapability> jyCapabilities = jyEntityTemplate.getJyCapabilities();
+		return jyCapabilities != null ? jyCapabilities
                 .stream()
                 .map(Capability::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
     
     public List<Map<String, Map<String, Object>>> getRequirements() {

@@ -1,10 +1,14 @@
 package org.openecomp.sdc.tosca.parser.impl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.openecomp.sdc.toscaparser.ToscaParser;
 import org.openecomp.sdc.toscaparser.ToscaParserFactory;
+import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
 
 public class SdcToscaParserFactory implements AutoCloseable{
 
@@ -42,7 +46,10 @@ public class SdcToscaParserFactory implements AutoCloseable{
 				throw new SdcToscaParserException("The factory is closed. It was probably closed too soon.");
 			}
 			try {
-				return new SdcCsarHelperImpl(toscaParserFactory.create().parse(csarPath));
+				ToscaParser create = toscaParserFactory.create();
+				ToscaTemplate parse = create.parse(csarPath);
+				SdcCsarHelperImpl sdcCsarHelperImpl = new SdcCsarHelperImpl(parse);
+				return sdcCsarHelperImpl;
 			} catch (IOException e) {
 				throw new SdcToscaParserException("Exception when creating the parser: "+e.getMessage());
 			}
@@ -64,6 +71,15 @@ public class SdcToscaParserFactory implements AutoCloseable{
 					}
 				}
 			}
+		}
+	}
+	
+	public static void main(String[] args) throws SdcToscaParserException {
+		try (SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance()){ //Autoclosable
+			ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper("C:\\Users\\pa0916\\Desktop\\Work\\ASDC\\CSARs\\csar_hello_world.zip");
+			//Can run methods on the helper
+			List<NodeTemplate> allottedResources = sdcCsarHelper.getAllottedResources();
+			//..............
 		}
 	}
 }
