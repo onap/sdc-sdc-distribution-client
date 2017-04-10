@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.openecomp.sdc.toscaparser.api.elements.NodeType;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.openecomp.sdc.toscaparser.jython.JyGroup;
+import org.openecomp.sdc.toscaparser.jython.JyNodeTemplate;
 import org.openecomp.sdc.toscaparser.jython.JySubstitutionMappings;
 import org.openecomp.sdc.toscaparser.jython.parameters.JyInput;
 
@@ -23,10 +24,11 @@ public class SubstitutionMappings {
     }
 
     public List<NodeTemplate> getNodeTemplates() {
-        return jySubstitutionMappings.getJyNodeTemplates()
+        List<JyNodeTemplate> jyNodeTemplates = jySubstitutionMappings.getJyNodeTemplates();
+		return jyNodeTemplates != null ? jyNodeTemplates
                 .stream()
                 .map(NodeTemplate::new)
-                .collect(toImmutableList());
+                .collect(toImmutableList()) : new ArrayList<>();
     }
     
     public List<Group> getGroups() {
@@ -49,12 +51,17 @@ public class SubstitutionMappings {
         return new NodeType(jySubstitutionMappings.getJyNodeDefinition());
     }
     
+    public Metadata getMetadata(){
+    	return jySubstitutionMappings.getJyMetadata() != null ? new Metadata(jySubstitutionMappings.getJyMetadata()) : null;
+    }
+    
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("nodeTemplates", getNodeTemplates())
                 .add("inputs", getInputs())
                 .add("nodeDefinition", getNodeDefinition())
+                .add("metadata", getMetadata())
                 .toString();
     }    
 }

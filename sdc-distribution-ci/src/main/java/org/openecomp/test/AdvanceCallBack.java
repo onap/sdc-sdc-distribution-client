@@ -20,12 +20,9 @@
 
 package org.openecomp.test;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.openecomp.sdc.api.IDistributionClient;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;

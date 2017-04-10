@@ -20,22 +20,29 @@
 
 package org.openecomp.sdc.tosca.parser.impl;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
-import org.openecomp.sdc.tosca.parser.utils.GeneralUtility;
-import org.openecomp.sdc.toscaparser.api.*;
-import org.openecomp.sdc.toscaparser.api.elements.NodeType;
-import org.openecomp.sdc.toscaparser.api.parameters.Input;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.openecomp.sdc.tosca.parser.utils.GeneralUtility;
+import org.openecomp.sdc.tosca.parser.utils.SdcToscaUtility;
+import org.openecomp.sdc.toscaparser.api.Group;
+import org.openecomp.sdc.toscaparser.api.Metadata;
+import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.Property;
+import org.openecomp.sdc.toscaparser.api.SubstitutionMappings;
+import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
+import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
+import org.openecomp.sdc.toscaparser.api.elements.NodeType;
+import org.openecomp.sdc.toscaparser.api.parameters.Input;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
@@ -57,10 +64,10 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 			log.error("getNodeTemplatePropertyLeafValue - leafValuePath is null or empty");
 			return null;
 		}
-		log.trace("getNodeTemplatePropertyLeafValue - nodeTemplate is : {}, leafValuePath is {} ", nodeTemplate.toString(), leafValuePath);
+		log.trace("getNodeTemplatePropertyLeafValue - nodeTemplate is : {}, leafValuePath is {} ", nodeTemplate, leafValuePath);
 		String[] split = leafValuePath.split("#");
 		List<Property> properties = nodeTemplate.getProperties();
-		log.trace("getNodeTemplatePropertyLeafValue - properties of nodeTemplate are : {}", properties.toString());
+		log.trace("getNodeTemplatePropertyLeafValue - properties of nodeTemplate are : {}", properties);
 		return processProperties(split, properties);
 	}
 
@@ -92,7 +99,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 			return null;
 		}
 		String metadataPropertyValue = metadata.getValue(metadataPropertyName);
-		log.trace("getMetadataPropertyValue - metadata is {} metadataPropertyName is {} the value is : {}", metadata.toString(), metadataPropertyName , metadataPropertyValue);
+		log.trace("getMetadataPropertyValue - metadata is {} metadataPropertyName is {} the value is : {}", metadata, metadataPropertyName , metadataPropertyValue);
 		return metadataPropertyValue;
 	}
 
@@ -135,14 +142,30 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	//Sunny flow - covered with UT
 	public List<Group> getVfModulesByVf(String vfCustomizationUuid) {
 		List<NodeTemplate> serviceVfList = getServiceVfList();
+		log.trace("getVfModulesByVf - VF list is {}", serviceVfList);
 		NodeTemplate nodeTemplateByCustomizationUuid = getNodeTemplateByCustomizationUuid(serviceVfList, vfCustomizationUuid);
+		log.trace("getVfModulesByVf - getNodeTemplateByCustomizationUuid is {}, customizationUuid {}", nodeTemplateByCustomizationUuid, vfCustomizationUuid);
 		if (nodeTemplateByCustomizationUuid != null){
-			SubstitutionMappings substitutionMappings = nodeTemplateByCustomizationUuid.getSubstitutionMappings();
+			/*SubstitutionMappings substitutionMappings = nodeTemplateByCustomizationUuid.getSubstitutionMappings();
 			if (substitutionMappings != null){
 				List<Group> groups = substitutionMappings.getGroups();
 				if (groups != null){
-					return groups.stream().filter(x -> "org.openecomp.groups.VfModule".equals(x.getTypeDefinition().getType())).collect(Collectors.toList());
+					List<Group> collect = groups.stream().filter(x -> "org.openecomp.groups.VfModule".equals(x.getTypeDefinition().getType())).collect(Collectors.toList());
+					log.trace("getVfModulesByVf - VfModules are {}", collect);
+					return collect;
 				}
+			}*/
+			String name = nodeTemplateByCustomizationUuid.getName();
+			String normaliseComponentInstanceName = SdcToscaUtility.normaliseComponentInstanceName(name);
+			List<Group> serviceLevelGroups = toscaTemplate.getTopologyTemplate().getGroups();
+			log.trace("getVfModulesByVf - VF node template name {}, normalized name {}. Searching groups on service level starting with VF normalized name...", name, normaliseComponentInstanceName);
+			if (serviceLevelGroups != null){
+				List<Group> collect = serviceLevelGroups
+						.stream()
+						.filter(x -> "org.openecomp.groups.VfModule".equals(x.getTypeDefinition().getType()) && x.getName().startsWith(normaliseComponentInstanceName))
+						.collect(Collectors.toList());
+				log.trace("getVfModulesByVf - VfModules are {}", collect);
+				return collect;
 			}
 		}
 		return new ArrayList<>();
@@ -167,7 +190,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		if (inputs != null){
 			Optional<Input> findFirst = inputs.stream().filter(x -> x.getName().equals(split[0])).findFirst();
 			if (findFirst.isPresent()){
-				log.trace("getServiceInputLeafValue - find first item is {}", findFirst.get().toString());
+				log.trace("getServiceInputLeafValue - find first item is {}", findFirst.get());
 				Input input = findFirst.get();
 				Object current = input.getDefault();
 				if (current == null){
@@ -175,7 +198,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 					return null;
 				}
 				if (split.length > 2){
-					current = new Yaml().load((String)current); 
+					current = new Yaml().load(current.toString()); 
 					for (int i = 2; i < split.length; i++) {
 						if (current instanceof Map){
 							current = ((Map<String, Object>)current).get(split[i]);
@@ -274,22 +297,35 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	@Override
 	//Sunny flow - covered with UT
-	public List<NodeTemplate> getMembersOfVfModule(NodeTemplate vf, Group vfModule) {
+	public List<NodeTemplate> getMembersOfVfModule(NodeTemplate vf, Group serviceLevelVfModule) {
 		if (vf == null) {
 			log.error("getMembersOfVfModule - vf is null");
 			return new ArrayList<>();
 		}
 
-		if (vfModule == null) {
-			log.error("getMembersOfVfModule - vfModule is null");
+		if (serviceLevelVfModule == null || serviceLevelVfModule.getMetadata() == null || serviceLevelVfModule.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID) == null) {
+			log.error("getMembersOfVfModule - vfModule or its metadata is null. Cannot match a VF group based on invariantUuid from missing metadata.");
 			return new ArrayList<>();
 		}
-
-		List<String> members = vfModule.getMembers();
-		if (members != null){
-			SubstitutionMappings substitutionMappings = vf.getSubstitutionMappings();
-			if (substitutionMappings != null){
-				return substitutionMappings.getNodeTemplates().stream().filter(x -> members.contains(x.getName())).collect(Collectors.toList());
+		
+		
+		SubstitutionMappings substitutionMappings = vf.getSubstitutionMappings();
+		if (substitutionMappings != null){
+			List<Group> groups = substitutionMappings.getGroups();
+			if (groups != null){
+				Optional<Group> findFirst = groups
+				.stream()
+				.filter(x -> (x.getMetadata() != null && serviceLevelVfModule.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID).equals(x.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID)))).findFirst();
+				if (findFirst.isPresent()){
+					log.trace("getMembersOfVfModule - Found VF level group with vfModuleModelInvariantUUID {}", serviceLevelVfModule.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID));
+					List<String> members = findFirst.get().getMembers();
+					log.trace("getMembersOfVfModule - members section is {}", members);
+					if (members != null){
+						List<NodeTemplate> collect = substitutionMappings.getNodeTemplates().stream().filter(x -> members.contains(x.getName())).collect(Collectors.toList());
+						log.trace("getMembersOfVfModule - Node templates are {}", collect);
+						return collect;
+					}
+				}
 			}
 		}
 		return new ArrayList<>();
@@ -406,19 +442,16 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
 	//Assumed to be unique property for the list
 	private NodeTemplate getNodeTemplateByCustomizationUuid(List<NodeTemplate> nodeTemplates, String customizationId){
-		for (NodeTemplate nodeTemplate : nodeTemplates){
-			if (customizationId.equals(nodeTemplate.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID))){
-				return nodeTemplate;
-			}
-		}
-		return null;
+		log.trace("getNodeTemplateByCustomizationUuid - nodeTemplates {}, customizationId {}", nodeTemplates, customizationId);
+		Optional<NodeTemplate> findFirst = nodeTemplates.stream().filter(x -> (x.getMetadata() != null && customizationId.equals(x.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_CUSTOMIZATIONUUID)))).findFirst();
+		return findFirst.isPresent() ? findFirst.get() : null;
 	}
 
 	private String processProperties(String[] split, List<Property> properties) {
 		log.trace("processProperties - the leafValuePath is  {} , the properties are {}", split.toString(), properties.toString());
 		Optional<Property> findFirst = properties.stream().filter(x -> x.getName().equals(split[0])).findFirst();
 		if (findFirst.isPresent()){
-			log.trace("processProperties - find first item is {}", findFirst.get().toString());
+			log.trace("processProperties - find first item is {}", findFirst.get());
 			Property property = findFirst.get();
 			Object current = property.getValue();
 			if (current == null){
@@ -426,7 +459,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 				return null;
 			}
 			if (split.length > 1){
-				current = new Yaml().load((String)current); 
+				current = new Yaml().load(current.toString()); 
 				for (int i = 1; i < split.length; i++) {
 					if (current instanceof Map){
 						current = ((Map<String, Object>)current).get(split[i]);
