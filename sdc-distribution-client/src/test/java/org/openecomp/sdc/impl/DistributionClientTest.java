@@ -452,7 +452,7 @@ public class DistributionClientTest {
 	// ########### TESTS TO ADD TO CI START ###########
 	public void createKeysTestCI() throws MalformedURLException, GeneralSecurityException {
 		validateConfigurationTest();
-		CambriaIdentityManager trueCambria = new CambriaClientBuilders.IdentityManagerBuilder().usingHosts(serverList).build();
+		CambriaIdentityManager trueCambria = new CambriaClientBuilders.IdentityManagerBuilder().usingHttps().usingHosts(serverList).build();
 		client.cambriaIdentityManager = trueCambria;
 		DistributionClientResultImpl keysResult = client.createUebKeys();
 		Assert.assertEquals(DistributionActionResultEnum.SUCCESS, keysResult.getDistributionActionResult());
@@ -511,7 +511,7 @@ public class DistributionClientTest {
 	public void registerProducerCI() {
 
 		try {
-			CambriaTopicManager topicManager = new CambriaClientBuilders.TopicManagerBuilder().usingHosts(serverList).authenticatedBy("sSJc5qiBnKy2qrlc", "4ZRPzNJfEUK0sSNBvccd2m7X").build();
+			CambriaTopicManager topicManager = new CambriaClientBuilders.TopicManagerBuilder().usingHttps().usingHosts(serverList).authenticatedBy("sSJc5qiBnKy2qrlc", "4ZRPzNJfEUK0sSNBvccd2m7X").build();
 			topicManager.allowProducer("ASDC-DISTR-STATUS-TOPIC-TESTER", "1FSVAA3bRjhSKNAI");
 		} catch (HttpException | IOException | GeneralSecurityException e) {
 			// TODO Auto-generated catch block
