@@ -41,8 +41,8 @@
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<sitePath>/content/sites/site/org/openecomp/sdc/sdc-distribution-client/${project.version}</sitePath>
-		<snapshots.path>snapshots</snapshots.path>
-		<releases.path>releases</releases.path>
+		<snapshots.path>/content/repositories/snapshots</snapshots.path>
+		<releases.path>/content/repositories/releases</releases.path>
 		<staging.profile.id>176c31dfe190a</staging.profile.id>
 		
 	</properties>
@@ -186,12 +186,12 @@
 		<repository>
 			<id>ecomp-releases</id>
 			<name>Release Repository</name>
-			<url>${nexus.proxy}/content/repositories/${releases.path}/</url>
+			<url>${nexus.proxy}${releases.path}/</url>
 		</repository>
 		<snapshotRepository>
 			<id>ecomp-snapshots</id>
 			<name>Snapshot Repository</name>
-			<url>${nexus.proxy}/content/repositories/${snapshots.path}/</url>
+			<url>${nexus.proxy}${snapshots.path}/</url>
 		</snapshotRepository>
     <site>
         <id>ecomp-site</id>
