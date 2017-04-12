@@ -6,14 +6,15 @@
 	<version>1.0.0</version>
 	<name>SDC Distribution Client</name>
 	<description>An SDC Client to be used by its consumers</description>
-	<properties> 
+	<properties>
 		<httpclient.version>4.5</httpclient.version>
 		<httpcore.version>4.4.1</httpcore.version>
 		<snakeyaml.version>1.14</snakeyaml.version>
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
 		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
-		<nexus.proxy>https://nexus.openecomp.org</nexus.proxy>
+		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
+		<sitePath>/content/sites/site/org/openecomp/sdc/sdc-distribution-client/${project.version}</sitePath>
 		<staging.profile.id>176c31dfe190a</staging.profile.id>
 	</properties>
 
@@ -50,7 +51,7 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-log4j12</artifactId>
 				</exclusion>
-			</exclusions> 
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -63,7 +64,7 @@
 			<version>0.0.1</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -83,7 +84,7 @@
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>  
+			<artifactId>commons-codec</artifactId>
 			<version>1.9</version>
 			<scope>compile</scope>
 		</dependency>
@@ -117,7 +118,7 @@
 			<version>${httpcore.version}</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
@@ -276,11 +277,15 @@
 			<name>Snapshot Repository</name>
 			<url>${nexus.proxy}/content/repositories/snapshots/</url>
 		</snapshotRepository>
+		<site>
+		    <id>ecomp-site</id>
+		    <url>dav:${nexus.proxy}${sitePath}</url>
+		</site>
 
 <!-- 				<site>
 					<id>rackspace-public</id>
 					<url>dav:https://ecomp-nexus:8443/repository/sdc-javadoc-repo/${project.version}</url>
-				</site> -->		
+				</site> -->
 
 			</distributionManagement>
 </project>
