@@ -372,14 +372,18 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	public List<NodeTemplate> getAllottedResources() {
 		List<NodeTemplate> nodeTemplates = null;
 		nodeTemplates = toscaTemplate.getTopologyTemplate().getNodeTemplates();
-		if(nodeTemplates==null || nodeTemplates.size()==0 ){
+		if (nodeTemplates.isEmpty()) {
 			log.error("getAllottedResources nodeTemplates not exist");
 		}
-		nodeTemplates = nodeTemplates.stream().filter(x -> x.getMetadata() != null && x.getMetadata().getValue("category").equals("Allotted Resources")).collect(Collectors.toList());
-		if(nodeTemplates==null || nodeTemplates.size()==0 ){
+		nodeTemplates = nodeTemplates.stream().filter(
+				x -> x.getMetadata() != null && x.getMetadata().getValue("category").equals("Allotted Resources"))
+				.collect(Collectors.toList());
+		if (nodeTemplates.isEmpty()) {
 			log.trace("getAllottedResources -  allotted resources not exist");
-		}else
+		} else {
 			log.trace("getAllottedResources - the allotted resources list is {}", nodeTemplates);
+		}
+
 		return nodeTemplates;
 	}
 	@Override
