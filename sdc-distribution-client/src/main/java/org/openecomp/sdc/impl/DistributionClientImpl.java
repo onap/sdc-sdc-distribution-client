@@ -146,7 +146,7 @@ public class DistributionClientImpl implements IDistributionClient {
 		}
 		if (errorWrapper.isEmpty()) {
 			try {
-				cambriaConsumer = new ConsumerBuilder().authenticatedBy(credential.getApiKey(), credential.getApiSecret()).knownAs(configuration.getConsumerGroup(), configuration.getConsumerID()).onTopic(notificationTopic).usingHosts(brokerServers)
+				cambriaConsumer = new ConsumerBuilder().authenticatedBy(credential.getApiKey(), credential.getApiSecret()).knownAs(configuration.getConsumerGroup(), configuration.getConsumerID()).onTopic(notificationTopic).usingHttps().usingHosts(brokerServers)
 						.withSocketTimeout(configuration.getPollingTimeout() * 1000).build();
 			} catch (MalformedURLException | GeneralSecurityException e) {
 				handleCambriaInitFailure(errorWrapper, e);
@@ -393,7 +393,7 @@ public class DistributionClientImpl implements IDistributionClient {
 	private Either<CambriaBatchingPublisher, IDistributionClientResult> getCambriaPublisher() {
 		CambriaBatchingPublisher cambriaPublisher = null;
 			try {
-				cambriaPublisher = new PublisherBuilder().onTopic(statusTopic).usingHosts(brokerServers).build();
+				cambriaPublisher = new PublisherBuilder().onTopic(statusTopic).usingHttps().usingHosts(brokerServers).build();
 				cambriaPublisher.setApiCredentials(credential.getApiKey(), credential.getApiSecret());
 			} catch (MalformedURLException | GeneralSecurityException e) {
 				Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();
@@ -582,7 +582,7 @@ public class DistributionClientImpl implements IDistributionClient {
 	private synchronized void initCambriaClient(Wrapper<IDistributionClientResult> errorWrapper) {
 		if (cambriaIdentityManager == null) {
 			try {
-				cambriaIdentityManager = new IdentityManagerBuilder().usingHosts(brokerServers).build();
+				cambriaIdentityManager = new IdentityManagerBuilder().usingHttps().usingHosts(brokerServers).build();
 			} catch (MalformedURLException | GeneralSecurityException e) {
 				handleCambriaInitFailure(errorWrapper, e);
 			}

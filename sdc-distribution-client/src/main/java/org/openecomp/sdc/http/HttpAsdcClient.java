@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
 
 public class HttpAsdcClient implements IHttpAsdcClient {
 
-	private static final String TLS = "TLS";
+	private static final String TLS = "TLSv1.2";
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String HTTPS = "https://";
 	private static Logger log = LoggerFactory.getLogger(DistributionClientImpl.class.getName());
@@ -178,8 +178,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 				sslContext.init(null, tms, null);
 				SSLContext.setDefault(sslContext);
 
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { "TLSv1", "TLSv1.1" }, null, hostnameVerifier);
-				httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setSSLSocketFactory(sslsf).build();
+				
 
 			} else {
 
@@ -192,9 +191,10 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 				});
 
 				sslContext = builder.build();
-
-				httpClient = HttpClientBuilder.create().setSSLHostnameVerifier(hostnameVerifier).setSslcontext(sslContext).setDefaultCredentialsProvider(credsProvider).build();
 			}
+			
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { "TLSv1.2" }, null, hostnameVerifier);
+			httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setSSLSocketFactory(sslsf).build();
 
 		} catch (Exception e) {
 			log.error("Failed to create https client", e);
