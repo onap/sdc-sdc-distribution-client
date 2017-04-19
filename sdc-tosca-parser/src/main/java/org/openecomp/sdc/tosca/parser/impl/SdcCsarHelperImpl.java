@@ -21,6 +21,7 @@
 package org.openecomp.sdc.tosca.parser.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 public class SdcCsarHelperImpl implements ISdcCsarHelper {
+
 
 	private ToscaTemplate toscaTemplate;
 	private static Logger log = LoggerFactory.getLogger(SdcCsarHelperImpl.class.getName());
@@ -452,7 +454,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 	}
 
 	private String processProperties(String[] split, List<Property> properties) {
-		log.trace("processProperties - the leafValuePath is  {} , the properties are {}", split.toString(), properties.toString());
+		log.trace("processProperties - the leafValuePath is  {} , the properties are {}", Arrays.toString(split), properties.toString());
 		Optional<Property> findFirst = properties.stream().filter(x -> x.getName().equals(split[0])).findFirst();
 		if (findFirst.isPresent()){
 			log.trace("processProperties - find first item is {}", findFirst.get());
