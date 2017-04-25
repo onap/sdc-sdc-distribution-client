@@ -67,13 +67,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- Jython Tosca Parser -->
-		<dependency>
-			<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
-			<artifactId>jtosca</artifactId>
-			<version>0.4.1-SNAPSHOT</version>
-		</dependency>
-
 		<!-- jtosca Tosca Parser -->
 		<dependency>
 			<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
