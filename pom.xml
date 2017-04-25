@@ -4,11 +4,11 @@
 
 	<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
 	<artifactId>sdc-main-distribution-client</artifactId>
-	<version>1.1.7-SNAPSHOT</version>
+	<version>1.1.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>jython-tosca-parser</module>
+		<module>jtosca</module>
 		<module>sdc-tosca-parser</module>
 		<module>sdc-distribution-client</module>
 		<module>sdc-distribution-ci</module>
