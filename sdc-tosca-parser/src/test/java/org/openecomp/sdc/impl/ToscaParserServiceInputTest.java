@@ -1,7 +1,7 @@
 package org.openecomp.sdc.impl;
 
 import org.junit.Test;
-import org.openecomp.sdc.toscaparser.parameters.Input;
+import org.openecomp.sdc.toscaparser.api.parameters.Input;
 
 import java.util.List;
 

@@ -22,10 +22,10 @@ package org.openecomp.sdc.tosca.parser.api;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.openecomp.sdc.toscaparser.Group;
-import org.openecomp.sdc.toscaparser.NodeTemplate;
-import org.openecomp.sdc.toscaparser.elements.Metadata;
-import org.openecomp.sdc.toscaparser.parameters.Input;
+import org.openecomp.sdc.toscaparser.api.Group;
+import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.elements.Metadata;
+import org.openecomp.sdc.toscaparser.api.parameters.Input;
 
 
 public interface ISdcCsarHelper {

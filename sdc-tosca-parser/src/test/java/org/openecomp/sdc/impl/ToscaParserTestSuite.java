@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
-import org.openecomp.sdc.toscaparser.common.JToscaException;
+import org.openecomp.sdc.toscaparser.api.common.JToscaException;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,8 +2,8 @@ package org.openecomp.sdc.impl;
 
 import org.junit.Test;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
-import org.openecomp.sdc.toscaparser.Group;
-import org.openecomp.sdc.toscaparser.elements.Metadata;
+import org.openecomp.sdc.toscaparser.api.Group;
+import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 
 import java.util.List;
 

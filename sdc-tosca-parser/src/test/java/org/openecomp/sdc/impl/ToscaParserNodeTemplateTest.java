@@ -10,8 +10,8 @@ import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
-import org.openecomp.sdc.toscaparser.Group;
-import org.openecomp.sdc.toscaparser.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.Group;
+import org.openecomp.sdc.toscaparser.api.NodeTemplate;
 
 public class ToscaParserNodeTemplateTest extends BasicTest {
 

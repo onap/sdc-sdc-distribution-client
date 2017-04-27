@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
-import org.openecomp.sdc.toscaparser.NodeTemplate;
-import org.openecomp.sdc.toscaparser.ToscaTemplate;
-import org.openecomp.sdc.toscaparser.common.JToscaException;
+import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
+import org.openecomp.sdc.toscaparser.api.common.JToscaException;
 
 public class SdcToscaParserFactory{
 

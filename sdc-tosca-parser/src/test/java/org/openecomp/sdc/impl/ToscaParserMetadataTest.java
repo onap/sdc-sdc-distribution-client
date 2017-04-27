@@ -1,7 +1,7 @@
 package org.openecomp.sdc.impl;
 
 import org.junit.Test;
-import org.openecomp.sdc.toscaparser.elements.Metadata;
+import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
