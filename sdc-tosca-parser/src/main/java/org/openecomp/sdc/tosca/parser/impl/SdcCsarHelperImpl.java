@@ -20,15 +20,7 @@
 
 package org.openecomp.sdc.tosca.parser.impl;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
@@ -45,6 +37,10 @@ import org.openecomp.sdc.toscaparser.api.elements.NodeType;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
@@ -295,9 +291,9 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 			return cpList;
 		}
 		NodeTemplate vfInstance = getNodeTemplateByCustomizationUuid(serviceVfList, vfCustomizationId);
-		log.debug("getCpListByVf vf list is {}", vfInstance);
+		log.debug("getCpListByVf vf is {}", vfInstance);
 		if (vfInstance == null) {
-			log.debug("getCpListByVf vf list is null");
+			log.debug("getCpListByVf vf  is null");
 			return cpList;
 		}
 		cpList = getNodeTemplateBySdcType(vfInstance, Types.TYPE_CP);

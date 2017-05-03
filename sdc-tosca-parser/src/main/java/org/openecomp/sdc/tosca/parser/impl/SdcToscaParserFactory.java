@@ -17,7 +17,6 @@ public class SdcToscaParserFactory{
 
 	/**
 	 * Get an SdcToscaParserFactory instance.
-	 * After parsing work is done, it must be closed using the close() method.
 	 */
 	public static SdcToscaParserFactory getInstance() {
 		if (instance == null) {

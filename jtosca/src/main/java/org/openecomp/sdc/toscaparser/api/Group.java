@@ -78,10 +78,18 @@ public class Group extends EntityTemplate {
 
 	@Override
 	public String toString() {
+		String memberNodesNames = "";
+		if(memberNodes!=null)
+		for(NodeTemplate nt:memberNodes){
+			memberNodesNames += nt.getName()==null?"":nt.getName()+",";
+		}
+		if (memberNodesNames!="" && memberNodesNames.length()>1) {
+			memberNodesNames=memberNodesNames.substring(0,memberNodesNames.length()-1);
+		}
 		return "Group{" +
 				"name='" + name + '\'' +
 				", tpl=" + tpl +
-				", memberNodes=" + memberNodes +
+				", memberNodesNames=" + memberNodesNames +
 				", customDef=" + customDef +
 				", metaData=" + metaData +
 				'}';

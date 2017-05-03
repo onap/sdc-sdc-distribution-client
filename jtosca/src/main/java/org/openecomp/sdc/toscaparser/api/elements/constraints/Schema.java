@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 
-
 public class Schema {
 
 	private static final String TYPE = "type";
@@ -171,7 +170,16 @@ public class Schema {
     public LinkedHashMap<String,Object> getSchema() {
     	return schema;
     }
-    
+
+	@Override
+	public String toString() {
+		return "Schema{" +
+				"name='" + name + '\'' +
+				", schema=" + schema +
+				", _len=" + _len +
+				", constraintsList=" + constraintsList +
+				'}';
+	}
 }
 
 /*python

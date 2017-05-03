@@ -1,13 +1,13 @@
 package org.openecomp.sdc.toscaparser.api.parameters;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
 import org.openecomp.sdc.toscaparser.api.DataEntity;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Constraint;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Schema;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class Input {
 	
@@ -107,6 +107,14 @@ public class Input {
     	}
     	DataEntity.validateDatatype(getType(),value,null,(LinkedHashMap<String,Object>)datatype,null);
     }
+
+	@Override
+	public String toString() {
+		return "Input{" +
+				"name='" + name + '\'' +
+				", schema=" + schema +
+				'}';
+	}
 }
 
 /*python
