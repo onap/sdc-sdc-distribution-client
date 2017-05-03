@@ -299,9 +299,16 @@ public class SubstitutionMappings {
 	}
 
 	public String toLimitedString() {
+		String nodetemplatesNames = "";
+		for(NodeTemplate nt:nodetemplates){
+			nodetemplatesNames += nt.getName()+",";
+		}
+		if (nodetemplatesNames!="" && nodetemplatesNames.length()>1) {
+			nodetemplatesNames=nodetemplatesNames.substring(0,nodetemplatesNames.length()-1);
+		}
 		return "SubstitutionMappings{" +
 				"subMappingDef=" + subMappingDef +
-				", nodetemplates=" + nodetemplates +
+				", nodetemplatesNames=" + nodetemplatesNames +
 				", inputs=" + inputs +
 				", outputs=" + outputs +
 				", groups=" + groups +

@@ -1,11 +1,11 @@
 package org.openecomp.sdc.toscaparser.elements.constraints;
 
+import org.openecomp.sdc.toscaparser.common.ExceptionCollector;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.openecomp.sdc.toscaparser.common.ExceptionCollector;
 
 
 public class Schema {
@@ -171,7 +171,16 @@ public class Schema {
     public LinkedHashMap<String,Object> getSchema() {
     	return schema;
     }
-    
+
+	@Override
+	public String toString() {
+		return "Schema{" +
+				"name='" + name + '\'' +
+				", schema=" + schema +
+				", _len=" + _len +
+				", constraintsList=" + constraintsList +
+				'}';
+	}
 }
 
 /*python
