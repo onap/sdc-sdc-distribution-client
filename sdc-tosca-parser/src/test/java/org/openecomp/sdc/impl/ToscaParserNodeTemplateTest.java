@@ -20,7 +20,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	public void testNumberOfVfSunnyFlow() throws SdcToscaParserException {
 		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
 		assertNotNull(serviceVfList);
-		assertEquals(1, serviceVfList.size());
+		assertEquals(2, serviceVfList.size());
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	@Test
 	public void testGetAllottedResources() {
 		List<NodeTemplate> allottedResources = ToscaParserTestSuite.fdntCsarHelper.getAllottedResources();
-		assertEquals(0, allottedResources.size());
+		assertEquals(1, allottedResources.size());
 	}
 
 	@Test

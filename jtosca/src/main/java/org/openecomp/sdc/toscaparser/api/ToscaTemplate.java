@@ -101,7 +101,7 @@ public class ToscaTemplate extends Object {
 
 		//long startTime = System.nanoTime();
 		
-		ExceptionCollector.start();
+		//ExceptionCollector.start();
 		
 		isFile = aFile;
 		inputPath = null;
@@ -184,7 +184,7 @@ public class ToscaTemplate extends Object {
         	csarTempDir = null;
         }
         
-		ExceptionCollector.stop();
+		//ExceptionCollector.stop();
 		verifyTemplate();
 	}
 

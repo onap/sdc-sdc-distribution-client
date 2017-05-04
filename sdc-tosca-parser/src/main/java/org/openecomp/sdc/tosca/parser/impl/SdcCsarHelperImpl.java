@@ -385,7 +385,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 			log.error("getAllottedResources nodeTemplates not exist");
 		}
 		nodeTemplates = nodeTemplates.stream().filter(
-				x -> x.getMetaData() != null && x.getMetaData().getValue("category").equals("Allotted Resources"))
+				x -> x.getMetaData() != null && x.getMetaData().getValue("category").equals("Allotted Resource"))
 				.collect(Collectors.toList());
 		if (nodeTemplates.isEmpty()) {
 			log.debug("getAllottedResources -  allotted resources not exist");

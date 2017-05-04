@@ -1,10 +1,9 @@
 package org.openecomp.sdc.toscaparser.api.common;
 
-import org.openecomp.sdc.toscaparser.api.elements.EntityType;
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 
 // Perfectly good enough... 
 
@@ -12,34 +11,34 @@ public class ExceptionCollector {
 
 	private static Logger log = LoggerFactory.getLogger(ExceptionCollector.class.getName());
 
-	private static boolean isCollecting = false;
-	private static ArrayList<String> exceptionStrings = null;
-	private static ArrayList<String> traceStrings = null;
+	//private static boolean isCollecting = false;
+	private static ArrayList<String> exceptionStrings = new ArrayList<>();
+	private static ArrayList<String> traceStrings = new ArrayList<>();
 	private static boolean bWantTrace = true;
 
-	public static void start() {
+	/*public static void start() {
 		if(exceptionStrings == null) {
 			exceptionStrings = new ArrayList<String>();
 			traceStrings = new ArrayList<String>();
 		}
 		isCollecting = true;
-	}
+	}*/
 
-	public static void stop() {
+	/*public static void stop() {
 		isCollecting = false;
-	}
+	}*/
 
 	public static void clear() {
-		exceptionStrings = null;
-		traceStrings = null;
+		exceptionStrings = new ArrayList<>();
+		traceStrings = new ArrayList<>();
 	}
 
 	public static void appendException(String strExc) { // throws Exception {
 
-		if(!isCollecting) {
+		/*if(!isCollecting) {
 			// throw new Exception("Can't append exception " + strExc);
 			log.error("ExceptionCollector - appendException - Can't append exception {}", strExc);
-		}
+		}*/
 
 		if(!exceptionStrings.contains(strExc)) {
 			exceptionStrings.add(strExc);
@@ -66,7 +65,7 @@ public class ExceptionCollector {
 			}
 			return report;
 		}
-		return null;
+		return new ArrayList<>();
 	}
 	
 	public static int errorsCaught() {
