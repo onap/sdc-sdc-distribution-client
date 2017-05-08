@@ -25,11 +25,12 @@ public class Input {
     
     private String name;
     private Schema schema;
+	private LinkedHashMap<String,Object> customDefs;//ATT-CDT
 	
-	
-	public Input(String _name,LinkedHashMap<String,Object> _schemaDict) {
+	public Input(String _name,LinkedHashMap<String,Object> _schemaDict,LinkedHashMap<String,Object> _customDefs) {//ATT-CDT
 		name = _name;
 		schema = new Schema(_name,_schemaDict);
+		customDefs = _customDefs;//ATT-CDT
 	}
 	
 	public String getName() {
@@ -89,6 +90,13 @@ public class Input {
 				break;
 			}
 		}
+		//ATT-CDT
+		if(!bFound) {
+			if(customDefs.get(inputType) != null) {
+				bFound = true;
+			}
+		}
+		//ATT-CDT
 		if(!bFound) {
             ExceptionCollector.appendException(String.format(
                     "ValueError: Invalid type \"%s\"",inputType));
@@ -97,14 +105,19 @@ public class Input {
     
     private void _validateValue(Object value) {
     	Object datatype = null;
-    	if (EntityType.TOSCA_DEF != null && EntityType.TOSCA_DEF.size() > 0) {
-	    	if(EntityType.TOSCA_DEF.get(getType()) != null) {
-	    		datatype = EntityType.TOSCA_DEF.get(getType());
-	    	}
-	    	else if(EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType()) != null) {
-	    		datatype = EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType());
-	    	}
+    	if(EntityType.TOSCA_DEF.get(getType()) != null) {
+    		datatype = EntityType.TOSCA_DEF.get(getType());
     	}
+    	else if(EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType()) != null) {
+    		datatype = EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType());
+    	}
+    	//ATT-CDT
+    	else if(customDefs.get(getType()) != null) {
+    		datatype = customDefs.get(getType());
+        	DataEntity.validateDatatype(getType(),value,(LinkedHashMap<String,Object>)datatype,customDefs,null);
+        	return;
+    	}
+    	//ATT-CDT 
     	DataEntity.validateDatatype(getType(),value,null,(LinkedHashMap<String,Object>)datatype,null);
     }
 }

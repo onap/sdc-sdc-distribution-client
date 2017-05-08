@@ -45,9 +45,18 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	public void testNodeTemplateNestedProperty() throws SdcToscaParserException {
 		List<NodeTemplate> serviceVlList = ToscaParserTestSuite.fdntCsarHelper.getServiceVlList();
 		NodeTemplate nodeTemplate = serviceVlList.get(0);
-		System.out.println("node template " + nodeTemplate.toString());
+		//System.out.println("node template " + nodeTemplate.toString());
 		assertEquals("24", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_assignments#ipv4_subnet_default_assignment#cidr_mask"));
 		assertEquals("7a6520b-9982354-ee82992c-105720", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_flows#vpn_binding"));
+	}
+	
+	@Test
+	public void testNodeTemplateNestedPropertyFromInput() throws SdcToscaParserException {
+		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
+		NodeTemplate nodeTemplate = serviceVfList.get(0);
+		//System.out.println("node template " + nodeTemplate.toString());
+		assertEquals("true", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#ecomp_generated_naming"));
+		assertEquals("FDNT_instance_VF_2", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#naming_policy"));
 	}
 
 	@Test

@@ -5,11 +5,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.openecomp.sdc.toscaparser.api.SubstitutionMappings;
-import org.openecomp.sdc.toscaparser.api.ToscaGraph;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.InterfacesDef;
-import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 import org.openecomp.sdc.toscaparser.api.elements.NodeType;
 import org.openecomp.sdc.toscaparser.api.elements.RelationshipType;
 import org.openecomp.sdc.toscaparser.api.functions.Function;
@@ -17,12 +14,9 @@ import org.openecomp.sdc.toscaparser.api.functions.GetAttribute;
 import org.openecomp.sdc.toscaparser.api.functions.GetInput;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.openecomp.sdc.toscaparser.api.parameters.Output;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TopologyTemplate {
 
-	private static Logger log = LoggerFactory.getLogger(TopologyTemplate.class.getName());
 	private static final String DESCRIPTION = "description";
 	private static final String INPUTS = "inputs";
 	private static final String NODE_TEMPLATES = "node_templates";
@@ -39,7 +33,7 @@ public class TopologyTemplate {
 			};
 
     private LinkedHashMap<String,Object> tpl;
-	Metadata metaData;
+	LinkedHashMap<String,Object> metaData;
     private ArrayList<Input> inputs;
     private ArrayList<Output> outputs;
     private ArrayList<RelationshipTemplate> relationshipTemplates;
@@ -86,10 +80,11 @@ public class TopologyTemplate {
 
 	@SuppressWarnings("unchecked")
 	private ArrayList<Input> _inputs() {
+		//DumpUtils.dumpYaml(customDefs,0);
 		ArrayList<Input> alInputs = new ArrayList<>();
 		for(String name: _tplInputs().keySet()) {
 			Object attrs = _tplInputs().get(name);
-			Input input = new Input(name,(LinkedHashMap<String,Object>)attrs);
+			Input input = new Input(name,(LinkedHashMap<String,Object>)attrs,customDefs);//ATT-CDT
             if(parsedParams != null && parsedParams.get(name) != null) {
             	input.validate(parsedParams.get(name));
             }
@@ -101,7 +96,7 @@ public class TopologyTemplate {
             }
             if((parsedParams != null && parsedParams.get(input.getName()) == null || parsedParams == null)
             		 && input.isRequired() && input.getDefault() == null) {
-            	log.error("Log warning: TopologyTemplate - _inputs - The required parameter {} is not provided", input.getName());
+            	System.out.format("Log warning: The required parameter \"%s\" is not provided\n",input.getName());
             }
             alInputs.add(input);
 		}
@@ -109,12 +104,12 @@ public class TopologyTemplate {
 		
 	}
 
-	private Metadata _metaData() {
+	private LinkedHashMap<String,Object> _metaData() {
         if(tpl.get(METADATA) != null) {
-        	return (Metadata)tpl.get(METADATA);
+        	return (LinkedHashMap<String,Object>)tpl.get(METADATA);
         }
         else {
-        	return new Metadata(new LinkedHashMap<>());
+        	return new LinkedHashMap<String,Object>();
         }
 	
 	}
@@ -178,7 +173,7 @@ public class TopologyTemplate {
 					                    nodeTemplates,
 					                    inputs,
 					                    outputs,
-					                    groups,
+					                    groups, //ATT addition
 					                    subMappedNodeTemplate,
 					                    customDefs);
 		}
@@ -511,7 +506,7 @@ public class TopologyTemplate {
 		return tpl;
 	}
 	
-	public Metadata getMetadata() {
+	public LinkedHashMap<String,Object> getMetadata() {
 		return metaData;
 	}
 	
@@ -545,27 +540,6 @@ public class TopologyTemplate {
 
 	public LinkedHashMap<String,Object> getParsedParams() {
 		return parsedParams;
-	}
-
-	@Override
-	public String toString() {
-		return "TopologyTemplate{" +
-				"tpl=" + tpl +
-				", metaData=" + metaData +
-				", inputs=" + inputs +
-				", outputs=" + outputs +
-				", relationshipTemplates=" + relationshipTemplates +
-				", nodeTemplates=" + nodeTemplates +
-				", customDefs=" + customDefs +
-				", relTypes=" + relTypes +
-				", subMappedNodeTemplate=" + subMappedNodeTemplate +
-				", groups=" + groups +
-				", policies=" + policies +
-				", parsedParams=" + parsedParams +
-				", description='" + description + '\'' +
-				", graph=" + graph +
-				", substitutionMappings=" + substitutionMappings +
-				'}';
 	}
 }
 
