@@ -48,14 +48,14 @@ public class CsarToscaTester {
 		        if (!exceptionReport.isEmpty())  {
 		        	
 					try {
-						fw = new FileWriter(new File(dir + "/critical-" + file.getName() + ".txt"));
+						fw = new FileWriter(new File(dir + "/" + exceptionReport.size() / 2 + "-critical-" + file.getName() + ".txt"));
 						for (String exception : exceptionReport) {
 							fw.write(exception);
 							fw.write("\r\n");
 						}
 						fw.close();
 						
-						fw = new FileWriter(new File(dir + "/warning-" + file.getName() + ".txt"));
+						fw = new FileWriter(new File(dir + "/" + warningsReport.size() / 2 +  "-warning-" + file.getName() + ".txt"));
 						for (String warning : warningsReport) {
 							fw.write(warning);
 							fw.write("\r\n");

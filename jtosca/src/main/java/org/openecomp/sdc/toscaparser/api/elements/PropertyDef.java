@@ -116,7 +116,7 @@ public class PropertyDef {
                 //                                                  attr,
                 //                                                  value,
                 //                                                  valid_values)
-				ExceptionCollector.appendException(String.format(
+				ExceptionCollector.appendWarning(String.format(
 						"Schema definition of \"%s\" has \"status\" attribute with an invalid value",
 						name));
 			}

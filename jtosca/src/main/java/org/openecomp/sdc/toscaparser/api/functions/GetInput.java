@@ -18,7 +18,8 @@ public class GetInput extends Function {
 	@Override
 	void validate() {
 	    if(args.size() != 1) {
-	        ExceptionCollector.appendException(String.format(
+	    	//ERROR under investigation
+	        ExceptionCollector.appendWarning(String.format(
 	            "ValueError: Expected one argument for function \"get_input\" but received \"%s\"",
 	            args.toString()));
 	    }

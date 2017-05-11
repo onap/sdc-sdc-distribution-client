@@ -35,7 +35,7 @@ public class Schema {
 	public static final String VERSION = "version";
 	public static final String PORTDEF = "PortDef";
 	public static final String PORTSPEC = "PortSpec"; //??? PortSpec.SHORTNAME
-	public static final String JSON = "json";
+	public static final String JSON = "json"; 
 
 	public static final String PROPERTY_TYPES[] = {
 	        INTEGER, STRING, BOOLEAN, FLOAT, RANGE,NUMBER, TIMESTAMP, LIST, MAP,

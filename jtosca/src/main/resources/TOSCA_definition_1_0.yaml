@@ -278,7 +278,7 @@ node_types:
     capabilities:
       link:
         type: tosca.capabilities.network.Linkable
-
+    
   tosca.nodes.network.Port:
     derived_from: tosca.nodes.Root
     description: >
@@ -777,7 +777,7 @@ data_types:
   tosca.datatypes.Root:
     description: >
       The TOSCA root Data Type all other TOSCA base Data Types derive from
-
+    
   tosca.datatypes.network.NetworkInfo:
     derived_from: tosca.datatypes.Root
     properties:

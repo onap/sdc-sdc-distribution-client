@@ -343,7 +343,7 @@ public abstract class EntityTemplate {
             }
             // Required properties found without value or a default value
             if(!reqPropsNoValueOrDefault.isEmpty()) {
-                ExceptionCollector.appendException(String.format(
+                ExceptionCollector.appendWarning(String.format(
                     "MissingRequiredFieldError: properties of template \"%s\" are missing field(s): %s",
                     name,reqPropsNoValueOrDefault.toString()));
             }

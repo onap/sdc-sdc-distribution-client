@@ -152,7 +152,7 @@ public abstract class Constraint {
         	value = ScalarUnit.getScalarunitValue(propertyType,value,null);
         }
         if(!_isValid(value)) {
-            ExceptionCollector.appendException("ValidationError: " + _errMsg(value));
+            ExceptionCollector.appendWarning("ValidationError: " + _errMsg(value));
         }
 	}
 

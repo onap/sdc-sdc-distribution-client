@@ -404,11 +404,13 @@ public class ToscaTemplate extends Object {
 			for(NodeTemplate nt: nodeTemplates) {
 				if(_isSubMappedNode(nt,toscaTpl)) {
 					parsedParams = _getParamsForNestedTemplate(nt);
+                    ArrayList<Object> alim = (ArrayList<Object>)toscaTpl.get(IMPORTS);
 					LinkedHashMap<String,Object> topologyTpl = 
 							(LinkedHashMap<String,Object>)toscaTpl.get(TOPOLOGY_TEMPLATE);
 					TopologyTemplate topologyWithSubMapping = 
 							new TopologyTemplate(topologyTpl,
-												_getAllCustomDefs(null), 
+												//_getAllCustomDefs(null),
+												_getAllCustomDefs(alim),
 												relationshipTypes, 
 												parsedParams,
 												nt);

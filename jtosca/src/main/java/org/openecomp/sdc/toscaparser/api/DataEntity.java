@@ -48,8 +48,9 @@ public class DataEntity {
         // If the datatype has 'properties' definition
         else {
             if(!(value instanceof LinkedHashMap)) {
-                ExceptionCollector.appendException(String.format(
-                    "TypeMismatchError: \"%s\" doesn't match \"%s\"",
+            	//ERROR under investigation
+                ExceptionCollector.appendWarning(String.format(
+                    "TypeMismatchError: \"%s\" is not a map. The type is \"%s\"",
                     value.toString(),dataType.getType()));
 
 				if (value instanceof List)
@@ -80,7 +81,8 @@ public class DataEntity {
             
             // check allowed field
             for(String valueKey: valueDict.keySet()) {
-            	if(!allowedProps.contains(valueKey)) {
+            	//1710 devlop JSON validation
+            	if(!("json").equals(dataType.getType()) && !allowedProps.contains(valueKey)) {
                     ExceptionCollector.appendException(String.format(
                         "UnknownFieldError: Data value of type \"%s\" contains unknown field \"%s\"",
                         dataType.getType(),valueKey));
@@ -104,7 +106,7 @@ public class DataEntity {
                 }
             }
             if(missingProp.size() > 0) {
-                ExceptionCollector.appendException(String.format(
+                ExceptionCollector.appendWarning(String.format(
                     "MissingRequiredFieldError: Data value of type \"%s\" is missing required field(s) \"%s\"",
                     dataType.getType(),missingProp.toString()));
             }
@@ -161,6 +163,13 @@ public class DataEntity {
 
 		if(Function.isFunction(value)) {
 			return value;
+		}
+		else if (type == null)  {
+			//NOT ANALYZED
+			 ExceptionCollector.appendWarning(String.format(
+	                    "MissingType: Type is missing for value \"%s\"",
+	                    value.toString()));
+			 return value;
 		}
 		else if(type.equals(Schema.STRING)) {
             return ValidateUtils.validateString(value);

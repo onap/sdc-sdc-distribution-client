@@ -51,7 +51,7 @@ public abstract class ScalarUnit {
 					return key;
 				}
 			}
-            ExceptionCollector.appendException(String.format(
+            ExceptionCollector.appendWarning(String.format(
             	"'The unit \"%s\" is not valid. Valid units are \n%s",
                 inputUnit,SCALAR_UNIT_DICT.keySet().toString()));
             return inputUnit;
