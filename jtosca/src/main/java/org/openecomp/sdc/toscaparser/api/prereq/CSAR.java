@@ -12,10 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -31,6 +28,7 @@ import org.yaml.snakeyaml.Yaml;
 public class CSAR {
 
 	private static Logger log = LoggerFactory.getLogger(CSAR.class.getName());
+	private static final ArrayList<String> META_PROPERTIES_FILES = new ArrayList<>(Arrays.asList("TOSCA-Metadata/TOSCA.meta", "csar.meta"));
 
 	private String path;
     private boolean isFile;
@@ -38,9 +36,10 @@ public class CSAR {
     private boolean errorCaught;
     private String csar;
     private String tempDir;
-    private Metadata metaData;
+//    private Metadata metaData;
     private File tempFile;
-	
+	private LinkedHashMap<String, LinkedHashMap<String, Object>> metaProperties;
+
 	public CSAR(String csarPath, boolean aFile) {
 		path = csarPath;
 		isFile = aFile;
@@ -49,8 +48,9 @@ public class CSAR {
         csar = null;
         tempDir = null;
         tempFile = null;
+		metaProperties = new LinkedHashMap<>();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean validate() {
 		isValidated = true;
@@ -89,86 +89,8 @@ public class CSAR {
 			return false;
 		}
 		
-		ZipFile zf = null;
-        
-		try {
+		_parseAndValidateMetaProperties();
 
-			// validate that it is a valid zip file
-			RandomAccessFile raf = new RandomAccessFile(csar, "r");
-			long n = raf.readInt();
-			raf.close();
-			// check if Zip's magic number
-			if (n != 0x504B0304) {
-			    throw new IOException(String.format("\"%s\" is not a valid zip file", csar));
-			}
-			
-			// validate that it contains the metadata file in the correct location
-			zf = new ZipFile(csar);
-			ZipEntry ze = zf.getEntry("TOSCA-Metadata/TOSCA.meta");
-			if(ze == null) {
-				throw new IOException(String.format(
-						"\"%s\" is not a valid CSAR as it does not contain the " +
-			            "required file \"TOSCA.meta\" in the folder \"TOSCA-Metadata\"", csar));
-			}
-	        
-			// verify it has "Entry-Definition"
-			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(csar));
-	        byte ba[] = new byte[4096];
-			while ((ze = zipIn.getNextEntry()) != null) {
-			    if (ze.getName().equals("TOSCA-Metadata/TOSCA.meta")) {
-					n = zipIn.read(ba,0,4096);
-					zipIn.close();
-			        break;
-			    }
-			}
-
-	        String md = new String(ba);
-	        md = md.substring(0, (int)n);
-	        Yaml yaml = new Yaml();
-	        Object mdo = yaml.load(md);
-	        if(!(mdo instanceof LinkedHashMap)) {
-	        	throw new IOException(String.format(
-	        			"The file \"TOSCA-Metadata/TOSCA.meta\" in the" +
-	        			" CSAR \"%s\" does not contain valid YAML content",csar));
-	        }
-	        
-			metaData = new Metadata((Map<String, Object>) mdo);
-	        String edf = metaData.getValue("Entry-Definitions");
-	        if(edf == null) {
-	        	throw new IOException(String.format(
-	        			"The CSAR \"%s\" is missing the required metadata " +
-	        			"\"Entry-Definitions\" in \"TOSCA-Metadata/TOSCA.meta\"",csar));
-	        }
-	        
-	        //validate that "Entry-Definitions' metadata value points to an existing file in the CSAR
-	        boolean foundEDF = false;
-	        Enumeration<? extends ZipEntry> entries = zf.entries();
-	        while (entries.hasMoreElements()) {
-	            ze = entries.nextElement();
-	            if (ze.getName().equals(edf)) {
-	                foundEDF = true;
-	                break;
-	            }
-	        }
-	        if(!foundEDF) {
-	        	throw new IOException(String.format(
-	        			"The \"Entry-Definitions\" file defined in the CSAR \"%s\" does not exist",csar));
-	        }
-			
-		}
-		catch(Exception e) {
-			ExceptionCollector.appendException("ValidationError: " + e.getMessage());
-			errorCaught = true;;
-		}
-		
-		try {
-			if(zf != null) {
-				zf.close();
-			}
-		}
-		catch(IOException e) {
-		}
-		
 		if(errorCaught) {
 			return false;
 		}
@@ -178,6 +100,93 @@ public class CSAR {
         
         return !errorCaught;
 
+	}
+
+	private void _parseAndValidateMetaProperties() {
+
+		ZipFile zf = null;
+
+		try {
+
+			// validate that it is a valid zip file
+			RandomAccessFile raf = new RandomAccessFile(csar, "r");
+			long n = raf.readInt();
+			raf.close();
+			// check if Zip's magic number
+			if (n != 0x504B0304) {
+				throw new IOException(String.format("\"%s\" is not a valid zip file", csar));
+			}
+
+			// validate that it contains the metadata file in the correct location
+			zf = new ZipFile(csar);
+			ZipEntry ze = zf.getEntry("TOSCA-Metadata/TOSCA.meta");
+			if (ze == null) {
+				throw new IOException(String.format(
+						"\"%s\" is not a valid CSAR as it does not contain the " +
+								"required file \"TOSCA.meta\" in the folder \"TOSCA-Metadata\"", csar));
+			}
+
+			//Going over expected metadata files and parsing them
+			for (String metaFile: META_PROPERTIES_FILES) {
+
+				byte ba[] = new byte[4096];
+				ze = zf.getEntry(metaFile);
+				if (ze != null) {
+					InputStream inputStream = zf.getInputStream(ze);
+					n = inputStream.read(ba, 0, 4096);
+
+					String md = new String(ba);
+					md = md.substring(0, (int) n);
+					Yaml yaml = new Yaml();
+					Object mdo = yaml.load(md);
+					if (!(mdo instanceof LinkedHashMap)) {
+						throw new IOException(String.format(
+								"The file \"%s\" in the" +
+										" CSAR \"%s\" does not contain valid YAML content", ze.getName(), csar));
+					}
+
+					String[] split = ze.getName().split("/");
+                    String fileName = split[split.length - 1];
+
+					if (!metaProperties.containsKey(fileName)) {
+						metaProperties.put(fileName, (LinkedHashMap<String, Object>) mdo);
+					}
+				}
+			}
+
+			// verify it has "Entry-Definition"
+			String edf = _getMetadata("Entry-Definitions");
+			if (edf == null) {
+				throw new IOException(String.format(
+						"The CSAR \"%s\" is missing the required metadata " +
+								"\"Entry-Definitions\" in \"TOSCA-Metadata/TOSCA.meta\"", csar));
+			}
+
+			//validate that "Entry-Definitions' metadata value points to an existing file in the CSAR
+			boolean foundEDF = false;
+			Enumeration<? extends ZipEntry> entries = zf.entries();
+			while (entries.hasMoreElements()) {
+				ze = entries.nextElement();
+				if (ze.getName().equals(edf)) {
+					foundEDF = true;
+					break;
+				}
+			}
+			if (!foundEDF) {
+				throw new IOException(String.format(
+						"The \"Entry-Definitions\" file defined in the CSAR \"%s\" does not exist", csar));
+			}
+		} catch (Exception e) {
+			ExceptionCollector.appendException("ValidationError: " + e.getMessage());
+			errorCaught = true;
+		}
+
+		try {
+			if (zf != null) {
+				zf.close();
+			}
+		} catch (IOException e) {
+		}
 	}
 	
 	public void cleanup() {
@@ -190,15 +199,12 @@ public class CSAR {
 		}
 	}
 	
-	public Metadata getMetadata() {
-		return metaData;
-	}
-	
     private String _getMetadata(String key) {
     	if(!isValidated) {
     		validate();
     	}
-    	return metaData.getValue(key);
+    	Object value = _getMetaProperty("TOSCA.meta").get(key);
+    	return value != null ? value.toString() : null;
     }
 
     public String getAuthor() {
@@ -208,8 +214,16 @@ public class CSAR {
     public String getVersion() {
         return _getMetadata("CSAR-Version");
     }
-    
-    public String getMainTemplate() {
+
+	public LinkedHashMap<String, LinkedHashMap<String, Object>> getMetaProperties() {
+		return metaProperties;
+	}
+
+	private LinkedHashMap<String, Object> _getMetaProperty(String propertiesFile) {
+		return metaProperties.get(propertiesFile);
+	}
+
+	public String getMainTemplate() {
     	String entryDef = _getMetadata("Entry-Definitions");
     	ZipFile zf;
     	boolean ok = false;
@@ -259,8 +273,10 @@ public class CSAR {
         if(desc != null) {
             return desc;
         }
-        metaData.setValue("Description",(String)getMainTemplateYaml().get("description"));
-        return metaData.getValue("Description");
+
+		Map<String, Object> metaData = metaProperties.get("TOSCA.meta");
+		metaData.put("Description", getMainTemplateYaml().get("description"));
+		return _getMetadata("Description");
     }
 
     public String getTempDir() {

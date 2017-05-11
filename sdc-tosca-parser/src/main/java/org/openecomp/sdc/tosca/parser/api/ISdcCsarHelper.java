@@ -246,5 +246,7 @@ public interface ISdcCsarHelper {
 	 * @return - the service inputs list.
 	 */
 	public List<Input> getServiceInputs();
-	
+
+
+	public String getConformanceLevel();
 }

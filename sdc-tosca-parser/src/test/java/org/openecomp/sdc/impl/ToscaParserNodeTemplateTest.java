@@ -1,14 +1,14 @@
 package org.openecomp.sdc.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.toscaparser.api.Group;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
@@ -18,7 +18,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getServiceVfList
 	@Test
 	public void testNumberOfVfSunnyFlow() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
 		assertNotNull(serviceVfList);
 		assertEquals(2, serviceVfList.size());
 	}
@@ -26,7 +26,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	@Test
 	public void testSingleVFWithNotMetadata() throws SdcToscaParserException {
 		//If there is no metadata on VF level - There is no VF's because the type is taken from metadata values.
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.rainyCsarHelperSingleVf.getServiceVfList();
+		List<NodeTemplate> serviceVfList = rainyCsarHelperSingleVf.getServiceVfList();
 		assertNotNull(serviceVfList);
 		assertEquals(0, serviceVfList.size());
 	}
@@ -35,54 +35,54 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getNodeTemplatePropertyLeafValue
 	@Test
 	public void testNodeTemplateFlatProperty() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
-		assertEquals("2", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "availability_zone_max_count"));
-		assertEquals("3", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "max_instances"));
-		assertEquals("some code", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "nf_naming_code"));
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
+		assertEquals("2", fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "availability_zone_max_count"));
+		assertEquals("3", fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "max_instances"));
+		assertEquals("some code", fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "nf_naming_code"));
 	}
 
 	@Test
 	public void testNodeTemplateNestedProperty() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVlList = ToscaParserTestSuite.fdntCsarHelper.getServiceVlList();
+		List<NodeTemplate> serviceVlList = fdntCsarHelper.getServiceVlList();
 		NodeTemplate nodeTemplate = serviceVlList.get(0);
 		//System.out.println("node template " + nodeTemplate.toString());
-		assertEquals("24", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_assignments#ipv4_subnet_default_assignment#cidr_mask"));
-		assertEquals("7a6520b-9982354-ee82992c-105720", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_flows#vpn_binding"));
+		assertEquals("24", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_assignments#ipv4_subnet_default_assignment#cidr_mask"));
+		assertEquals("7a6520b-9982354-ee82992c-105720", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_flows#vpn_binding"));
 	}
 	
 	@Test
 	public void testNodeTemplateNestedPropertyFromInput() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
 		NodeTemplate nodeTemplate = serviceVfList.get(0);
 		//System.out.println("node template " + nodeTemplate.toString());
-		assertEquals("true", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#ecomp_generated_naming"));
-		assertEquals("FDNT_instance_VF_2", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#naming_policy"));
+		assertEquals("true", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#ecomp_generated_naming"));
+		assertEquals("FDNT_instance_VF_2", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "nf_naming#naming_policy"));
 	}
 
 	@Test
 	public void testNodeTemplateNestedPropertyNotExists() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
-		String nodeTemplatePropertyLeafValue = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "nf_role#nf_naming#kuku");
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
+		String nodeTemplatePropertyLeafValue = fdntCsarHelper.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "nf_role#nf_naming#kuku");
 		assertNull(nodeTemplatePropertyLeafValue);
 	}
 
 	@Test
 	public void testNodeTemplateFlatPropertyByNotFoundProperty() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceVfList();
-		String nodeTemplatePropertyLeafValue = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "XXXX");
+		List<NodeTemplate> serviceVfList = rainyCsarHelperMultiVfs.getServiceVfList();
+		String nodeTemplatePropertyLeafValue = rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), "XXXX");
 		assertNull(nodeTemplatePropertyLeafValue);
 	}
 
 	@Test
 	public void testNodeTemplateFlatPropertyByNullProperty() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceVfList();
-		String nodeTemplatePropertyLeafValue = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), null);
+		List<NodeTemplate> serviceVfList = rainyCsarHelperMultiVfs.getServiceVfList();
+		String nodeTemplatePropertyLeafValue = rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(serviceVfList.get(0), null);
 		assertNull(nodeTemplatePropertyLeafValue);
 	}
 
 	@Test
 	public void testNodeTemplateFlatPropertyByNullNodeTemplate() throws SdcToscaParserException {
-		String nodeTemplatePropertyLeafValue = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(null, "availability_zone_max_count");
+		String nodeTemplatePropertyLeafValue = rainyCsarHelperMultiVfs.getNodeTemplatePropertyLeafValue(null, "availability_zone_max_count");
 		assertNull(nodeTemplatePropertyLeafValue);
 	}
 	//endregion
@@ -90,14 +90,14 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getServiceVlList
 	@Test
 	public void testServiceVl() {
-		List<NodeTemplate> vlList = ToscaParserTestSuite.fdntCsarHelper.getServiceVlList();
+		List<NodeTemplate> vlList = fdntCsarHelper.getServiceVlList();
 		assertEquals(1, vlList.size());
 		assertEquals("exVL", vlList.get(0).getName());
 	}
 
 	@Test
 	public void testNumberOfVLRainyFlow() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVlList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceVlList();
+		List<NodeTemplate> serviceVlList = rainyCsarHelperMultiVfs.getServiceVlList();
 		assertNotNull(serviceVlList);
 		assertEquals(0, serviceVlList.size());
 	}
@@ -106,21 +106,21 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getServiceNodeTemplatesByType
 	@Test
 	public void testServiceNodeTemplatesByType() throws SdcToscaParserException {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceNodeTemplatesByType("org.openecomp.resource.vf.Fdnt");
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceNodeTemplatesByType("org.openecomp.resource.vf.Fdnt");
 		assertNotNull(serviceVfList);
 		assertEquals(1, serviceVfList.size());
 	}
 
 	@Test
 	public void testServiceNodeTemplatesByNull() {
-		List<NodeTemplate> nodeTemplates = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceNodeTemplatesByType(null);
+		List<NodeTemplate> nodeTemplates = rainyCsarHelperMultiVfs.getServiceNodeTemplatesByType(null);
 		assertNotNull(nodeTemplates);
 		assertEquals(0, nodeTemplates.size());
 	}
 
 	@Test
 	public void testServiceNodeTemplatesByNotFoundProperty() {
-		List<NodeTemplate> nodeTemplates = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceNodeTemplatesByType("XXX");
+		List<NodeTemplate> nodeTemplates = rainyCsarHelperMultiVfs.getServiceNodeTemplatesByType("XXX");
 		assertNotNull(nodeTemplates);
 		assertEquals(0, nodeTemplates.size());
 	}
@@ -129,14 +129,14 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getTypeOfNodeTemplate
 	@Test
 	public void testGetTypeOfNodeTemplate() {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
-		String typeOfNodeTemplate = ToscaParserTestSuite.fdntCsarHelper.getTypeOfNodeTemplate(serviceVfList.get(0));
+		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
+		String typeOfNodeTemplate = fdntCsarHelper.getTypeOfNodeTemplate(serviceVfList.get(0));
 		assertEquals("org.openecomp.resource.vf.Fdnt", typeOfNodeTemplate);
 	}
 
 	@Test
 	public void testGetTypeOfNullNodeTemplate() {
-		String typeOfNodeTemplate = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getTypeOfNodeTemplate(null);
+		String typeOfNodeTemplate = rainyCsarHelperMultiVfs.getTypeOfNodeTemplate(null);
 		assertNull(typeOfNodeTemplate);
 	}
 	//endregion
@@ -144,13 +144,13 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getAllottedResources
 	@Test
 	public void testGetAllottedResources() {
-		List<NodeTemplate> allottedResources = ToscaParserTestSuite.fdntCsarHelper.getAllottedResources();
+		List<NodeTemplate> allottedResources = fdntCsarHelper.getAllottedResources();
 		assertEquals(1, allottedResources.size());
 	}
 
 	@Test
 	public void testGetAllottedResourcesZero() {
-		List<NodeTemplate> allottedResources = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getAllottedResources();
+		List<NodeTemplate> allottedResources = rainyCsarHelperMultiVfs.getAllottedResources();
 		assertNotNull(allottedResources);
 		assertEquals(0, allottedResources.size());
 	}
@@ -159,20 +159,20 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getVfcListByVf
 	@Test
 	public void testGetVfcFromVf() {
-		List<NodeTemplate> vfcListByVf = ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID);
+		List<NodeTemplate> vfcListByVf = fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID);
 		assertEquals(2, vfcListByVf.size());
 	}
 
 	@Test
 	public void testVfcListByNull() {
-		List<NodeTemplate> vfcList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getVfcListByVf(null);
+		List<NodeTemplate> vfcList = rainyCsarHelperMultiVfs.getVfcListByVf(null);
 		assertNotNull(vfcList);
 		assertEquals(0, vfcList.size());
 	}
 
 	@Test
 	public void testVfcListByNotFoundProperty() {
-		List<NodeTemplate> vfcList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getVfcListByVf("XXX");
+		List<NodeTemplate> vfcList = rainyCsarHelperMultiVfs.getVfcListByVf("XXX");
 		assertNotNull(vfcList);
 		assertEquals(0, vfcList.size());
 	}
@@ -181,7 +181,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getCpListByVf
 	@Test
 	public void testGetCpFromVf() {
-		List<NodeTemplate> cpListByVf = ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID);
+		List<NodeTemplate> cpListByVf = fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID);
 		assertEquals(1, cpListByVf.size());
 		NodeTemplate nodeTemplate = cpListByVf.get(0);
 		assertEquals("DNT_PORT", nodeTemplate.getName());
@@ -189,14 +189,14 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 
 	@Test
 	public void testGetCpFromVfByNullId() {
-		List<NodeTemplate> cpListByVf = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getCpListByVf(null);
+		List<NodeTemplate> cpListByVf = rainyCsarHelperMultiVfs.getCpListByVf(null);
 		assertNotNull(cpListByVf);
 		assertEquals(0, cpListByVf.size());
 	}
 
 	@Test
 	public void testGetCpFromVfXxx() {
-		List<NodeTemplate> cpListByVf = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getCpListByVf("XXXXX");
+		List<NodeTemplate> cpListByVf = rainyCsarHelperMultiVfs.getCpListByVf("XXXXX");
 		assertNotNull(cpListByVf);
 		assertEquals(0, cpListByVf.size());
 	}
@@ -205,7 +205,7 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getNodeTemplatePairsByReqName
 	@Test
 	public void testGetNodeTemplatePairsByReqName() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), "binding");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID), fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID), "binding");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(1, nodeTemplatePairsByReqName.size());
 		Pair<NodeTemplate, NodeTemplate> pair = nodeTemplatePairsByReqName.get(0);
@@ -217,40 +217,40 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithNullVF() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				null, ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), "binding");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				null, fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID), "binding");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
 
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithEmptyVF() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				new ArrayList<>(), ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), "binding");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				new ArrayList<>(), fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID), "binding");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
 
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithNullCap() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), null, "binding");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID), null, "binding");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
 
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithEmptyCap() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), new ArrayList<>(), "binding");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID), new ArrayList<>(), "binding");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
 
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithNullReq() {
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), null);
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID), fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID), null);
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
@@ -258,8 +258,8 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	@Test
 	public void testGetNodeTemplatePairsByReqNameWithDummyReq() {
 
-		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePairsByReqName(
-				ToscaParserTestSuite.fdntCsarHelper.getCpListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), ToscaParserTestSuite.fdntCsarHelper.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID), "XXX");
+		List<Pair<NodeTemplate, NodeTemplate>> nodeTemplatePairsByReqName = fdntCsarHelper.getNodeTemplatePairsByReqName(
+				fdntCsarHelper.getCpListByVf(VF_CUSTOMIZATION_UUID), fdntCsarHelper.getVfcListByVf(VF_CUSTOMIZATION_UUID), "XXX");
 		assertNotNull(nodeTemplatePairsByReqName);
 		assertEquals(0, nodeTemplatePairsByReqName.size());
 	}
@@ -268,11 +268,11 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 	//region getMembersOfVfModule
 	@Test
 	public void testGetMembersOfVfModule() {
-		NodeTemplate vf = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList().get(0);
-		List<Group> vfModulesByVf = ToscaParserTestSuite.fdntCsarHelper.getVfModulesByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID);
+		NodeTemplate vf = fdntCsarHelper.getServiceVfList().get(0);
+		List<Group> vfModulesByVf = fdntCsarHelper.getVfModulesByVf(VF_CUSTOMIZATION_UUID);
 		assertEquals(2, vfModulesByVf.size());
 		for (Group group : vfModulesByVf) {
-			List<NodeTemplate> membersOfVfModule = ToscaParserTestSuite.fdntCsarHelper.getMembersOfVfModule(vf, group);
+			List<NodeTemplate> membersOfVfModule = fdntCsarHelper.getMembersOfVfModule(vf, group);
 			assertNotNull(membersOfVfModule);
 			if (group.getName().equals("fdnt1..Fdnt..base_stsi_dnt_frwl..module-0")) {
 				assertEquals(1, membersOfVfModule.size());
@@ -289,16 +289,16 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 
 	@Test
 	public void testMembersOfVfModuleByNullVf() {
-		List<Group> vfModulesByVf = ToscaParserTestSuite.fdntCsarHelper.getVfModulesByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID);
-		List<NodeTemplate> nodeTemplates = ToscaParserTestSuite.fdntCsarHelper.getMembersOfVfModule(null, vfModulesByVf.get(0));
+		List<Group> vfModulesByVf = fdntCsarHelper.getVfModulesByVf(VF_CUSTOMIZATION_UUID);
+		List<NodeTemplate> nodeTemplates = fdntCsarHelper.getMembersOfVfModule(null, vfModulesByVf.get(0));
 		assertNotNull(nodeTemplates);
 		assertEquals(0, nodeTemplates.size());
 	}
 
 	@Test
 	public void testMembersOfVfModuleByNullGroup() {
-		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceVfList();
-		List<NodeTemplate> nodeTemplates = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getMembersOfVfModule(serviceVfList.get(0), null);
+		List<NodeTemplate> serviceVfList = rainyCsarHelperMultiVfs.getServiceVfList();
+		List<NodeTemplate> nodeTemplates = rainyCsarHelperMultiVfs.getMembersOfVfModule(serviceVfList.get(0), null);
 		assertNotNull(nodeTemplates);
 		assertEquals(0, nodeTemplates.size());
 	}

@@ -407,6 +407,25 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 		return nodeTemplate.getTypeDefinition().getType();
 	}
 
+	@Override
+	public String getConformanceLevel() {
+		LinkedHashMap<String, Object> csarMeta = toscaTemplate.getMetaProperties("csar.meta");
+		if (csarMeta == null){
+			log.warn("No csar.meta file is found in CSAR - this file should hold the conformance level of the CSAR. This might be OK for older CSARs.");
+			return null;
+		}
+
+		Object conformanceLevel = csarMeta.get("SDC-TOSCA-Definitions-Version");
+		if (conformanceLevel != null){
+			String confLevelStr = conformanceLevel.toString();
+			log.debug("CSAR conformance level is {}", confLevelStr);
+			return confLevelStr;
+		} else {
+			log.error("Invalid csar.meta file - no entry found for SDC-TOSCA-Definitions-Version key. This entry should hold the conformance level.");
+			return null;
+		}
+	}
+
 	/************************************* helper functions ***********************************/
 	private List<NodeTemplate> getNodeTemplateBySdcType(NodeTemplate nodeTemplate, String sdcType){
 		if (nodeTemplate == null)  {

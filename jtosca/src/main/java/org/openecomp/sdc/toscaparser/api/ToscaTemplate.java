@@ -82,8 +82,9 @@ public class ToscaTemplate extends Object {
     private ArrayList<TopologyTemplate> nestedToscaTemplatesWithTopology;
     private ToscaGraph graph;
     private String csarTempDir;
-    private int nestingLoopCounter; 
-  
+    private int nestingLoopCounter;
+	private LinkedHashMap<String, LinkedHashMap<String, Object>> metaProperties;
+
 	@SuppressWarnings("unchecked")
 	public ToscaTemplate(String _path,
 			 			 LinkedHashMap<String,Object> _parsedParams,
@@ -480,6 +481,7 @@ public class ToscaTemplate extends Object {
 			if (csar.validate()) {
 				try {
 					csar.decompress();
+					metaProperties = csar.getMetaProperties();
 				} 
 				catch (IOException e) {
 					log.error("ToscaTemplate - _getPath - IOException trying to decompress {}", _path);
@@ -553,6 +555,10 @@ public class ToscaTemplate extends Object {
 	
 	public ArrayList<NodeTemplate> getNodeTemplates() {
 		return nodeTemplates;
+	}
+
+	public LinkedHashMap<String, Object> getMetaProperties(String propertiesFile) {
+		return metaProperties.get(propertiesFile);
 	}
 	
 	private boolean _isSubMappedNode(NodeTemplate nt,LinkedHashMap<String,Object> toscaTpl) {
