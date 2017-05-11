@@ -1,6 +1,7 @@
 package org.openecomp.sdc.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,12 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
-import org.testng.ITestContext;
+import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.common.JToscaException;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 
 public abstract class BasicTest {
 
@@ -22,35 +24,18 @@ public abstract class BasicTest {
     static ISdcCsarHelper rainyCsarHelperSingleVf;
     static ISdcCsarHelper rainyCsarHelperMultiVfs;
     static ISdcCsarHelper fdntCsarHelper;
+    static ISdcCsarHelper complexCps;
     static Map<String, HashMap<String, List<String>>> fdntCsarHelper_Data;
-    @BeforeSuite
-    public static void init(ITestContext context) throws Exception {
+    
+    @BeforeClass
+    public static void init() throws SdcToscaParserException, JToscaException, IOException {
 
         factory = SdcToscaParserFactory.getInstance();
-        long startTime = System.currentTimeMillis();
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("Time to init factory " + estimatedTime);
-
-        String fileStr1 = BasicTest.class.getClassLoader().getResource("csars/service-ServiceFdnt-with-allotted.csar").getFile();
-        File file1 = new File(fileStr1);
-        startTime = System.currentTimeMillis();
-
-        fdntCsarHelper = factory.getSdcCsarHelper(file1.getAbsolutePath());
-
-        estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("init CSAR Execution time: " + estimatedTime);
-
-        String fileStr2 = BasicTest.class.getClassLoader().getResource("csars/service-ServiceFdnt-csar-rainy.csar").getFile();
-        File file2 = new File(fileStr2);
-        rainyCsarHelperMultiVfs = factory.getSdcCsarHelper(file2.getAbsolutePath());
-
-        String fileStr3 = BasicTest.class.getClassLoader().getResource("csars/service-ServiceFdnt-csar.csar").getFile();
-        File file3 = new File(fileStr3);
-        rainyCsarHelperSingleVf = factory.getSdcCsarHelper(file3.getAbsolutePath());
-        
-        /* Objects for QA Validation Tests */
-        
-       fdntCsarHelper_Data = new HashMap<String, HashMap<String, List<String>>>(){
+        fdntCsarHelper = getCsarHelper("csars/service-ServiceFdnt-with-allotted.csar");
+        rainyCsarHelperMultiVfs = getCsarHelper("csars/service-ServiceFdnt-csar-rainy.csar");
+        rainyCsarHelperSingleVf = getCsarHelper("csars/service-ServiceFdnt-csar.csar");
+        complexCps = getCsarHelper("csars/1service-ServiceWithPorts.csar");
+        fdntCsarHelper_Data = new HashMap<String, HashMap<String, List<String>>>(){
     		{
     			HashMap<String, List<String>> FDNT ;
     			
@@ -106,18 +91,27 @@ public abstract class BasicTest {
       					"dnt_fw_rhrg.binding_DNT_FW_NIMBUS_HSL_RVMI",
       					"dnt_fw_rsg_si_1.feature"));
     			
+			
     			put("FDNT", FDNT);			
     		}
     	};
     };
 
-    @AfterSuite
-    public static void after(){
-        long startTime = System.currentTimeMillis();
-        long estimatedTime = System.currentTimeMillis() - startTime;
-        System.out.println("close Execution time: "+estimatedTime);
-    };
-
+	private static ISdcCsarHelper getCsarHelper(String path) throws JToscaException, IOException, SdcToscaParserException {
+		System.out.println("Parsing CSAR "+path+"...");
+		String fileStr1 = BasicTest.class.getClassLoader().getResource(path).getFile();
+        File file1 = new File(fileStr1);
+        ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(file1.getAbsolutePath());
+        List<String> exceptionReport = ExceptionCollector.getCriticalsReport();
+		if (!exceptionReport.isEmpty()){
+        	System.out.println("TOSCA Errors found in CSAR - failing the tests...");
+        	System.out.println(exceptionReport.toString());
+        	ExceptionCollector.clear();
+        	//throw new SdcToscaParserException("CSAR didn't pass validation");
+        }
+		return sdcCsarHelper;
+	}
+    
     @BeforeMethod
     public void setupTest(Method method) {
         System.out.println("#### Starting Test " + method.getName() + " ###########");

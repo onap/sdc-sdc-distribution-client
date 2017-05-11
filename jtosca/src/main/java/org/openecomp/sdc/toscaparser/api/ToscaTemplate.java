@@ -1,5 +1,15 @@
 package org.openecomp.sdc.toscaparser.api;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.common.JToscaException;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
@@ -11,11 +21,6 @@ import org.openecomp.sdc.toscaparser.api.prereq.CSAR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class ToscaTemplate extends Object {
 
@@ -501,24 +506,42 @@ public class ToscaTemplate extends Object {
 	}
 
 	private void verifyTemplate() throws JToscaException {
-		ArrayList<String> exceptionStrings = ExceptionCollector.getExceptionReport();
-		if (exceptionStrings != null && exceptionStrings.size() > 0) {
-			int nexc = ExceptionCollector.errorsCaught();
-			log.error("ToscaTemplate - verifyTemplate - {} Parsing Exception{} occurred...", nexc, (nexc > 1 ? "s" : ""));
-			for (String s : exceptionStrings) {
+		//Warnings
+		List<String> warningsStrings = ExceptionCollector.getWarningsReport();
+		if (warningsStrings != null && warningsStrings.size() > 0) {
+			int nexcw = ExceptionCollector.warningsCaught();
+			log.warn("####################################################################################################");
+			log.warn("ToscaTemplate - verifyTemplate - {} Parsing Warning{} occurred...", nexcw, (nexcw > 1 ? "s" : ""));
+			for (String s : warningsStrings) {
 				if (s != null) {
 					log.debug("ToscaTemplate - verifyTemplate - {}", s);
 				}
 			}
-			if(bAbortOnParsingErrors) {
-				throw new JToscaException("Aborting because of parsing errors");
+			log.warn("####################################################################################################");
+
+			
+			List<String> exceptionStrings = ExceptionCollector.getCriticalsReport();
+			if (exceptionStrings != null && exceptionStrings.size() > 0) {
+				int nexc = ExceptionCollector.errorsCaught();
+				log.error("####################################################################################################");
+				log.error("ToscaTemplate - verifyTemplate - {} Parsing Critical{} occurred...", nexc, (nexc > 1 ? "s" : ""));
+				for (String s : exceptionStrings) {
+					if (s != null) {
+						log.debug("ToscaTemplate - verifyTemplate - {}", s);
+					}
+				}
+				log.error("####################################################################################################");
+				if(bAbortOnParsingErrors) {
+					throw new JToscaException("Aborting because of parsing errors");
+				}
+			} 
+			else {
+				if (inputPath != null) {
+					log.debug("ToscaTemplate - verifyTemplate - The input {} passed validation", inputPath);
+				}
 			}
+
 		} 
-		else {
-			if (inputPath != null) {
-				log.debug("ToscaTemplate - verifyTemplate - The input {} passed validation", inputPath);
-			}
-		}
 	}
 
 	public String getPath() {

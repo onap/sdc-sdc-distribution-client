@@ -5,6 +5,7 @@ import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.toscaparser.api.Group;
 import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.*;
@@ -95,5 +96,14 @@ public class ToscaParserGroupTest extends BasicTest{
         assertNull(groupProperty);
     }
     //endregion
+
+    //region getGroupPropertyAsObject
+    @Test
+    public void testGetGroupPropertyAsObject() {
+        List<Group> vfModulesByVf = fdntCsarHelper.getVfModulesByVf(VF_CUSTOMIZATION_UUID);
+        Object volumeGroup = fdntCsarHelper.getGroupPropertyAsObject(vfModulesByVf.get(0), "volume_group");
+        assertEquals(false, volumeGroup);
+    }
+    //getGroupPropertyAsObject
 
 }
