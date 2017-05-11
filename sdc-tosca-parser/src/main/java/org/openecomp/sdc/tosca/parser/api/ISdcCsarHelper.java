@@ -20,6 +20,7 @@ package org.openecomp.sdc.tosca.parser.api;
 
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openecomp.sdc.toscaparser.api.Group;
@@ -72,7 +73,33 @@ public interface ISdcCsarHelper {
 	 * @return the leaf value as String, or null if there's no such property, or it's not a leaf.
 	 */
 	public String getNodeTemplatePropertyLeafValue(NodeTemplate nodeTemplate, String pathToPropertyLeafValue);
-	
+
+	/**
+	 * Get any property leaf value for node template by full path separated by #.<br>
+	 * For example, for node template with this property:<br><br>
+	 *   network_assignments:<br>
+	 &nbsp;&nbsp;ecomp_generated_network_assignment: true<br>
+	 &nbsp;&nbsp;is_shared_network: false<br>
+	 &nbsp;&nbsp;is_external_network: false<br>
+	 &nbsp;&nbsp;ipv4_subnet_default_assignments:<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;use_ipv4: true<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;ip_network_address_plan: 1.2.3.4<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;dhcp_enabled: true<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;ip_version: 4<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;cidr_mask: 24<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;min_subnets_count: 1<br>
+	 &nbsp;&nbsp;ipv6_subnet_default_assignments:<br>
+	 &nbsp;&nbsp;&nbsp;&nbsp;use_ipv6: false<br><br>
+
+	 * calling<br>
+	 * getNodeTemplatePropertyLeafValue(nodeTemplate, "network_assignments#ipv6_subnet_default_assignments#use_ipv6")<br>
+	 * will return "false".
+	 * @param nodeTemplate - nodeTemplate where the property should be looked up.
+	 * @param pathToPropertyLeafValue - the full path of the required property.
+	 * @return the leaf value as Object, or null if there's no such property, or it's not a leaf.
+	 */
+	public Object getNodeTemplatePropertyAsObject(NodeTemplate nodeTemplate, String pathToPropertyLeafValue);
+
 	/**
 	 * Get any property leaf value for a group definition by full path separated by #.
 	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for a group.
@@ -82,6 +109,14 @@ public interface ISdcCsarHelper {
 	 */
 	public String getGroupPropertyLeafValue(Group group, String propertyName);
 
+	/**
+	 * Get any property leaf value for a group definition by full path separated by #.
+	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for a group.
+	 * @param group - group where the property should be looked up.
+	 * @param propertyName - the name of the required property.
+	 * @return the leaf value as Object, or null if there's no such property, or it's not a leaf.
+	 */
+	public Object getGroupPropertyAsObject(Group group, String propertyName);
 
 	/**
 	 * Get all VL node templates of the CSAR service.
@@ -133,7 +168,16 @@ public interface ISdcCsarHelper {
 	 * @return input leaf value for the service.
 	 */
 	public String getServiceInputLeafValueOfDefault(String inputLeafValuePath);
-	
+
+	/**
+	 * Get input leaf value for the CSAR service, by full path separated by #.<br>
+	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for an input full path.
+	 * The expected format is "input_name#default[optionally #rest_of_path]"
+	 * @param inputLeafValuePath by full path separated by #.
+	 * @return input leaf value for the service as Service.
+	 */
+	public Object getServiceInputLeafValueOfDefaultAsObject(String inputLeafValuePath);
+
 	/**
 	 * Get the type name of the CSAR service's substitution mappings element.<br> 
 	 * 
@@ -246,5 +290,16 @@ public interface ISdcCsarHelper {
 	 * @return - the service inputs list.
 	 */
 	public List<Input> getServiceInputs();
+
 	
+
+	public String getConformanceLevel();
+	
+	
+	/**
+	 * Get the map of CP-related props from
+	 * @param vfc - VFC to look for CP-related props.
+	 * @return map of CP node template name to a map of CP-related properties key-value for this CP.
+	 */
+	public Map<String, Map<String, Object>> getCpPropertiesFromVfc(NodeTemplate vfc);
 }

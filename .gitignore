@@ -16,3 +16,5 @@ target/
 *.class
 *.orig
 .idea/*
+/bin/
+sdc-tosca-parser/test-output/**/*
