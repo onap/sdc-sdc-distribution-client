@@ -16,3 +16,4 @@ target/
 *.class
 *.orig
 .idea/*
+/bin/

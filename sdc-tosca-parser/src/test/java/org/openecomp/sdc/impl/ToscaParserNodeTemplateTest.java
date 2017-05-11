@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
@@ -301,6 +302,32 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 		List<NodeTemplate> nodeTemplates = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getMembersOfVfModule(serviceVfList.get(0), null);
 		assertNotNull(nodeTemplates);
 		assertEquals(0, nodeTemplates.size());
+	}
+	//endregion
+
+	//region getCpPropertiesFromVfc
+	@Test
+	public void testGetCpPropertiesFromVfc() {
+		List<NodeTemplate> vfcs = ToscaParserTestSuite.complexCps.getVfcListByVf(ToscaParserTestSuite.VF_CUSTOMIZATION_UUID);
+		Map<String, Map<String, Object>> cps = ToscaParserTestSuite.complexCps.getCpPropertiesFromVfc(vfcs.get(0));
+
+		assertEquals("1", cps.get("port_fe1_sigtran").get("ip_requirements#ip_count_required#count"));
+		assertEquals("true", cps.get("port_fe1_sigtran").get("ip_requirements#dhcp_enabled"));
+		assertEquals("4", cps.get("port_fe1_sigtran").get("ip_requirements#ip_version"));
+
+		assertEquals("2", cps.get("port_fe_cluster").get("ip_requirements#ip_count_required#count"));
+		assertEquals("true", cps.get("port_fe_cluster").get("ip_requirements#dhcp_enabled"));
+		assertEquals("4", cps.get("port_fe_cluster").get("ip_requirements#ip_version"));
+	}
+	//endregion
+
+	//region getNodeTemplatePropertyAsObject
+	@Test
+	public void testGetNodeTemplatePropertyAsObject() {
+		List<NodeTemplate> serviceVfList = ToscaParserTestSuite.fdntCsarHelper.getServiceVfList();
+		assertEquals("2", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyAsObject(serviceVfList.get(0), "availability_zone_max_count"));
+		assertEquals(3, ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyAsObject(serviceVfList.get(0), "max_instances"));
+		assertEquals("some code", ToscaParserTestSuite.fdntCsarHelper.getNodeTemplatePropertyAsObject(serviceVfList.get(0), "nf_naming_code"));
 	}
 	//endregion
 

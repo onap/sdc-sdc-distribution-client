@@ -351,7 +351,7 @@ public abstract class EntityTemplate {
         else {
             // Required properties in schema, but not in template
             if(!requiredProps.isEmpty()) {
-                ExceptionCollector.appendException(String.format(
+                ExceptionCollector.appendWarning(String.format(
                         "MissingRequiredFieldError2: properties of template \"%s\" are missing field(s): %s",
                         name,requiredProps.toString()));
             }

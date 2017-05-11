@@ -35,11 +35,12 @@ public class Schema {
 	public static final String VERSION = "version";
 	public static final String PORTDEF = "PortDef";
 	public static final String PORTSPEC = "PortSpec"; //??? PortSpec.SHORTNAME
+	public static final String JSON = "json";
 
 	public static final String PROPERTY_TYPES[] = {
 	        INTEGER, STRING, BOOLEAN, FLOAT, RANGE,NUMBER, TIMESTAMP, LIST, MAP,
 	        SCALAR_UNIT_SIZE, SCALAR_UNIT_FREQUENCY, SCALAR_UNIT_TIME,
-	        VERSION, PORTDEF, PORTSPEC};
+	        VERSION, PORTDEF, PORTSPEC, JSON};
 	
 	@SuppressWarnings("unused")
 	private static final String SCALAR_UNIT_SIZE_DEFAULT = "B";

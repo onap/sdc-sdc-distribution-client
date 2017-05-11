@@ -47,4 +47,11 @@ public class ToscaParserServiceInputTest extends BasicTest {
     }
     //endregion
 
+    //region getServiceInputLeafValueOfDefaultAsObject
+    @Test
+    public void testGetServiceInputLeafValueOfDefaultAsObject() {
+        Object serviceInputLeafValue = ToscaParserTestSuite.fdntCsarHelper.getServiceInputLeafValueOfDefault("service_naming#default");
+        assertEquals("test service naming", serviceInputLeafValue);
+    }
+    //endregion
 }
