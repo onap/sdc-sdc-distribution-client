@@ -1,7 +1,9 @@
 package org.openecomp.sdc.toscaparser.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.*;
@@ -49,8 +51,17 @@ public class DataEntity {
                 ExceptionCollector.appendException(String.format(
                     "TypeMismatchError: \"%s\" doesn't match \"%s\"",
                     value.toString(),dataType.getType()));
-            }
-            LinkedHashMap<String,Object> valueDict = (LinkedHashMap<String,Object>)value;
+
+				if (value instanceof List)
+					value = ((List) value).get(0);
+
+				if (!(value instanceof LinkedHashMap))
+					return value;
+			}
+
+
+
+			LinkedHashMap<String,Object> valueDict = (LinkedHashMap<String,Object>)value;
             ArrayList<String> allowedProps = new ArrayList<>();
             ArrayList<String> requiredProps = new ArrayList<>();
             LinkedHashMap<String,Object> defaultProps = new LinkedHashMap<>();

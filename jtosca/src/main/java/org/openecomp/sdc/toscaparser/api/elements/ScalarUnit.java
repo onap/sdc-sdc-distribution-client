@@ -86,9 +86,9 @@ public abstract class ScalarUnit {
 			ValidateUtils.strToNum(matcher.group(1));
 			String scalarUnit = _checkUnitInScalarStandardUnits(matcher.group(2));
 			value = matcher.group(1) + " " + scalarUnit;
-			Object on1 = ValidateUtils.strToNum(matcher.group(1));
-			Object on2 = SCALAR_UNIT_DICT.get(matcher.group(2)); 
-			Object on3 = SCALAR_UNIT_DICT.get(unit);
+			Object on1 = ValidateUtils.strToNum(matcher.group(1)) != null ? ValidateUtils.strToNum(matcher.group(1)) : 0;
+			Object on2 = SCALAR_UNIT_DICT.get(matcher.group(2)) != null ? SCALAR_UNIT_DICT.get(matcher.group(2)) : 0; 
+			Object on3 = SCALAR_UNIT_DICT.get(unit) != null ? SCALAR_UNIT_DICT.get(unit) : 0;
 			
 			Double n1 = new Double(on1.toString());
 			Double n2 = new Double(on2.toString());

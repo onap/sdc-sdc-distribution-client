@@ -22,13 +22,16 @@ public class TypeValidation {
 	private static final String INTERFACE_TYPES = "interface_types";
 	private static final String POLICY_TYPES = "policy_types";
 	private static final String TOPOLOGY_TEMPLATE = "topology_template";
+	//Pavel
+	private static final String METADATA = "metadata";
+
     private String ALLOWED_TYPE_SECTIONS[] = { 
     		DEFINITION_VERSION, DESCRIPTION, IMPORTS,
             DSL_DEFINITIONS, NODE_TYPES, REPOSITORIES,
             DATA_TYPES, ARTIFACT_TYPES, GROUP_TYPES,
             RELATIONSHIP_TYPES, CAPABILITY_TYPES,
             INTERFACE_TYPES, POLICY_TYPES,
-            TOPOLOGY_TEMPLATE 
+            TOPOLOGY_TEMPLATE, METADATA
     };
 
     private static ArrayList<String> VALID_TEMPLATE_VERSIONS = _getVTV();

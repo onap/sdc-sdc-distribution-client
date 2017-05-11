@@ -1,18 +1,18 @@
 package org.openecomp.sdc.impl;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 public class ToscaParserMetadataTest extends BasicTest {
 
     //region getServiceMetadata
     @Test
     public void testGetServiceMetadata() {
-        Metadata serviceMetadata = ToscaParserTestSuite.fdntCsarHelper.getServiceMetadata();
+        Metadata serviceMetadata = fdntCsarHelper.getServiceMetadata();
         assertNotNull(serviceMetadata);
         assertEquals("78c72999-1003-4a35-8534-bbd7d96fcae3", serviceMetadata.getValue("invariantUUID"));
         assertEquals("Service FDNT", serviceMetadata.getValue("name"));
@@ -21,7 +21,7 @@ public class ToscaParserMetadataTest extends BasicTest {
 
     @Test
     public void testServiceMetadata() {
-        Metadata metadata = ToscaParserTestSuite.rainyCsarHelperSingleVf.getServiceMetadata();
+        Metadata metadata = rainyCsarHelperSingleVf.getServiceMetadata();
         assertNull(metadata);
     }
     //endregion
@@ -29,29 +29,38 @@ public class ToscaParserMetadataTest extends BasicTest {
     //region getMetadataPropertyValue
     @Test
     public void testGetMetadataProperty(){
-        Metadata serviceMetadata = ToscaParserTestSuite.fdntCsarHelper.getServiceMetadata();
-        String metadataPropertyValue = ToscaParserTestSuite.fdntCsarHelper.getMetadataPropertyValue(serviceMetadata, "invariantUUID");
+        Metadata serviceMetadata = fdntCsarHelper.getServiceMetadata();
+        String metadataPropertyValue = fdntCsarHelper.getMetadataPropertyValue(serviceMetadata, "invariantUUID");
         assertEquals("78c72999-1003-4a35-8534-bbd7d96fcae3", metadataPropertyValue);
     }
 
     @Test
     public void testGetNullMetadataPropertyValue() {
-        String value = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getMetadataPropertyValue(null, "XXX");
+        String value = rainyCsarHelperMultiVfs.getMetadataPropertyValue(null, "XXX");
         assertNull(value);
     }
 
     @Test
     public void testGetMetadataByNullPropertyValue() {
-        Metadata metadata = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceMetadata();
-        String value = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getMetadataPropertyValue(metadata, null);
+        Metadata metadata = rainyCsarHelperMultiVfs.getServiceMetadata();
+        String value = rainyCsarHelperMultiVfs.getMetadataPropertyValue(metadata, null);
         assertNull(value);
     }
 
     @Test
     public void testGetMetadataByEmptyPropertyValue() {
-        Metadata metadata =  ToscaParserTestSuite.rainyCsarHelperMultiVfs.getServiceMetadata();
-        String value = ToscaParserTestSuite.rainyCsarHelperMultiVfs.getMetadataPropertyValue(metadata, "");
+        Metadata metadata =  rainyCsarHelperMultiVfs.getServiceMetadata();
+        String value = rainyCsarHelperMultiVfs.getMetadataPropertyValue(metadata, "");
         assertNull(value);
+    }
+    //endregion
+
+    //region getConformanceLevel
+    @Test
+    public void testSunnyGetConformanceLevel() {
+        String conformanceLevel = fdntCsarHelper.getConformanceLevel();
+        assertNotNull(conformanceLevel);
+        assertEquals("3.0", conformanceLevel);
     }
     //endregion
 
