@@ -9,8 +9,6 @@ import org.openecomp.sdc.tosca.parser.utils.GeneralUtility;
 import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
 import org.openecomp.sdc.toscaparser.api.common.JToscaException;
 
-import java.io.IOException;
-
 public class SdcToscaParserFactory {
 
     private static volatile SdcToscaParserFactory instance;
@@ -22,9 +20,9 @@ public class SdcToscaParserFactory {
 
     /**
      * Get an SdcToscaParserFactory instance.
-     * After parsing work is done, it must be closed using the close() method.
+     * @return SdcToscaParserFactory instance.
      */
-    public static SdcToscaParserFactory getInstance() throws IOException {
+    public static SdcToscaParserFactory getInstance() {
         if (instance == null) {
             synchronized (SdcToscaParserFactory.class) {
                 if (instance == null) {
@@ -42,18 +40,13 @@ public class SdcToscaParserFactory {
      * @param csarPath - the absolute path to CSAR file.
      * @return ISdcCsarHelper object.
      * @throws SdcToscaParserException - in case the path or CSAR are invalid.
-     * @throws JToscaException
+     * @throws JToscaException - in case the path or CSAR are invalid.
      */
-    public ISdcCsarHelper getSdcCsarHelper(String csarPath) throws JToscaException, IOException, SdcToscaParserException {
-        //TODO add logic to check if legal file and csar
+    public ISdcCsarHelper getSdcCsarHelper(String csarPath) throws JToscaException, SdcToscaParserException {
         synchronized (SdcToscaParserFactory.class) {
-
-
             ToscaTemplate tosca = new ToscaTemplate(csarPath, null, true, null);
             SdcCsarHelperImpl sdcCsarHelperImpl = new SdcCsarHelperImpl(tosca);
-            if (sdcCsarHelperImpl != null) {
-                validateCsarVersion(sdcCsarHelperImpl.getConformanceLevel());
-            }
+            validateCsarVersion(sdcCsarHelperImpl.getConformanceLevel());
             return sdcCsarHelperImpl;
         }
     }

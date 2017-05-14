@@ -259,7 +259,7 @@ public interface ISdcCsarHelper {
 	 * @param listOfReqNodeTemplates - list of node templates in which the "reqName" requirement should be looked.
 	 * @param listOfCapNodeTemplates - list of node templates in which the capability matching the "reqName" requirement should be looked.
 	 * @param reqName - the name of a requirement definition to match by.
-	 * @return
+	 * @return pairs of node templates according to described above.
 	 */
 	public List<Pair<NodeTemplate,NodeTemplate>> getNodeTemplatePairsByReqName(List<NodeTemplate> listOfReqNodeTemplates, List<NodeTemplate> listOfCapNodeTemplates, String reqName);
 	
@@ -310,7 +310,7 @@ public interface ISdcCsarHelper {
 	 *  port_fe_interce={ip_requirements#ip_count_required#count=1, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4},<br> 
 	 *  port_fe_oam={ip_requirements#ip_count_required#count=2, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4, subnetpoolid="subnet_2", network_role_tag="Mobility_OAM_protected"}}<br><br>
 	 * @param vfc - VFC node template to look for CP-related props.
-	 * @return map <CP node template name>  to a map of <full path to a property on this CP> <value of this property on this CP>.
+	 * @return map <b>CP node template name</b>  to a map of <b>full path to a property on this CP</b> - <b> value of this property on this CP</b>.
 	 */
 	public Map<String, Map<String, Object>> getCpPropertiesFromVfc(NodeTemplate vfc);
 }
