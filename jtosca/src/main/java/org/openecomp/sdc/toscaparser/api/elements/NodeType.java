@@ -106,7 +106,10 @@ public class NodeType extends StatefulEntityType {
                             // the capability type
             				String captype = (String)req.get("capability");
             				String value = _getNodeTypeByCap(captype);
-            				relation = _getRelation(key,value);
+            				String getRelation = _getRelation(key,value);
+            				if (getRelation != null)  {
+            					relation = getRelation;
+            				}
             				keyword = key;
             				nodeType = value;
             			}

@@ -96,7 +96,7 @@ public interface ISdcCsarHelper {
 	 * will return "false".
 	 * @param nodeTemplate - nodeTemplate where the property should be looked up.
 	 * @param pathToPropertyLeafValue - the full path of the required property.
-	 * @return the leaf value as Object, or null if there's no such property, or it's not a leaf.
+	 * @return the leaf value as Object, or null if there's no such property. It's up to the caller to cast it to a proper type.
 	 */
 	public Object getNodeTemplatePropertyAsObject(NodeTemplate nodeTemplate, String pathToPropertyLeafValue);
 
@@ -110,11 +110,11 @@ public interface ISdcCsarHelper {
 	public String getGroupPropertyLeafValue(Group group, String propertyName);
 
 	/**
-	 * Get any property leaf value for a group definition by full path separated by #.
+	 * Get any property value for a group definition by full path separated by #.
 	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for a group.
 	 * @param group - group where the property should be looked up.
 	 * @param propertyName - the name of the required property.
-	 * @return the leaf value as Object, or null if there's no such property, or it's not a leaf.
+	 * @return the leaf value as Object, or null if there's no such property. It's up to the caller to cast it to a proper type.
 	 */
 	public Object getGroupPropertyAsObject(Group group, String propertyName);
 
@@ -174,7 +174,7 @@ public interface ISdcCsarHelper {
 	 * Same logic as in {@link #getNodeTemplatePropertyLeafValue(NodeTemplate, String) getNodeTemplatePropertyLeafValue}, only for an input full path.
 	 * The expected format is "input_name#default[optionally #rest_of_path]"
 	 * @param inputLeafValuePath by full path separated by #.
-	 * @return input leaf value for the service as Service.
+	 * @return input value for the service as Object. It's up to the caller to cast it to a proper type.
 	 */
 	public Object getServiceInputLeafValueOfDefaultAsObject(String inputLeafValuePath);
 
@@ -292,14 +292,25 @@ public interface ISdcCsarHelper {
 	public List<Input> getServiceInputs();
 
 	
-
+	/**
+	 * Get the conformance level of this CSAR. <br>
+	 * The conformance level value of the CSAR is located in csar.meta file at the top level of the CSAR file.<br>
+	 * For 1707 CSARs, the conformance level is 3.0.
+	 * @return the conformance level of the CSAR. 
+	 */
 	public String getConformanceLevel();
 	
 	
 	/**
-	 * Get the map of CP-related props from
-	 * @param vfc - VFC to look for CP-related props.
-	 * @return map of CP node template name to a map of CP-related properties key-value for this CP.
+	 * Get the map of CP-related props from a VFC node template. <br>
+	 * Let's say there are 5 CPs related to this VFC. Then the output will look like this: <br><br>
+	 * {port_fe1_sigtran={ip_requirements#ip_count_required#count=1, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4, subnetpoolid="subnet_1", network_role_tag="SIGNET_vrf_B1_direct"},<br> 
+	 *  port_fe_cluster={ip_requirements#ip_count_required#count=2, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4},<br>
+	 *  port_fe_slan={ip_requirements#ip_count_required#count=1, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4},<br> 
+	 *  port_fe_interce={ip_requirements#ip_count_required#count=1, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4},<br> 
+	 *  port_fe_oam={ip_requirements#ip_count_required#count=2, ip_requirements#dhcp_enabled=true, ip_requirements#ip_version=4, subnetpoolid="subnet_2", network_role_tag="Mobility_OAM_protected"}}<br><br>
+	 * @param vfc - VFC node template to look for CP-related props.
+	 * @return map <CP node template name>  to a map of <full path to a property on this CP> <value of this property on this CP>.
 	 */
 	public Map<String, Map<String, Object>> getCpPropertiesFromVfc(NodeTemplate vfc);
 }

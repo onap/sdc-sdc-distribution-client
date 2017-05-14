@@ -40,9 +40,9 @@ public class CsarToscaTester {
 		        List<NodeTemplate> vflist = csarHelper.getServiceVfList();
 		        List<Input> inputs = csarHelper.getServiceInputs();
 		        List<String> exceptionReport = ExceptionCollector.getCriticalsReport();
-		        System.out.println("CRITICALS during CSAR parsing are: " + (exceptionReport != null ? exceptionReport.toString() : "none"));
+		        //System.out.println("CRITICALS during CSAR parsing are: " + (exceptionReport != null ? exceptionReport.toString() : "none"));
 		        List<String> warningsReport = ExceptionCollector.getWarningsReport();
-		        System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
+		        //System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
 		        
 				
 		        if (!exceptionReport.isEmpty())  {
