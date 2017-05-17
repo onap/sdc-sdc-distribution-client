@@ -27,7 +27,8 @@ public class CsarToscaTester {
 		Date now = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("d-MM-y-HH_mm_ss");
 		String time = dateFormat.format(now);
-		File dir = new File(args[1].toString() + "/csar-reports-" + time);
+		String csarsDir = args[1].toString() + "/csar-reports-" + time;
+		File dir = new File(csarsDir);
 		dir.mkdir();
 		
 		
@@ -35,7 +36,10 @@ public class CsarToscaTester {
 			if (file.isFile()) {  
 		        System.out.println("File " + file.getAbsolutePath());
 		        ExceptionCollector.clear();
-
+		        String name = file.getName();
+		        String currentCsarDir = csarsDir+"/"+name+"-"+time;
+				dir = new File(currentCsarDir);
+				dir.mkdir();
 		        ISdcCsarHelper csarHelper = factory.getSdcCsarHelper(file.getAbsolutePath());
 		        List<NodeTemplate> vflist = csarHelper.getServiceVfList();
 		        List<Input> inputs = csarHelper.getServiceInputs();
@@ -44,24 +48,33 @@ public class CsarToscaTester {
 		        List<String> warningsReport = ExceptionCollector.getWarningsReport();
 		        //System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
 		        
+		        
 				
 		        if (!exceptionReport.isEmpty())  {
 		        	
 					try {
-						fw = new FileWriter(new File(dir + "/" + exceptionReport.size() / 2 + "-critical-" + file.getName() + ".txt"));
+						fw = new FileWriter(new File(currentCsarDir + "/" + exceptionReport.size() / 2 + "-critical-" + name +"-"+time + ".txt"));
 						for (String exception : exceptionReport) {
 							fw.write(exception);
 							fw.write("\r\n");
 						}
 						fw.close();
 						
-						fw = new FileWriter(new File(dir + "/" + warningsReport.size() / 2 +  "-warning-" + file.getName() + ".txt"));
+						fw = new FileWriter(new File(currentCsarDir + "/" + warningsReport.size() / 2 +  "-warning-" + name +"-"+time + ".txt"));
 						for (String warning : warningsReport) {
 							fw.write(warning);
 							fw.write("\r\n");
 						}
 						fw.close();
 						
+						
+						//TODO
+						fw = new FileWriter(new File(currentCsarDir + "/" + exceptionReport.size() / 2 + "-critical-" + name +"-"+time + ".txt"));
+						for (String critical : exceptionReport) {
+							fw.write(critical);
+							fw.write("\r\n");
+						}
+						fw.close();
 						
 					} catch (IOException ex) {
 						ex.printStackTrace();

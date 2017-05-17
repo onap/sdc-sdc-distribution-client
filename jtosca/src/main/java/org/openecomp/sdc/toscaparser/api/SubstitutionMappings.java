@@ -286,18 +286,19 @@ public class SubstitutionMappings {
 	@Override
 	public String toString() {
 		return "SubstitutionMappings{" +
-				"subMappingDef=" + subMappingDef +
-				", nodetemplates=" + nodetemplates +
-				", inputs=" + inputs +
-				", outputs=" + outputs +
-				", groups=" + groups +
-				", subMappedNodeTemplate=" + subMappedNodeTemplate +
-				", customDefs=" + customDefs +
-				", _capabilities=" + _capabilities +
-				", _requirements=" + _requirements +
+//				"subMappingDef=" + subMappingDef +
+//				", nodetemplates=" + nodetemplates +
+//				", inputs=" + inputs +
+//				", outputs=" + outputs +
+//				", groups=" + groups +
+				", subMappedNodeTemplate=" + (subMappedNodeTemplate==null?"":subMappedNodeTemplate.getName()) +
+//				", customDefs=" + customDefs +
+//				", _capabilities=" + _capabilities +
+//				", _requirements=" + _requirements +
 				'}';
 	}
 
+	@Deprecated
 	public String toLimitedString() {
 		return "SubstitutionMappings{" +
 				"subMappingDef=" + subMappingDef +
@@ -305,7 +306,7 @@ public class SubstitutionMappings {
 				", inputs=" + inputs +
 				", outputs=" + outputs +
 				", groups=" + groups +
-				", subMappedNodeTemplate=" + subMappedNodeTemplate.getName() +
+				", subMappedNodeTemplate=" + (subMappedNodeTemplate==null?"":subMappedNodeTemplate.getName()) +
 				", customDefs=" + customDefs +
 				", _capabilities=" + _capabilities +
 				", _requirements=" + _requirements +

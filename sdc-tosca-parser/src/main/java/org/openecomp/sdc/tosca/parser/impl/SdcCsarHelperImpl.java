@@ -68,10 +68,8 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             log.error("getNodeTemplatePropertyLeafValue - leafValuePath is null or empty");
             return null;
         }
-        log.debug("getNodeTemplatePropertyLeafValue - nodeTemplate is : {}, leafValuePath is {} ", nodeTemplate, leafValuePath);
         String[] split = getSplittedPath(leafValuePath);
         LinkedHashMap<String, Property> properties = nodeTemplate.getProperties();
-        log.debug("getNodeTemplatePropertyLeafValue - properties of nodeTemplate are : {}", properties);
         Object property = processProperties(split, properties);
         return property == null ? null : String.valueOf(property);
     }
@@ -86,10 +84,8 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             log.error("getNodeTemplatePropertyAsObject - leafValuePath is null or empty");
             return null;
         }
-        log.debug("getNodeTemplatePropertyAsObject - nodeTemplate is : {}, leafValuePath is {} ", nodeTemplate, leafValuePath);
         String[] split = getSplittedPath(leafValuePath);
         LinkedHashMap<String, Property> properties = nodeTemplate.getProperties();
-        log.debug("getNodeTemplatePropertyAsObject - properties of nodeTemplate are : {}", properties);
         return processProperties(split, properties);
     }
 
@@ -134,7 +130,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
     //Sunny flow - covered with UT
     public List<NodeTemplate> getServiceVlList() {
         List<NodeTemplate> serviceVlList = getNodeTemplateBySdcType(toscaTemplate.getTopologyTemplate(), Types.TYPE_VL);
-        log.debug("getServiceVlList - the VL list is {}", serviceVlList);
         return serviceVlList;
     }
 
@@ -142,7 +137,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
     //Sunny flow - covered with UT
     public List<NodeTemplate> getServiceVfList() {
         List<NodeTemplate> serviceVfList = getNodeTemplateBySdcType(toscaTemplate.getTopologyTemplate(), Types.TYPE_VF);
-        log.debug("getServiceVfList - the VF list is {}", serviceVfList);
         return serviceVfList;
     }
 
@@ -158,7 +152,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             return null;
         }
         String metadataPropertyValue = metadata.getValue(metadataPropertyName);
-        log.debug("getMetadataPropertyValue - metadata is {} metadataPropertyName is {} the value is : {}", metadata, metadataPropertyName, metadataPropertyValue);
         return metadataPropertyValue;
     }
 
@@ -179,7 +172,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             }
         }
 
-        log.debug("getServiceNodeTemplatesByType - For Node Type : {} -  NodeTemplate list value is: {}", nodeType, res);
         return res;
     }
 
@@ -193,7 +185,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
         List<NodeTemplate> serviceVfList = getServiceVfList();
         NodeTemplate vfInstance = getNodeTemplateByCustomizationUuid(serviceVfList, vfCustomizationId);
-        log.debug("getVfcListByVf - serviceVfList value: {}, vfInstance value: {}", serviceVfList, vfInstance);
         return getNodeTemplateBySdcType(vfInstance, Types.TYPE_VFC);
     }
 
@@ -201,9 +192,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
     //Sunny flow - covered with UT
     public List<Group> getVfModulesByVf(String vfCustomizationUuid) {
         List<NodeTemplate> serviceVfList = getServiceVfList();
-        log.debug("getVfModulesByVf - VF list is {}", serviceVfList);
         NodeTemplate nodeTemplateByCustomizationUuid = getNodeTemplateByCustomizationUuid(serviceVfList, vfCustomizationUuid);
-        log.debug("getVfModulesByVf - getNodeTemplateByCustomizationUuid is {}, customizationUuid {}", nodeTemplateByCustomizationUuid, vfCustomizationUuid);
         if (nodeTemplateByCustomizationUuid != null) {
             /*SubstitutionMappings substitutionMappings = nodeTemplateByCustomizationUuid.getSubstitutionMappings();
 			if (substitutionMappings != null){
@@ -223,7 +212,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
                         .stream()
                         .filter(x -> "org.openecomp.groups.VfModule".equals(x.getTypeDefinition().getType()) && x.getName().startsWith(normaliseComponentInstanceName))
                         .collect(Collectors.toList());
-                log.debug("getVfModulesByVf - VfModules are {}", collect);
                 return collect;
             }
         }
@@ -245,11 +233,9 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
         }
 
         List<Input> inputs = toscaTemplate.getInputs();
-        log.debug("getServiceInputLeafValue - the leafValuePath is  {} , the inputs are {}", inputLeafValuePath, inputs);
         if (inputs != null) {
             Optional<Input> findFirst = inputs.stream().filter(x -> x.getName().equals(split[0])).findFirst();
             if (findFirst.isPresent()) {
-                log.debug("getServiceInputLeafValue - find first item is {}", findFirst.get());
                 Input input = findFirst.get();
                 Object current = input.getDefault();
                 Object property = iterateProcessPath(2, current, split);
@@ -274,11 +260,9 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
         }
 
         List<Input> inputs = toscaTemplate.getInputs();
-        log.debug("getServiceInputLeafValueOfDefaultAsObject - the leafValuePath is  {} , the inputs are {}", inputLeafValuePath, inputs);
         if (inputs != null) {
             Optional<Input> findFirst = inputs.stream().filter(x -> x.getName().equals(split[0])).findFirst();
             if (findFirst.isPresent()) {
-                log.debug("getServiceInputLeafValueOfDefaultAsObject - find first item is {}", findFirst.get());
                 Input input = findFirst.get();
                 Object current = input.getDefault();
                 return iterateProcessPath(2, current, split);
@@ -308,7 +292,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             }
         }
         if (current != null) {
-            log.debug("iterateProcessPath - the input default leaf value is {}", String.valueOf(current));
             return current;
         }
         log.error("iterateProcessPath - Path not Found");
@@ -328,14 +311,12 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             log.debug("getServiceSubstitutionMappingsTypeName - No Substitution Mappings defined");
             return null;
         }
-        log.debug("getServiceSubstitutionMappingsTypeName - SubstitutionMappings value: {}", substitutionMappings);
 
         NodeType nodeType = substitutionMappings.getNodeDefinition();
         if (nodeType == null) {
             log.debug("getServiceSubstitutionMappingsTypeName - No Substitution Mappings node defined");
             return null;
         }
-        log.debug("getServiceSubstitutionMappingsTypeName - nodeType value: {}", nodeType);
 
         return nodeType.getType();
     }
@@ -403,7 +384,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             return cpList;
         }
         NodeTemplate vfInstance = getNodeTemplateByCustomizationUuid(serviceVfList, vfCustomizationId);
-        log.debug("getCpListByVf vf list is {}", vfInstance);
         if (vfInstance == null) {
             log.debug("getCpListByVf vf list is null");
             return cpList;
@@ -436,12 +416,9 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
                         .stream()
                         .filter(x -> (x.getMetadata() != null && serviceLevelVfModule.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID).equals(x.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID)))).findFirst();
                 if (findFirst.isPresent()) {
-                    log.debug("getMembersOfVfModule - Found VF level group with vfModuleModelInvariantUUID {}", serviceLevelVfModule.getMetadata().getValue(SdcPropertyNames.PROPERTY_NAME_VFMODULEMODELINVARIANTUUID));
                     List<String> members = findFirst.get().getMembers();
-                    log.debug("getMembersOfVfModule - members section is {}", members);
                     if (members != null) {
                         List<NodeTemplate> collect = substitutionMappings.getNodeTemplates().stream().filter(x -> members.contains(x.getName())).collect(Collectors.toList());
-                        log.debug("getMembersOfVfModule - Node templates are {}", collect);
                         return collect;
                     }
                 }
@@ -498,7 +475,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
         if (nodeTemplates.isEmpty()) {
             log.debug("getAllottedResources -  allotted resources not exist");
         } else {
-            log.debug("getAllottedResources - the allotted resources list is {}", nodeTemplates);
         }
 
         return nodeTemplates;
@@ -512,7 +488,6 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             log.error("getTypeOfNodeTemplate nodeTemplate is null");
             return null;
         }
-        log.debug("getTypeOfNodeTemplate node template type is {}", nodeTemplate.getTypeDefinition().getType());
         return nodeTemplate.getTypeDefinition().getType();
     }
 
@@ -583,16 +558,13 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
     //Assumed to be unique property for the list
     private NodeTemplate getNodeTemplateByCustomizationUuid(List<NodeTemplate> nodeTemplates, String customizationId) {
-        log.debug("getNodeTemplateByCustomizationUuid - nodeTemplates {}, customizationId {}", nodeTemplates, customizationId);
         Optional<NodeTemplate> findFirst = nodeTemplates.stream().filter(x -> (x.getMetaData() != null && customizationId.equals(x.getMetaData().getValue(PROPERTY_NAME_CUSTOMIZATIONUUID)))).findFirst();
         return findFirst.isPresent() ? findFirst.get() : null;
     }
 
     private Object processProperties(String[] split, LinkedHashMap<String, Property> properties) {
-        log.debug("processProperties - the leafValuePath is  {} , the properties are {}", Arrays.toString(split), properties.toString());
         Optional<Entry<String, Property>> findFirst = properties.entrySet().stream().filter(x -> x.getKey().equals(split[0])).findFirst();
         if (findFirst.isPresent()) {
-            log.debug("processProperties - find first item is {}", findFirst.get());
             Property property = findFirst.get().getValue();
             Object current = property.getValue();
             return iterateProcessPath(1, current, split);

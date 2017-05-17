@@ -1,6 +1,7 @@
 package org.openecomp.sdc.toscaparser.api.parameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.DataEntity;
@@ -18,19 +19,31 @@ public class Input {
 	private static final String REQUIRED = "required";
 	private static final String STATUS = "status";
 	private static final String ENTRY_SCHEMA = "entry_schema";
+	
+	public static final String INTEGER = "integer";
+	public static final String STRING = "string";
+	public static final String BOOLEAN = "boolean";
+	public static final String FLOAT = "float";
+	public static final String LIST = "list";
+	public static final String MAP = "map";
+	public static final String JSON = "json";
     
 	private static String INPUTFIELD[] = {
     		TYPE, DESCRIPTION, DEFAULT, CONSTRAINTS, REQUIRED,STATUS, ENTRY_SCHEMA
     };
+	
+	private static String PRIMITIVE_TYPES[] = {
+			INTEGER, STRING, BOOLEAN, FLOAT, LIST, MAP, JSON
+    };
     
     private String name;
     private Schema schema;
-	private LinkedHashMap<String,Object> customDefs;//ATT-CDT
+	private LinkedHashMap<String,Object> customDefs;
 	
-	public Input(String _name,LinkedHashMap<String,Object> _schemaDict,LinkedHashMap<String,Object> _customDefs) {//ATT-CDT
+	public Input(String _name,LinkedHashMap<String,Object> _schemaDict,LinkedHashMap<String,Object> _customDefs) {
 		name = _name;
 		schema = new Schema(_name,_schemaDict);
-		customDefs = _customDefs;//ATT-CDT
+		customDefs = _customDefs;
 	}
 	
 	public String getName() {
@@ -90,13 +103,13 @@ public class Input {
 				break;
 			}
 		}
-		//ATT-CDT
+		
 		if(!bFound) {
 			if(customDefs.get(inputType) != null) {
 				bFound = true;
 			}
 		}
-		//ATT-CDT
+		
 		if(!bFound) {
             ExceptionCollector.appendException(String.format(
                     "ValueError: Invalid type \"%s\"",inputType));
@@ -111,14 +124,20 @@ public class Input {
     	else if(EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType()) != null) {
     		datatype = EntityType.TOSCA_DEF.get(EntityType.DATATYPE_NETWORK_PREFIX + getType());
     	}
-    	//ATT-CDT
+    	
+    	String type = getType();
+    	// if it's one of the basic types DON'T look in customDefs
+    	if(Arrays.asList(PRIMITIVE_TYPES).contains(type)) {
+        	DataEntity.validateDatatype(getType(), value, null, (LinkedHashMap<String,Object>)datatype, null);
+        	return;	
+    	}
     	else if(customDefs.get(getType()) != null) {
     		datatype = customDefs.get(getType());
-        	DataEntity.validateDatatype(getType(),value,(LinkedHashMap<String,Object>)datatype,customDefs,null);
+        	DataEntity.validateDatatype(getType(), value, (LinkedHashMap<String,Object>)datatype, customDefs, null);
         	return;
     	}
-    	//ATT-CDT 
-    	DataEntity.validateDatatype(getType(),value,null,(LinkedHashMap<String,Object>)datatype,null);
+    	
+    	DataEntity.validateDatatype(getType(), value, null, (LinkedHashMap<String,Object>)datatype, null);
     }
 }
 

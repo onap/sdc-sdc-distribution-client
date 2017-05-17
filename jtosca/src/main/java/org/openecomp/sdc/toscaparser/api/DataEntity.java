@@ -52,12 +52,14 @@ public class DataEntity {
                 ExceptionCollector.appendWarning(String.format(
                     "TypeMismatchError: \"%s\" is not a map. The type is \"%s\"",
                     value.toString(),dataType.getType()));
-
-				if (value instanceof List)
+                
+				if (value instanceof List && ((List) value).size() > 0)  {
 					value = ((List) value).get(0);
+				}
 
-				if (!(value instanceof LinkedHashMap))
+				if (!(value instanceof LinkedHashMap))  {
 					return value;
+				}
 			}
 
 

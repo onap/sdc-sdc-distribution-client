@@ -84,7 +84,7 @@ public class TopologyTemplate {
 		ArrayList<Input> alInputs = new ArrayList<>();
 		for(String name: _tplInputs().keySet()) {
 			Object attrs = _tplInputs().get(name);
-			Input input = new Input(name,(LinkedHashMap<String,Object>)attrs,customDefs);//ATT-CDT
+			Input input = new Input(name,(LinkedHashMap<String,Object>)attrs,customDefs);
             if(parsedParams != null && parsedParams.get(name) != null) {
             	input.validate(parsedParams.get(name));
             }
@@ -173,7 +173,7 @@ public class TopologyTemplate {
 					                    nodeTemplates,
 					                    inputs,
 					                    outputs,
-					                    groups, //ATT addition
+					                    groups,
 					                    subMappedNodeTemplate,
 					                    customDefs);
 		}
@@ -232,7 +232,7 @@ public class TopologyTemplate {
                 DataEntity.validateDatatype("list", memberNames,null,null,null);
 				if(memberNames.size() < 1 || 
 				       (new HashSet<String>(memberNames)).size() != memberNames.size()) {
-                    ExceptionCollector.appendException(String.format(
+                    ExceptionCollector.appendWarning(String.format(
                             "InvalidGroupTargetException: Member nodes \"%s\" should be >= 1 and not repeated",
                             memberNames.toString()));
 				}

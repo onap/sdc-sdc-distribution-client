@@ -467,19 +467,9 @@ public class NodeTemplate extends EntityTemplate {
 
 	@Override
 	public String toString() {
-		return "NodeTemplate{" +
-				//"templates=" + templates +
-				//", customDef=" + customDef +
-				//", availableRelTpls=" + availableRelTpls +
-				//", availableRelTypes=" + availableRelTypes +
-				//", related=" + related +
-				//", relationshipTpl=" + relationshipTpl +
-				//", _relationships=" + _relationships +
-				", subMappingToscaTemplate=" + (subMappingToscaTemplate==null?"":subMappingToscaTemplate.toLimitedString()) +
-				//", subMappingToscaTemplate2=" +( subMappingToscaTemplate2 ==null?"":subMappingToscaTemplate2.toLimitedString()) +
-				", metadata=" + metadata +
-				'}';
+		return getName();
 	}
+
 }
 
 /*python
