@@ -69,4 +69,10 @@ public class DistributionClientDownloadResultStubImpl extends DistributionClient
 		return "MackArtifactName";
 	}
 
+	@Override
+	public String getArtifactFilename() {
+		// TODO Auto-generated method stub
+		return "MackArtifactName";
+	}
+
 }

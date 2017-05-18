@@ -58,8 +58,8 @@ public class AdvanceCallBack extends SimpleCallback{
  
  protected void saveArtifactPayloadToDisk(IDistributionClientDownloadResult downloadResult) {
         System.out.println("################ Downloaded Artifact Payload Start ################");
-        String fileName = downloadResult.getArtifactName().replaceAll("attachment; filename=","");
-        saveFile(downloadResult.getArtifactPayload(), fileName.replaceAll("\"", ""));
+        String fileName = downloadResult.getArtifactFilename();
+        saveFile(downloadResult.getArtifactPayload(), fileName);
         System.out.println("################ Downloaded Artifact Payload End ################");
  }
 

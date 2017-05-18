@@ -22,6 +22,24 @@ package org.openecomp.sdc.api.results;
 
 /**Distribution Client Result For Download API*/
 public interface IDistributionClientDownloadResult extends IDistributionClientResult{
+	
+	
 	byte[] getArtifactPayload();
+	
+	
+	/**
+	 * @deprecated
+	 * This method is deprecated and will be removed in 1710.
+	 * It returns <b>attachment; filename="filename"</b> rather than <b>"filename"</b>.
+	 * Please use {@link #getArtifactFilename()}. 
+	 * @return
+	 */
+	@Deprecated
 	String getArtifactName();
+	
+	/**
+	 * Returns the filename of the artifact.
+	 * @return the filename of the artifact.
+	 */
+	String getArtifactFilename();
 }
