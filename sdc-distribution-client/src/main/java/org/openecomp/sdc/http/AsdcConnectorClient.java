@@ -381,14 +381,18 @@ public class AsdcConnectorClient {
 				return new DistributionClientDownloadResultImpl(DistributionActionResultEnum.DATA_INTEGRITY_PROBLEM, "failed to get artifact from ASDC. Empty checksum");
 			}
 
-			if (validateChecksum(artifactInfo, payload)) {
+			DistributionClientDownloadResultImpl resResponse = new DistributionClientDownloadResultImpl(DistributionActionResultEnum.SUCCESS, "success", artifactName, payload);
+			return resResponse;
+			
+			//Validate checksum removed as fix to bug 293657 
+			/*if (validateChecksum(artifactInfo, payload)) {
 				DistributionClientDownloadResultImpl resResponse = new DistributionClientDownloadResultImpl(DistributionActionResultEnum.SUCCESS, "success", artifactName, payload);
 				return resResponse;
 
 			} else {
 
 				return new DistributionClientDownloadResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Invalid checksum. ArtifactInfo checksum ");
-			}
+			}*/
 
 		} catch (UnsupportedOperationException | IOException e) {
 			log.error("failed to get artifact from response ");
