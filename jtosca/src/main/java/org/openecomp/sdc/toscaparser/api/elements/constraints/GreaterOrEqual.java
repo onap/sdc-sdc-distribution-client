@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.functions.Function;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GreaterOrEqual extends Constraint {
 	// Constraint class for "greater_or_equal"
@@ -37,7 +38,7 @@ public class GreaterOrEqual extends Constraint {
 		super(name,type,c);
 		
 		if(!validTypes.contains(constraintValue.getClass().getSimpleName())) {
-	        ExceptionCollector.appendException("InvalidSchemaError: The property \"greater_or_equal\" expects comparable values");
+	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"greater_or_equal\" expects comparable values");
 		}
 	}
 	
@@ -90,7 +91,7 @@ def __init__(self, property_name, property_type, constraint):
     super(GreaterOrEqual, self).__init__(property_name, property_type,
                                          constraint)
     if not isinstance(self.constraint_value, self.valid_types):
-        ExceptionCollector.appendException(
+        ThreadLocalsHolder.getCollector().appendException(
             InvalidSchemaError(message=_('The property '
                                          '"greater_or_equal" expects '
                                          'comparable values.')))

@@ -11,13 +11,13 @@ import java.util.Map;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
-import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.common.JToscaException;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-public abstract class BasicTest {
+public abstract class SdcToscaParserBasicTest {
 
     public static final String VF_CUSTOMIZATION_UUID = "56179cd8-de4a-4c38-919b-bbc4452d2d73";
     static SdcToscaParserFactory factory;
@@ -97,18 +97,11 @@ public abstract class BasicTest {
     	};
     };
 
-	private static ISdcCsarHelper getCsarHelper(String path) throws JToscaException, IOException, SdcToscaParserException {
+	protected static ISdcCsarHelper getCsarHelper(String path) throws SdcToscaParserException {
 		System.out.println("Parsing CSAR "+path+"...");
-		String fileStr1 = BasicTest.class.getClassLoader().getResource(path).getFile();
+		String fileStr1 = SdcToscaParserBasicTest.class.getClassLoader().getResource(path).getFile();
         File file1 = new File(fileStr1);
         ISdcCsarHelper sdcCsarHelper = factory.getSdcCsarHelper(file1.getAbsolutePath());
-        List<String> exceptionReport = ExceptionCollector.getCriticalsReport();
-		if (!exceptionReport.isEmpty()){
-        	System.out.println("TOSCA Errors found in CSAR - failing the tests...");
-        	System.out.println(exceptionReport.toString());
-        	ExceptionCollector.clear();
-        	//throw new SdcToscaParserException("CSAR didn't pass validation");
-        }
 		return sdcCsarHelper;
 	}
     

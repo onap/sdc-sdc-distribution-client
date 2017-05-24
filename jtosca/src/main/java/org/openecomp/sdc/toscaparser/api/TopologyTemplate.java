@@ -14,6 +14,7 @@ import org.openecomp.sdc.toscaparser.api.functions.GetAttribute;
 import org.openecomp.sdc.toscaparser.api.functions.GetInput;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.openecomp.sdc.toscaparser.api.parameters.Output;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class TopologyTemplate {
 
@@ -232,7 +233,7 @@ public class TopologyTemplate {
                 DataEntity.validateDatatype("list", memberNames,null,null,null);
 				if(memberNames.size() < 1 || 
 				       (new HashSet<String>(memberNames)).size() != memberNames.size()) {
-                    ExceptionCollector.appendWarning(String.format(
+                    ThreadLocalsHolder.getCollector().appendWarning(String.format(
                             "InvalidGroupTargetException: Member nodes \"%s\" should be >= 1 and not repeated",
                             memberNames.toString()));
 				}
@@ -281,7 +282,7 @@ public class TopologyTemplate {
 		}
 		for(String member: members) {
 			if(!nodeNames.contains(member)) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "InvalidGroupTargetException: Target member \"%s\" is not found in \"nodeTemplates\"",member));
 			}
 		}
@@ -383,7 +384,7 @@ public class TopologyTemplate {
     			}
     		}
     		if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"UnknownFieldError: TopologyTemplate contains unknown field \"%s\"",name));
     		}
     	}

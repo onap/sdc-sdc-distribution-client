@@ -9,6 +9,7 @@ import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Constraint;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Schema;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Input {
 	
@@ -88,7 +89,7 @@ public class Input {
     			}
     		}
     		if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"UnknownFieldError: Input \"%s\" contains unknown field \"%s\"",
                 		name,key));
     		}
@@ -111,7 +112,7 @@ public class Input {
 		}
 		
 		if(!bFound) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                     "ValueError: Invalid type \"%s\"",inputType));
 		}
     }

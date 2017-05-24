@@ -34,7 +34,7 @@ public class UrlUtils {
         //   relative_path: heat-translator
         //   - joined: http://www.githib.com/openstack/heat-translator
 		if(!validateUrl(sUrl)) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 					"ValueError: The URL \"%s\" is malformed",sUrl));
 		}
 		try {
@@ -42,7 +42,7 @@ public class UrlUtils {
 			return (new URL(base,relativePath)).toString();
 		}
 		catch(MalformedURLException e) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 					"ValueError: Joining URL \"%s\" and relative path \"%s\" caused an exception",sUrl,relativePath));
 			return sUrl; 
 		}

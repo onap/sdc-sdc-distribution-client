@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api.elements;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GroupType extends StatefulEntityType {
 
@@ -91,7 +92,7 @@ public class GroupType extends StatefulEntityType {
 					}
 				}
 				if(!bFound) {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: Group Type \"%s\" contains unknown field \"%s\"",
                         groupType,name));
 				}
@@ -103,7 +104,7 @@ public class GroupType extends StatefulEntityType {
 	private void _validateMetadata(LinkedHashMap<String,Object> metadata) {
 		String mtt = (String) metadata.get("type");
 		if(mtt != null && !mtt.equals("map") && !mtt.equals("tosca:map")) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidTypeError: \"%s\" defined in group for metadata is invalid",
                 mtt));
 		}
@@ -112,7 +113,7 @@ public class GroupType extends StatefulEntityType {
 			if(estob instanceof LinkedHashMap) {
 				String est = (String)((LinkedHashMap<String,Object>)estob).get("type");
 				if(!est.equals("string")) {
-	                ExceptionCollector.appendException(String.format(
+	                ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "InvalidTypeError: \"%s\" defined in group for metadata \"%s\" is invalid",
 	                    est,entrySchema));
 				}

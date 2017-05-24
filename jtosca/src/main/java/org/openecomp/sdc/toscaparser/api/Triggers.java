@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 
 public class Triggers extends EntityTemplate {
@@ -76,7 +77,7 @@ public class Triggers extends EntityTemplate {
 				}
 			}
 			if(!bFound) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "UnknownFieldError: Triggers \"%s\" contains unknown field \"%s\"",
 	                    name,key));
 			}
@@ -93,7 +94,7 @@ public class Triggers extends EntityTemplate {
 				}
 			}
 			if(!bFound) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "UnknownFieldError: Triggers \"%s\" contains unknown field \"%s\"",
 	                    name,key));
 			}

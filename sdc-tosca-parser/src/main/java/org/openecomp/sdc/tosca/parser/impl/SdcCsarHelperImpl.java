@@ -22,6 +22,8 @@ package org.openecomp.sdc.tosca.parser.impl;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -49,7 +51,8 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
     private static final String PATH_DELIMITER = "#";
     private static final String PREFIX = "port_";
-    private static final String[] SUFFIX = new String[]{"_network_role_tag", "_ip_requirements", "_subnetpoolid"};
+    Pattern SUFFIX = Pattern.compile("(_network_role_tag|_ip_requirements|_subnetpoolid)$");
+//    private static final String[] SUFFIX = new String[]{"_network_role_tag", "_ip_requirements", "_subnetpoolid"};
     private ToscaTemplate toscaTemplate;
     private static Logger log = LoggerFactory.getLogger(SdcCsarHelperImpl.class.getName());
 
@@ -91,6 +94,11 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
     public Map<String, Map<String, Object>> getCpPropertiesFromVfc(NodeTemplate vfc) {
 
+        if (vfc == null) {
+            log.error("getCpPropertiesFromVfc - vfc is null");
+            return new HashMap<>();
+        }
+
         List<String> paths = new ArrayList<>();
         paths.add("network_role_tag");
         paths.add("ip_requirements#ip_count_required#count");
@@ -102,22 +110,25 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
 
         Map<String, Map<String, Object>> cps = new HashMap<>();
 
-        for (Map.Entry<String, Property> entry : props.entrySet()) {
-            String fullCpName = entry.getKey();
+        if (props != null) {
+            for (Map.Entry<String, Property> entry : props.entrySet()) {
+                String fullCpName = entry.getKey();
+                Matcher matcher = SUFFIX.matcher(fullCpName);
 
-            if (fullCpName.startsWith(PREFIX) &&
-                    Arrays.stream(SUFFIX).parallel().anyMatch(fullCpName::endsWith))
-            {
-                //this is CP - get all it's properties according to paths list
-                String cpName = fullCpName.replaceAll("^("+PREFIX+")", "").replaceAll("("+String.join("|", SUFFIX)+")$", "");
-                cps.put(cpName, new HashMap<>());
-                for (String path: paths) {
-                    String fullPathToSearch = PREFIX + cpName + "_" + path;
-                    String value = getNodeTemplatePropertyLeafValue(vfc, fullPathToSearch);
-                    if (value != null) {
-                        value = StringUtils.stripStart(value, "[");
-                        value = StringUtils.stripEnd(value, "]");
-                        cps.get(cpName).put(path, value);
+                if (fullCpName.startsWith(PREFIX) && matcher.find()) {
+                    //this is CP - get all it's properties according to paths list
+                    String cpName = fullCpName.replaceAll("^(" + PREFIX + ")", "").replaceAll(matcher.group(1), "");
+
+                    List<String> propertiesToSearch = paths.stream().filter(i -> i.contains(StringUtils.stripStart(matcher.group(1), "_"))).collect(Collectors.toList());
+                    for (String item : propertiesToSearch) {
+                        String fullPathToSearch = PREFIX + cpName + "_" + item;
+                        Object value = getNodeTemplatePropertyAsObject(vfc, fullPathToSearch);
+                        if (value != null) {
+                            if (!cps.containsKey(cpName))
+                                cps.put(cpName, new HashMap<>());
+                        }
+
+                        cps.get(cpName).put(item, value);
                     }
                 }
             }
@@ -569,7 +580,8 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
             Object current = property.getValue();
             return iterateProcessPath(1, current, split);
         }
-        log.error("processProperties - property not found");
+        String propName = (split != null && split.length > 0 ? split[0] : null);
+        log.error("processProperties - property {} not found", propName);
         return null;
     }
 }

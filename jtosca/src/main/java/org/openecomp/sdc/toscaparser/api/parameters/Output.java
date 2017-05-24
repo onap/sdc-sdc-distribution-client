@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api.parameters;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Output {
 	
@@ -33,13 +34,13 @@ public class Output {
 	private void _validateField() {
 		if(!(attrs instanceof LinkedHashMap)) {
 			//TODO wrong error message...
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                     "ValidationError: Output \"%s\" has wrong type. Expecting a dict",
                     name));
 		}
 		
 		if(getValue() == null) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                     "MissingRequiredFieldError: Output \"%s\" is missing required \"%s\"",
                     name,VALUE));
 		}
@@ -52,7 +53,7 @@ public class Output {
     			}
     		}
     		if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "UnknownFieldError: Output \"%s\" contains unknown field \"%s\"",
                     name,key));
             }

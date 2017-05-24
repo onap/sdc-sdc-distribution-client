@@ -3,11 +3,7 @@ package org.openecomp.sdc.toscaparser.api.functions;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import org.openecomp.sdc.toscaparser.api.Capability;
-import org.openecomp.sdc.toscaparser.api.NodeTemplate;
-import org.openecomp.sdc.toscaparser.api.Property;
-import org.openecomp.sdc.toscaparser.api.RelationshipTemplate;
-import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
+import org.openecomp.sdc.toscaparser.api.*;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.CapabilityTypeDef;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
@@ -15,6 +11,7 @@ import org.openecomp.sdc.toscaparser.api.elements.NodeType;
 import org.openecomp.sdc.toscaparser.api.elements.PropertyDef;
 import org.openecomp.sdc.toscaparser.api.elements.RelationshipType;
 import org.openecomp.sdc.toscaparser.api.elements.StatefulEntityType;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GetProperty extends Function {
 	// Get a property value of an entity defined in the same service template
@@ -50,7 +47,7 @@ public class GetProperty extends Function {
 	@Override
 	void validate() { 
 		if(args.size() < 2) {
-	        ExceptionCollector.appendException(
+	        ThreadLocalsHolder.getCollector().appendException(
 		        "ValueError: Illegal arguments for function \"get_property\". Expected arguments: \"node-template-name\", \"req-or-cap\" (optional), \"property name.\"");
 		        return;
 		}
@@ -139,14 +136,14 @@ public class GetProperty extends Function {
 	            property = ((Property)props.get(propertyName)).getValue();
 	        }
 	        if(property == null && throwErrors) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "KeyError: Property \"%s\" was not found in capability \"%s\" of node template \"%s\" referenced from node template \"%s\"",
 	                propertyName,capabilityName,nodeTemplate.getName(),((NodeTemplate)context).getName()));
 	        }
     		return property;
 		}
 		if(throwErrors) {
-		    ExceptionCollector.appendException(String.format(
+		    ThreadLocalsHolder.getCollector().appendException(String.format(
 		    	"KeyError: Requirement/Capability \"%s\" referenced from node template \"%s\" was not found in node template \"%s\"",
 		    	capabilityName,((NodeTemplate)context).getName(),nodeTemplate.getName()));
 		}
@@ -162,7 +159,7 @@ public class GetProperty extends Function {
         LinkedHashMap<String,Property> props = nodeTpl.getProperties();
 		Property found = props.get(propertyName);
 		if(found == null) {
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 		        "KeyError: Property \"%s\" was not found in node template \"%s\"",
 		        propertyName,nodeTpl.getName()));
 		}
@@ -177,7 +174,7 @@ public class GetProperty extends Function {
 	    if(nodeTemplateName.equals(HOST)) {
 	        NodeTemplate node = _findHostContainingProperty(null);
 	        if(node == null) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "KeyError: Property \"%s\" was not found in capability \"%s\" of node template \"%s\" referenced from node template \"%s\"",
 		            (String)args.get(2),(String)args.get(1),((NodeTemplate)context).getName()));
 	            return null;
@@ -186,7 +183,7 @@ public class GetProperty extends Function {
 	    }
 	    if(nodeTemplateName.equals(TARGET)) {
 	    	if(!(((RelationshipTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 		            "KeyError: \"TARGET\" keyword can only be used in context to \"Relationships\" target node");
 	            return null;
 	    	}
@@ -194,7 +191,7 @@ public class GetProperty extends Function {
 	    }
 	    if(nodeTemplateName.equals(SOURCE)) {
 	    	if(!(((RelationshipTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 		            "KeyError: \"SOURCE\" keyword can only be used in context to \"Relationships\" target node");
 	            return null;
 	    	}
@@ -208,7 +205,7 @@ public class GetProperty extends Function {
 	            return nodeTemplate;
 	        }
 	    }
-	    ExceptionCollector.appendException(String.format(
+	    ThreadLocalsHolder.getCollector().appendException(String.format(
 	        "KeyError: Node template \"%s\" was not found. Referenced from Node Template \"%s\"", 
 	        nodeTemplateName,((NodeTemplate)context).getName()));
 	    
@@ -222,14 +219,14 @@ public class GetProperty extends Function {
 				return ((ArrayList)value).get(index);
 			}
 			else {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "KeyError: Property \"%s\" found in capability \"%s\" referenced from node template \"%s\" must have an element with index %d",
 		            args.get(2),args.get(1),((NodeTemplate)context).getName(),index));
 
 			}
 		}
 		else {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "KeyError: Property \"%s\" found in capability \"%s\" referenced from node template \"%s\" must be a list",
 		            args.get(2),args.get(1),((NodeTemplate)context).getName()));
 		}
@@ -244,13 +241,13 @@ public class GetProperty extends Function {
 	            return ov;
 	    	}
 	        else {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "KeyError: Property \"%s\" found in capability \"%s\" referenced from node template \"%s\" must have an attribute named \"%s\"",
 		            args.get(2),args.get(1),((NodeTemplate)context).getName(),attribute));
 	        }
 	    }
 	    else {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "KeyError: Property \"%s\" found in capability \"%s\" referenced from node template \"%s\" must be a dict",
 		            args.get(2),args.get(1),((NodeTemplate)context).getName()));
 	    }

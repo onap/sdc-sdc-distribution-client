@@ -9,6 +9,7 @@ import org.openecomp.sdc.toscaparser.api.elements.NodeType;
 import org.openecomp.sdc.toscaparser.api.elements.PropertyDef;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.openecomp.sdc.toscaparser.api.parameters.Output;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 
 public class SubstitutionMappings {
@@ -128,7 +129,7 @@ public class SubstitutionMappings {
 				}
 			}
 			if(!bFound) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "UnknownFieldError: SubstitutionMappings contain unknown field \"%s\"",
 	                key));
 			}
@@ -139,13 +140,13 @@ public class SubstitutionMappings {
         // validate the node_type of substitution mappings
         String nodeType = (String)subMappingDef.get(NODE_TYPE);
         if(nodeType == null) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "MissingRequiredFieldError: SubstitutionMappings used in topology_template is missing required field \"%s\"",
                 NODE_TYPE));
         }
         Object nodeTypeDef = customDefs.get(nodeType);
         if(nodeTypeDef == null) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidNodeTypeError: \"%s\" is invalid",nodeType));
         }
 	}
@@ -172,7 +173,7 @@ public class SubstitutionMappings {
         for(String property: requiredProperties) {
             // Check property which is 'required' and has no 'default' value
             if(!allInputs.contains(property)) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "MissingRequiredInputError: SubstitutionMappings with node_type \"%s\" is missing required input \"%s\"",
                     getNodeType(),property));
             }
@@ -190,7 +191,7 @@ public class SubstitutionMappings {
          diffset.removeAll(allInputs);
          for(String parameter: diffset) {
         	 if(allProperties.contains(parameter)) {
-                 ExceptionCollector.appendException(String.format(
+                 ThreadLocalsHolder.getCollector().appendException(String.format(
                      "MissingRequiredInputError: SubstitutionMappings with node_type \"%s\" is missing required input \"%s\"",
                      getNodeType(),parameter));
         	 }
@@ -203,7 +204,7 @@ public class SubstitutionMappings {
 	    	diffset = allInputs;
 	    	diffset.removeAll(allProperties);
 	    	if(diffset.contains(inp.getName()) && inp.getDefault() == null) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                     "MissingRequiredInputError: SubstitutionMappings with node_type \"%s\" is missing rquired input \"%s\"",
 	                     getNodeType(),inp.getName()));
 	    	}
@@ -276,7 +277,7 @@ public class SubstitutionMappings {
         for(Output output: outputs) {
         	Object ado = getNodeDefinition().getAttributesDef();
         	if(ado != null && ((LinkedHashMap<String,Object>)ado).get(output.getName()) == null) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "UnknownOutputError: Unknown output \"%s\" in SubstitutionMappings with node_type \"%s\"",
                     output.getName(),getNodeType()));
         	}

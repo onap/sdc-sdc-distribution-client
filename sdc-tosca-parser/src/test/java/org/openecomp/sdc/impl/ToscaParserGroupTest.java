@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.testng.Assert.*;
 
-public class ToscaParserGroupTest extends BasicTest{
+public class ToscaParserGroupTest extends SdcToscaParserBasicTest{
 
     //region getVfModulesByVf
     @Test

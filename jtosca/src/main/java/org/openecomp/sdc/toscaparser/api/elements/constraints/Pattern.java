@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.PatternSyntaxException;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Pattern extends Constraint {
 
@@ -23,7 +24,7 @@ public class Pattern extends Constraint {
 		super(name,type,c);
 		
 		if(!validTypes.contains(constraintValue.getClass().getSimpleName())) {
-	        ExceptionCollector.appendException("InvalidSchemaError: The property \"pattern\" expects a string");
+	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"pattern\" expects a string");
 		}
 	}
 
@@ -31,7 +32,7 @@ public class Pattern extends Constraint {
 	protected boolean _isValid(Object value) {
 		try {
 			if(!(value instanceof String)) {
-		        ExceptionCollector.appendException(String.format("ValueError: Input value \"%s\" to \"pattern\" property \"%s\" must be a string",
+		        ThreadLocalsHolder.getCollector().appendException(String.format("ValueError: Input value \"%s\" to \"pattern\" property \"%s\" must be a string",
 		        		value.toString(),propertyName));
 				return false;
 			}
@@ -45,7 +46,7 @@ public class Pattern extends Constraint {
 			return false;
 		}
 		catch(PatternSyntaxException pse) {
-	        ExceptionCollector.appendException(String.format("ValueError: Invalid regex \"%s\" in \"pattern\" property \"%s\"",
+	        ThreadLocalsHolder.getCollector().appendException(String.format("ValueError: Invalid regex \"%s\" in \"pattern\" property \"%s\"",
 	        		constraintValue.toString(),propertyName));
 	        return false;
 		}

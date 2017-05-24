@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.utils.TOSCAVersionProperty;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class PolicyType extends StatefulEntityType {
 	
@@ -134,7 +135,7 @@ public class PolicyType extends StatefulEntityType {
 				}
 			}
 			if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "UnknownFieldError: Policy \"%s\" contains unknown field \"%s\"",
                     type,key));
 			}
@@ -145,7 +146,7 @@ public class PolicyType extends StatefulEntityType {
 								  LinkedHashMap<String,Object> _customDef) {
 		for(String nodetype: _targetsList) {
 			if(_customDef.get(nodetype) == null) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "InvalidTypeError: \"%s\" defined in targets for policy \"%s\"",
                     nodetype,type));
 				
@@ -156,7 +157,7 @@ public class PolicyType extends StatefulEntityType {
 	private void _validateMetadata(LinkedHashMap<String,Object> _metaData) {
 		String mtype = (String)_metaData.get("type");
 		if(mtype != null && !mtype.equals("map") && !mtype.equals("tosca:map")) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidTypeError: \"%s\" defined in policy for metadata",
                 mtype));
 		}
@@ -166,7 +167,7 @@ public class PolicyType extends StatefulEntityType {
 				String est = (String)
 						((LinkedHashMap<String,Object>)estob).get("type");
 				if(!est.equals("string")) {
-	                ExceptionCollector.appendException(String.format(
+	                ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "InvalidTypeError: \"%s\" defined in policy for metadata \"%s\"",
 	                    est,entrySchema));
 				}

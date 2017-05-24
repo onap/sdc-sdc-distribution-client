@@ -1,7 +1,9 @@
 package org.openecomp.sdc.toscaparser.api.common;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,114 +12,111 @@ import org.slf4j.LoggerFactory;
 
 public class ExceptionCollector {
 
-	private static Logger log = LoggerFactory.getLogger(ExceptionCollector.class.getName());
+    private static Logger log = LoggerFactory.getLogger(ExceptionCollector.class.getName());
 
-	//private static boolean isCollecting = false;
-	private static ArrayList<String> exceptionStrings = new ArrayList<>();
-	private static ArrayList<String> exceptionTraceStrings = new ArrayList<>();
-	private static ArrayList<String> warningStrings = new ArrayList<>();
-	private static ArrayList<String> warningTraceStrings = new ArrayList<>();
-	private static boolean bWantTrace = true;
+    private Map<String, String> notAnalyzedExceptions = new HashMap<>();
+    private Map<String, String> criticalExceptions = new HashMap<>();
+    private Map<String, String> warningExceptions = new HashMap<>();
 
-	/*public static void start() {
-		if(exceptionStrings == null) {
-			exceptionStrings = new ArrayList<String>();
-			exceptionTraceStrings = new ArrayList<String>();
-		}
-		isCollecting = true;
-	}*/
+    private boolean bWantTrace = true;
+    private String filePath;
 
-	/*public static void stop() {
-		isCollecting = false;
-	}*/
+    public enum ReportType {WARNING, CRITICAL, NOT_ANALYZED}
 
-	public static void clear() {
-		exceptionStrings = new ArrayList<>();
-		exceptionTraceStrings = new ArrayList<>();
-		warningStrings = new ArrayList<>();
-		warningTraceStrings = new ArrayList<>();
-	}
+    public ExceptionCollector(String filePath) {
+        this.filePath = filePath;
+    }
 
-	public static void appendException(String strExc) { // throws Exception {
+    public void appendException(String exception) {
 
-		/*if(!isCollecting) {
-			// throw new Exception("Can't append exception " + strExc);
-			log.error("ExceptionCollector - appendException - Can't append exception {}", strExc);
-		}*/
+        addException(exception, ReportType.NOT_ANALYZED);
+    }
 
-		if(!exceptionStrings.contains(strExc)) {
-			exceptionStrings.add(strExc);
-			// get stack trace
-			StackTraceElement[] ste =  Thread.currentThread().getStackTrace();
-			StringBuilder sb = new StringBuilder();
-			// skip the last 2 (getStackTrace and this)
-			for(int i=2; i<ste.length; i++) {
-				sb.append(String.format("  %s(%s:%d)%s",ste[i].getClassName(),ste[i].getFileName(),
-												ste[i].getLineNumber(),i==ste.length-1?" ":"\n"));
-			}
-			exceptionTraceStrings.add(sb.toString());
-		}
-	}
-	
-	public static void appendWarning(String strExc) { // throws Exception {
+    public void appendCriticalException(String exception) {
 
-		/*if(!isCollecting) {
-			// throw new Exception("Can't append exception " + strExc);
-			log.error("ExceptionCollector - appendException - Can't append exception {}", strExc);
-		}*/
+        addException(exception, ReportType.CRITICAL);
+    }
 
-		if(!warningStrings.contains(strExc)) {
-			warningStrings.add(strExc);
-			// get stack trace
-			StackTraceElement[] ste =  Thread.currentThread().getStackTrace();
-			StringBuilder sb = new StringBuilder();
-			// skip the last 2 (getStackTrace and this)
-			for(int i=2; i<ste.length; i++) {
-				sb.append(String.format("  %s(%s:%d)%s",ste[i].getClassName(),ste[i].getFileName(),
-												ste[i].getLineNumber(),i==ste.length-1?" ":"\n"));
-			}
-			warningTraceStrings.add(sb.toString());
-		}
-	}
+    public void appendWarning(String exception) {
 
-	public static List<String> getCriticalsReport() {
-		
-		List<String> res = new ArrayList<>();
-		if(exceptionStrings.size() > 0) {
-			for(int i=0; i<exceptionStrings.size(); i++) {
-				res.add(exceptionStrings.get(i));
-				if(bWantTrace) {
-					res.add(exceptionTraceStrings.get(i));
-				}
-			}
-		}
-		return res;
-	}
-	
-	public static List<String> getWarningsReport() {
-		
-		List<String> res = new ArrayList<>();
-		if(warningStrings.size() > 0) {
-			for(int i=0; i<warningStrings.size(); i++) {
-				res.add(warningStrings.get(i));
-				if(bWantTrace) {
-					res.add(warningTraceStrings.get(i));
-				}
-			}
-		}
-		return res;
-	}
-	
-	public static int errorsCaught() {
-		return exceptionStrings.size();
-	}
-	
-	public static int warningsCaught() {
-		return warningStrings.size();
-	}
-	
-	public static void setWantTrace(boolean b) {
-		bWantTrace = b;
-	}
+        addException(exception, ReportType.WARNING);
+    }
+
+    private void addException(String exception, ReportType type) {
+
+        Map<String, String> exceptions = getExceptionCollection(type);
+
+        if (!exceptions.containsKey(exception)) {
+            // get stack trace
+            StackTraceElement[] ste = Thread.currentThread().getStackTrace();
+            StringBuilder sb = new StringBuilder();
+            // skip the last 2 (getStackTrace and this)
+            for (int i = 2; i < ste.length; i++) {
+                sb.append(String.format("  %s(%s:%d)%s", ste[i].getClassName(), ste[i].getFileName(),
+                        ste[i].getLineNumber(), i == ste.length - 1 ? " " : "\n"));
+            }
+            exceptions.put(exception, sb.toString());
+        }
+    }
+
+    public List<String> getCriticalsReport() {
+
+        return getReport(ReportType.CRITICAL);
+    }
+
+    public List<String> getNotAnalyzedExceptionsReport() {
+
+        return getReport(ReportType.NOT_ANALYZED);
+    }
+
+    public List<String> getWarningsReport() {
+
+        return getReport(ReportType.WARNING);
+    }
+
+    private List<String> getReport(ReportType type) {
+        Map<String, String> collectedExceptions = getExceptionCollection(type);
+
+        List<String> report = new ArrayList<>();
+        if (collectedExceptions.size() > 0) {
+            for (Map.Entry<String, String> exception : collectedExceptions.entrySet()) {
+                report.add(exception.getKey());
+                if (bWantTrace) {
+                    report.add(exception.getValue());
+                }
+            }
+        }
+
+        return report;
+    }
+
+    private Map<String, String> getExceptionCollection(ReportType type) {
+        switch (type) {
+            case WARNING:
+                return warningExceptions;
+            case CRITICAL:
+                return criticalExceptions;
+            case NOT_ANALYZED:
+                return notAnalyzedExceptions;
+            default:
+                return notAnalyzedExceptions;
+        }
+    }
+
+    public int errorsNotAnalyzedCaught() {
+        return notAnalyzedExceptions.size();
+    }
+
+    public int criticalsCaught() {
+        return criticalExceptions.size();
+    }
+
+    public int warningsCaught() {
+        return warningExceptions.size();
+    }
+
+    public void setWantTrace(boolean b) {
+        bWantTrace = b;
+    }
 
 }

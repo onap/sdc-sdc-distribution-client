@@ -1,6 +1,7 @@
 package org.openecomp.sdc.toscaparser.api;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class UnsupportedType {
 
@@ -26,7 +27,7 @@ public class UnsupportedType {
     public static boolean validateType(String entityType) {
     	for(String ust: unsupportedTypes) {
     		if(ust.equals(entityType)) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"UnsupportedTypeError: Entity type \"%s\" is not supported",entityType));
     			return true;
     		}

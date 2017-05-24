@@ -20,7 +20,7 @@ import org.openecomp.sdc.toscaparser.api.Property;
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertNull;
 
-public class ToscaParserSubsMappingsTest extends BasicTest {
+public class ToscaParserSubsMappingsTest extends SdcToscaParserBasicTest {
 
     //region getServiceSubstitutionMappingsTypeName
     @Test

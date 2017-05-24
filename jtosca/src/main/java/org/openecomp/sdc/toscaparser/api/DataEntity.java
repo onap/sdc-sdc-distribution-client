@@ -11,6 +11,7 @@ import org.openecomp.sdc.toscaparser.api.elements.constraints.Constraint;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Schema;
 import org.openecomp.sdc.toscaparser.api.functions.Function;
 import org.openecomp.sdc.toscaparser.api.utils.TOSCAVersionProperty;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 
 public class DataEntity {
@@ -49,7 +50,7 @@ public class DataEntity {
         else {
             if(!(value instanceof LinkedHashMap)) {
             	//ERROR under investigation
-                ExceptionCollector.appendWarning(String.format(
+                ThreadLocalsHolder.getCollector().appendWarning(String.format(
                     "TypeMismatchError: \"%s\" is not a map. The type is \"%s\"",
                     value.toString(),dataType.getType()));
                 
@@ -85,7 +86,7 @@ public class DataEntity {
             for(String valueKey: valueDict.keySet()) {
             	//1710 devlop JSON validation
             	if(!("json").equals(dataType.getType()) && !allowedProps.contains(valueKey)) {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: Data value of type \"%s\" contains unknown field \"%s\"",
                         dataType.getType(),valueKey));
             	}
@@ -108,7 +109,7 @@ public class DataEntity {
                 }
             }
             if(missingProp.size() > 0) {
-                ExceptionCollector.appendWarning(String.format(
+                ThreadLocalsHolder.getCollector().appendWarning(String.format(
                     "MissingRequiredFieldError: Data value of type \"%s\" is missing required field(s) \"%s\"",
                     dataType.getType(),missingProp.toString()));
             }
@@ -168,7 +169,7 @@ public class DataEntity {
 		}
 		else if (type == null)  {
 			//NOT ANALYZED
-			 ExceptionCollector.appendWarning(String.format(
+			 ThreadLocalsHolder.getCollector().appendWarning(String.format(
 	                    "MissingType: Type is missing for value \"%s\"",
 	                    value.toString()));
 			 return value;

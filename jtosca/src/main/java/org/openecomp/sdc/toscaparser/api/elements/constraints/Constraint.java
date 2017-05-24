@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.ScalarUnit;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public abstract class Constraint {
 	
@@ -34,7 +35,7 @@ public abstract class Constraint {
 
         if(!(constraint instanceof LinkedHashMap) || 
         		((LinkedHashMap<String,Object>)constraint).size() != 1) {
-                 ExceptionCollector.appendException(
+                 ThreadLocalsHolder.getCollector().appendException(
                      "InvalidSchemaError: Invalid constraint schema " + constraint.toString());
         }
         
@@ -72,7 +73,7 @@ public abstract class Constraint {
         	return new Pattern(propname,proptype,constraint);
         }
         else {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             		"InvalidSchemaError: Invalid property \"%s\"",constraintClass));
             return null;
         }
@@ -116,7 +117,7 @@ public abstract class Constraint {
         	}
         }
         if(!bFound) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             	"InvalidSchemaError: Property \"%s\" is not valid for data type \"%s\"",
             	constraintKey,propertyType));
         }
@@ -152,7 +153,7 @@ public abstract class Constraint {
         	value = ScalarUnit.getScalarunitValue(propertyType,value,null);
         }
         if(!_isValid(value)) {
-            ExceptionCollector.appendWarning("ValidationError: " + _errMsg(value));
+            ThreadLocalsHolder.getCollector().appendWarning("ValidationError: " + _errMsg(value));
         }
 	}
 

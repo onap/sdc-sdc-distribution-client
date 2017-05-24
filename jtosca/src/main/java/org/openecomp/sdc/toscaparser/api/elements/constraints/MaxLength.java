@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api.elements.constraints;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class MaxLength extends Constraint {
 	// Constraint class for "min_length"
@@ -25,7 +26,7 @@ public class MaxLength extends Constraint {
 		super(name,type,c);
 		
 		if(!validTypes.contains(constraintValue.getClass().getSimpleName())) {
-	        ExceptionCollector.appendException("InvalidSchemaError: The property \"max_length\" expects an integer");
+	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"max_length\" expects an integer");
 		}
 	}
 	

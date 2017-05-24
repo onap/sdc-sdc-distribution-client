@@ -5,7 +5,7 @@ import org.openecomp.sdc.tosca.parser.utils.GeneralUtility;
 
 import static org.testng.Assert.assertTrue;
 
-public class ToscaParserGeneralUtilTest extends BasicTest {
+public class ToscaParserGeneralUtilTest extends SdcToscaParserBasicTest {
 
     @Test
     public void testVersionCompare() {

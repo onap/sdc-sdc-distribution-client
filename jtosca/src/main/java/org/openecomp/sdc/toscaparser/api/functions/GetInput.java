@@ -7,6 +7,7 @@ import org.openecomp.sdc.toscaparser.api.DataEntity;
 import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GetInput extends Function {
 	
@@ -18,8 +19,8 @@ public class GetInput extends Function {
 	@Override
 	void validate() {
 	    if(args.size() != 1) {
-	    	//ERROR under investigation
-	        ExceptionCollector.appendWarning(String.format(
+	    	//PA - changed to WARNING from CRITICAL after talking to Renana, 22/05/2017
+	        ThreadLocalsHolder.getCollector().appendWarning(String.format(
 	            "ValueError: Expected one argument for function \"get_input\" but received \"%s\"",
 	            args.toString()));
 	    }
@@ -31,7 +32,7 @@ public class GetInput extends Function {
 	    	}
 	    }
 	    if(!bFound) {
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "UnknownInputError: Unknown input \"%s\"",args.get(0)));
 	    }
 	}

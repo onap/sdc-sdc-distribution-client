@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.EntityTemplate;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class InterfacesDef extends StatefulEntityType {
 
@@ -90,7 +91,7 @@ public class InterfacesDef extends StatefulEntityType {
         				inputs = (LinkedHashMap<String,Object>)me.getValue();
         			}
         			else {
-                        ExceptionCollector.appendException(String.format(
+                        ThreadLocalsHolder.getCollector().appendException(String.format(
                             "UnknownFieldError: \"interfaces\" of template \"%s\" contain unknown field \"%s\"",
                             nodeTemplate.getName(),me.getKey()));
         			}

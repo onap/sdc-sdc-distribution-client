@@ -14,7 +14,7 @@ import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.toscaparser.api.Group;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
 
-public class ToscaParserNodeTemplateTest extends BasicTest {
+public class ToscaParserNodeTemplateTest extends SdcToscaParserBasicTest {
 
 	//region getServiceVfList
 	@Test
@@ -311,13 +311,22 @@ public class ToscaParserNodeTemplateTest extends BasicTest {
 		List<NodeTemplate> vfcs = complexCps.getVfcListByVf(VF_CUSTOMIZATION_UUID);
 		Map<String, Map<String, Object>> cps = complexCps.getCpPropertiesFromVfc(vfcs.get(0));
 
-		assertEquals("1", cps.get("port_fe1_sigtran").get("ip_requirements#ip_count_required#count"));
-		assertEquals("true", cps.get("port_fe1_sigtran").get("ip_requirements#dhcp_enabled"));
-		assertEquals("4", cps.get("port_fe1_sigtran").get("ip_requirements#ip_version"));
+		assertEquals(5, cps.size());
 
-		assertEquals("2", cps.get("port_fe_cluster").get("ip_requirements#ip_count_required#count"));
-		assertEquals("true", cps.get("port_fe_cluster").get("ip_requirements#dhcp_enabled"));
-		assertEquals("4", cps.get("port_fe_cluster").get("ip_requirements#ip_version"));
+		assertEquals(1, cps.get("port_fe1_sigtran").get("ip_requirements#ip_count_required#count"));
+		assertEquals(true, cps.get("port_fe1_sigtran").get("ip_requirements#dhcp_enabled"));
+		assertEquals(4, cps.get("port_fe1_sigtran").get("ip_requirements#ip_version"));
+
+		assertEquals(2, cps.get("port_fe_cluster").get("ip_requirements#ip_count_required#count"));
+		assertEquals(true, cps.get("port_fe_cluster").get("ip_requirements#dhcp_enabled"));
+		assertEquals(4, cps.get("port_fe_cluster").get("ip_requirements#ip_version"));
+	}
+
+	@Test
+	public void testGetCpPropertiesFromVfcForNullVFC() {
+		Map<String, Map<String, Object>> cps = complexCps.getCpPropertiesFromVfc(null);
+		assertNotNull(cps);
+		assertEquals(0, cps.size());
 	}
 	//endregion
 

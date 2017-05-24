@@ -9,6 +9,7 @@ import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.AttributeDef;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
 import org.openecomp.sdc.toscaparser.api.elements.PropertyDef;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 
 public class StatefulEntityType extends EntityType {
@@ -48,7 +49,7 @@ public class StatefulEntityType extends EntityType {
             }
             else{
                 defs = null;
-                ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
                     "InvalidTypeError: \"%s\" is not a valid type",entityType));
             }
         }
@@ -66,7 +67,7 @@ public class StatefulEntityType extends EntityType {
 				Object to = me.getValue();
 				if(to == null || !(to instanceof LinkedHashMap)) {
 					String s = to == null ? "null" : to.getClass().getSimpleName();
-					ExceptionCollector.appendException(String.format(
+					ThreadLocalsHolder.getCollector().appendException(String.format(
 							"Unexpected type error: property \"%s\" has type \"%s\" (expected dict)",pdname,s));
 					continue;
 				}

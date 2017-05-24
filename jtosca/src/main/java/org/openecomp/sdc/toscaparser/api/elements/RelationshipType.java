@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.EntityType;
 import org.openecomp.sdc.toscaparser.api.elements.StatefulEntityType;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class RelationshipType extends StatefulEntityType {
 
@@ -53,7 +54,7 @@ public class RelationshipType extends StatefulEntityType {
         		}
         	}
         	if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: Relationshiptype \"%s\" has unknown field \"%s\"",type,key));
         	}
         }

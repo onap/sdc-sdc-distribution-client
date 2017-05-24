@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 
 public class Schema {
@@ -70,14 +71,14 @@ public class Schema {
         if(!(_schemaDict instanceof LinkedHashMap)) {
             //msg = (_('Schema definition of "%(pname)s" must be a dict.')
             //       % dict(pname=name))
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             		"InvalidSchemaError: Schema definition of \"%s\" must be a dict",name));
         }
 
         if(_schemaDict.get("type") == null) {
             //msg = (_('Schema definition of "%(pname)s" must have a "type" '
             //         'attribute.') % dict(pname=name))
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             		"InvalidSchemaError: Schema definition of \"%s\" must have a \"type\" attribute",name));
         }
         
@@ -121,7 +122,7 @@ public class Schema {
 	            			}
 	            			else {
 	            				// error
-	            				ExceptionCollector.appendException(String.format(
+	            				ThreadLocalsHolder.getCollector().appendException(String.format(
 	            					"UnknownFieldError: Constraint type \"%s\" for property \"%s\" is not supported",
 	            					cClass,name));
 	            			}

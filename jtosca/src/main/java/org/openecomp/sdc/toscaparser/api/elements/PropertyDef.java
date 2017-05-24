@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class PropertyDef {
 	
@@ -45,7 +46,7 @@ public class PropertyDef {
         	if(schema.get("type") == null) {
         		//msg = (_('Schema definition of "%(pname)s" must have a "type" '
 	            //         'attribute.') % dict(pname=self.name))
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	            		"InvalidSchemaError: Schema definition of \"%s\" must have a \"type\" attribute",name));
         	}
 	        _loadRequiredAttrFromSchema();
@@ -83,7 +84,7 @@ public class PropertyDef {
                 //                                                  attr,
                 //                                                  value,
                 //                                                  valid_values)
-				ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
 						"Schema definition of \"%s\" has \"required\" attribute with an invalid value",
 						name));
 			}
@@ -116,7 +117,7 @@ public class PropertyDef {
                 //                                                  attr,
                 //                                                  value,
                 //                                                  valid_values)
-				ExceptionCollector.appendWarning(String.format(
+				ThreadLocalsHolder.getCollector().appendWarning(String.format(
 						"Schema definition of \"%s\" has \"status\" attribute with an invalid value",
 						name));
 			}

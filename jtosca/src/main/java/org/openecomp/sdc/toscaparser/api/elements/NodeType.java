@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.InterfacesDef;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class NodeType extends StatefulEntityType {
 	// TOSCA built-in node type
@@ -314,7 +315,7 @@ public class NodeType extends StatefulEntityType {
     				}
     			}
     			if(!bFound) {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                             "UnknownFieldError: Nodetype \"%s\" has unknown field \"%s\"",ntype,key));
     			}
     		}

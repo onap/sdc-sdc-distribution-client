@@ -2,6 +2,7 @@ package org.openecomp.sdc.toscaparser.api;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.TypeValidation;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class ImportsLoader {
 	        if((_path == null || _path.isEmpty()) && tpl == null) {
 	            //msg = _('Input tosca template is not provided.')
 	            //log.warning(msg)
-	            ExceptionCollector.appendException("ValidationError: Input tosca template is not provided");
+	            ThreadLocalsHolder.getCollector().appendException("ValidationError: Input tosca template is not provided");
 	        }
 	        
 	        this.path = _path;
@@ -77,7 +78,7 @@ public class ImportsLoader {
     	if(importslist == null) {
             //msg = _('"imports" keyname is defined without including templates.')
             //log.error(msg)
-            ExceptionCollector.appendException(
+            ThreadLocalsHolder.getCollector().appendException(
             		"ValidationError: \"imports\" keyname is defined without including templates");
             return;
     	}
@@ -92,7 +93,7 @@ public class ImportsLoader {
     				if(importNames.contains(importName)) {
                         //msg = (_('Duplicate import name "%s" was found.') % import_name)
                         //log.error(msg)
-                        ExceptionCollector.appendException(String.format(
+                        ThreadLocalsHolder.getCollector().appendException(String.format(
                         		"ValidationError: Duplicate import name \"%s\" was found",importName));
     				}
     				importNames.add(importName); //???
@@ -168,7 +169,7 @@ public class ImportsLoader {
     private void _validateImportKeys(String importName, LinkedHashMap<String,Object> importUri) {
     	if(importUri.get(FILE) == null) {
             //log.warning(_('Missing keyname "file" in import "%(name)s".') % {'name': import_name})
-    		ExceptionCollector.appendException(String.format(
+    		ThreadLocalsHolder.getCollector().appendException(String.format(
     				"MissingRequiredFieldError: Import of template \"%s\" is missing field %s",importName,FILE));
     	}
     	for(String key: importUri.keySet()) {
@@ -183,7 +184,7 @@ public class ImportsLoader {
                 //log.warning(_('Unknown keyname "%(key)s" error in '
                 //        'imported definition "%(def)s".')
                 //      % {'key': key, 'def': import_name})
-    			ExceptionCollector.appendException(String.format(
+    			ThreadLocalsHolder.getCollector().appendException(String.format(
     					"UnknownFieldError: Import of template \"%s\" has unknown fiels %s",importName,key));
     		}
     	}
@@ -220,7 +221,7 @@ public class ImportsLoader {
             repository = (String)((LinkedHashMap<String,Object>)importUriDef).get(REPOSITORY);
             if(repository != null) {
             	if(!repositories.keySet().contains(repository)) {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                     		"InvalidPropertyValueError: Repository \"%s\" not found in \"%s\"",
                     		repository,repositories.keySet().toString()));
             	}
@@ -237,7 +238,7 @@ public class ImportsLoader {
 	        //         'definition "%(import_name)s".')
 	        //       % {'import_name': import_name})
 	        //log.error(msg)
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 	        		"ValidationError: A template file name is not provided with import definition \"%s\"",importName));
 	        al[0] = al[1] = null;
 	        return al;
@@ -252,7 +253,7 @@ public class ImportsLoader {
 	            return al;
         	}
         	catch(IOException e) {
-    	        ExceptionCollector.appendException(String.format(
+    	        ThreadLocalsHolder.getCollector().appendException(String.format(
     	        		"ImportError: \"%s\" loading YAML import from \"%s\"",e.getClass().getSimpleName(),fileName));
     	        al[0] = al[1] = null;
     	        return al;
@@ -268,7 +269,7 @@ public class ImportsLoader {
             			String msg = String.format(
                             	"ImportError: Absolute file name \"%s\" cannot be used in the URL-based input template \"%s\"",
                             	fileName,path);
-                        ExceptionCollector.appendException(msg);
+                        ThreadLocalsHolder.getCollector().appendException(msg);
                         al[0] = al[1] = null;
                         return al;
             		}
@@ -311,7 +312,7 @@ public class ImportsLoader {
                                         //log.error(msg)
                             			String msg = String.format(
                                         		"ValueError: \"%s\" is not a valid file",importTemplate);
-                                        ExceptionCollector.appendException(msg);
+                                        ThreadLocalsHolder.getCollector().appendException(msg);
                                         log.debug("ImportsLoader - _loadImportTemplate - {}", msg);
                             		}
                             	}
@@ -329,7 +330,7 @@ public class ImportsLoader {
             	else {
             		String msg = String.format(
             			"Relative file name \"%s\" cannot be used in a pre-parsed input template",fileName);
-                   ExceptionCollector.appendException("ImportError: " + msg);
+                   ThreadLocalsHolder.getCollector().appendException("ImportError: " + msg);
                    al[0] = al[1] = null;
                    return al;
             	}
@@ -338,7 +339,7 @@ public class ImportsLoader {
             if(importTemplate == null || importTemplate.isEmpty()) {
                 //log.error(_('Import "%(name)s" is not valid.') %
                 //          {'name': import_uri_def})
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"ImportError: Import \"%s\" is not valid",importUriDef));
     	        al[0] = al[1] = null;
     	        return al;
@@ -347,7 +348,7 @@ public class ImportsLoader {
             // for now, this must be a file
             if(!aFile) {
             	log.error("ImportsLoader - _loadImportTemplate - Error!! Expected a file. importUriDef = {}, importTemplate = {}", importUriDef, importTemplate);
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"ImportError: Import \"%s\" is not a file",importName));
     	        al[0] = al[1] = null;
     	        return al;
@@ -360,13 +361,13 @@ public class ImportsLoader {
 	            return al;
             }
             catch(FileNotFoundException e) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"ImportError: Failed to load YAML from \"%s\"",importName));
     	        al[0] = al[1] = null;
     	        return al;
             }
             catch(Exception e) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"ImportError: Exception from SnakeYAML file = \"%s\"",importName));
     	        al[0] = al[1] = null;
     	        return al;
@@ -375,7 +376,7 @@ public class ImportsLoader {
             	
         if(shortImportNotation) {
             //log.error(_('Import "%(name)s" is not valid.') % import_uri_def)
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             		"ImportError: Import \"%s\" is not valid",importName));
 	        al[0] = al[1] = null;
 	        return al;
@@ -409,7 +410,7 @@ public class ImportsLoader {
                 String msg = String.format(
                 	"referenced repository \"%s\" in import definition \"%s\" not found",
                 	repository,importName);
-                ExceptionCollector.appendException("ImportError: " + msg);
+                ThreadLocalsHolder.getCollector().appendException("ImportError: " + msg);
    	        	al[0] = al[1] = null;
    	        	return al;
         	}
@@ -423,7 +424,7 @@ public class ImportsLoader {
 	            return al;
         	}
         	catch(IOException e) {
-    	        ExceptionCollector.appendException(String.format(
+    	        ThreadLocalsHolder.getCollector().appendException(String.format(
     	        		"ImportError: Exception loading YAML import from \"%s\"",fullUrl));
     	        al[0] = al[1] = null;
     	        return al;
@@ -433,12 +434,12 @@ public class ImportsLoader {
             String msg = String.format(
                 	"repository URL \"%s\" in import definition \"%s\" is not valid",
                 	repoUrl,importName);
-               ExceptionCollector.appendException("ImportError: " + msg);
+               ThreadLocalsHolder.getCollector().appendException("ImportError: " + msg);
         }
           
         // if we got here something is wrong with the flow...
         log.error("ImportsLoader - _loadImportTemplate - got to dead end (importName {})", importName);
-        ExceptionCollector.appendException(String.format(
+        ThreadLocalsHolder.getCollector().appendException(String.format(
         		"ImportError: _loadImportTemplate got to dead end (importName %s)\n",importName));
         al[0] = al[1] = null;
         return al;

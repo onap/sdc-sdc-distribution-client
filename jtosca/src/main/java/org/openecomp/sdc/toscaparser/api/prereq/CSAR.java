@@ -18,8 +18,9 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import org.openecomp.sdc.toscaparser.api.ImportsLoader;
-import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
-import org.openecomp.sdc.toscaparser.api.elements.Metadata;
+import org.openecomp.sdc.toscaparser.api.common.JToscaException;
+import org.openecomp.sdc.toscaparser.api.utils.JToscaErrorCodes;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.UrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,7 @@ public class CSAR {
 	}
 
 	@SuppressWarnings("unchecked")
-	public boolean validate() {
+	public boolean validate() throws JToscaException {
 		isValidated = true;
 	
         //validate that the file or URL exists
@@ -60,7 +61,7 @@ public class CSAR {
 		if(isFile) {
 			File f = new File(path);
 			if (!f.isFile()) {
-				ExceptionCollector.appendException(String.format("\"%s\" is not a file", path));
+				ThreadLocalsHolder.getCollector().appendException(String.format("\"%s\" is not a file", path));
 				return false;
 			} 
 			else {
@@ -69,7 +70,7 @@ public class CSAR {
 		}
 		else {
 			if(!UrlUtils.validateUrl(path)) {
-				ExceptionCollector.appendException(String.format("ImportError: \"%s\" does not exist",path));
+				ThreadLocalsHolder.getCollector().appendException(String.format("ImportError: \"%s\" does not exist",path));
 				return false;
 			}
 			// get it to a local file
@@ -81,7 +82,7 @@ public class CSAR {
 			    Files.copy(in,ptf,StandardCopyOption.REPLACE_EXISTING);
 			}
 			catch(Exception e) {
-				ExceptionCollector.appendException("ImportError: failed to load CSAR from " + path);
+				ThreadLocalsHolder.getCollector().appendException("ImportError: failed to load CSAR from " + path);
 				return false;
 			}
 			
@@ -102,7 +103,7 @@ public class CSAR {
 
 	}
 
-	private void _parseAndValidateMetaProperties() {
+	private void _parseAndValidateMetaProperties() throws JToscaException {
 
 		ZipFile zf = null;
 
@@ -114,16 +115,21 @@ public class CSAR {
 			raf.close();
 			// check if Zip's magic number
 			if (n != 0x504B0304) {
-				throw new IOException(String.format("\"%s\" is not a valid zip file", csar));
+				String errorString = String.format("\"%s\" is not a valid zip file", csar);
+				log.error(errorString);
+				throw new JToscaException(errorString , JToscaErrorCodes.INVALID_CSAR_FORMAT.getValue());
 			}
 
 			// validate that it contains the metadata file in the correct location
 			zf = new ZipFile(csar);
 			ZipEntry ze = zf.getEntry("TOSCA-Metadata/TOSCA.meta");
 			if (ze == null) {
-				throw new IOException(String.format(
+				
+				String errorString = String.format(
 						"\"%s\" is not a valid CSAR as it does not contain the " +
-								"required file \"TOSCA.meta\" in the folder \"TOSCA-Metadata\"", csar));
+								"required file \"TOSCA.meta\" in the folder \"TOSCA-Metadata\"", csar);
+				log.error(errorString);
+				throw new JToscaException(errorString, JToscaErrorCodes.MISSING_META_FILE.getValue());
 			}
 
 			//Going over expected metadata files and parsing them
@@ -134,22 +140,31 @@ public class CSAR {
 				if (ze != null) {
 					InputStream inputStream = zf.getInputStream(ze);
 					n = inputStream.read(ba, 0, 4096);
-
 					String md = new String(ba);
 					md = md.substring(0, (int) n);
-					Yaml yaml = new Yaml();
-					Object mdo = yaml.load(md);
-					if (!(mdo instanceof LinkedHashMap)) {
-						throw new IOException(String.format(
-								"The file \"%s\" in the" +
-										" CSAR \"%s\" does not contain valid YAML content", ze.getName(), csar));
+					
+					String errorString = String.format(
+							"The file \"%s\" in the" +
+									" CSAR \"%s\" does not contain valid YAML content", ze.getName(), csar);
+					
+					try {
+						Yaml yaml = new Yaml();
+						Object mdo = yaml.load(md);
+						if (!(mdo instanceof LinkedHashMap)) {
+							log.error(errorString);
+							throw new JToscaException(errorString, JToscaErrorCodes.INVALID_META_YAML_CONTENT.getValue());
+						}
+
+						String[] split = ze.getName().split("/");
+	                    String fileName = split[split.length - 1];
+
+						if (!metaProperties.containsKey(fileName)) {
+							metaProperties.put(fileName, (LinkedHashMap<String, Object>) mdo);
+						}
 					}
-
-					String[] split = ze.getName().split("/");
-                    String fileName = split[split.length - 1];
-
-					if (!metaProperties.containsKey(fileName)) {
-						metaProperties.put(fileName, (LinkedHashMap<String, Object>) mdo);
+					catch(Exception e) {
+						log.error(errorString);
+						throw new JToscaException(errorString, JToscaErrorCodes.INVALID_META_YAML_CONTENT.getValue());
 					}
 				}
 			}
@@ -157,9 +172,11 @@ public class CSAR {
 			// verify it has "Entry-Definition"
 			String edf = _getMetadata("Entry-Definitions");
 			if (edf == null) {
-				throw new IOException(String.format(
+				String errorString = String.format(
 						"The CSAR \"%s\" is missing the required metadata " +
-								"\"Entry-Definitions\" in \"TOSCA-Metadata/TOSCA.meta\"", csar));
+								"\"Entry-Definitions\" in \"TOSCA-Metadata/TOSCA.meta\"", csar);
+				log.error(errorString);
+				throw new JToscaException(errorString, JToscaErrorCodes.ENTRY_DEFINITION_NOT_DEFINED.getValue());
 			}
 
 			//validate that "Entry-Definitions' metadata value points to an existing file in the CSAR
@@ -173,11 +190,16 @@ public class CSAR {
 				}
 			}
 			if (!foundEDF) {
-				throw new IOException(String.format(
-						"The \"Entry-Definitions\" file defined in the CSAR \"%s\" does not exist", csar));
+				String errorString = String.format(
+						"The \"Entry-Definitions\" file defined in the CSAR \"%s\" does not exist", csar);
+				log.error(errorString);
+				throw new JToscaException(errorString, JToscaErrorCodes.MISSING_ENTRY_DEFINITION_FILE.getValue());
 			}
+		} catch (JToscaException e) {
+			//ThreadLocalsHolder.getCollector().appendCriticalException(e.getMessage());
+			throw e;
 		} catch (Exception e) {
-			ExceptionCollector.appendException("ValidationError: " + e.getMessage());
+			ThreadLocalsHolder.getCollector().appendException("ValidationError: " + e.getMessage());
 			errorCaught = true;
 		}
 
@@ -199,7 +221,7 @@ public class CSAR {
 		}
 	}
 	
-    private String _getMetadata(String key) {
+    private String _getMetadata(String key) throws JToscaException {
     	if(!isValidated) {
     		validate();
     	}
@@ -207,11 +229,11 @@ public class CSAR {
     	return value != null ? value.toString() : null;
     }
 
-    public String getAuthor() {
+    public String getAuthor() throws JToscaException {
         return _getMetadata("Created-By");
     }
 
-    public String getVersion() {
+    public String getVersion() throws JToscaException {
         return _getMetadata("CSAR-Version");
     }
 
@@ -223,7 +245,7 @@ public class CSAR {
 		return metaProperties.get(propertiesFile);
 	}
 
-	public String getMainTemplate() {
+	public String getMainTemplate() throws JToscaException {
     	String entryDef = _getMetadata("Entry-Definitions");
     	ZipFile zf;
     	boolean ok = false;
@@ -246,7 +268,7 @@ public class CSAR {
     }
 
 	@SuppressWarnings("unchecked")
-	public LinkedHashMap<String,Object> getMainTemplateYaml() {
+	public LinkedHashMap<String,Object> getMainTemplateYaml() throws JToscaException {
     	String mainTemplate = tempDir + File.separator + getMainTemplate();
     	if(mainTemplate != null) {
 			try {
@@ -259,7 +281,7 @@ public class CSAR {
 		        return (LinkedHashMap<String,Object>)data;
 			}
 			catch(Exception e) {
-				ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
 						"The file \"%s\" in the CSAR \"%s\" does not " +
 		                "contain valid TOSCA YAML content",
 		                mainTemplate,csar));
@@ -268,7 +290,7 @@ public class CSAR {
     	return null;
     }
     
-    public String getDescription() {
+    public String getDescription() throws JToscaException {
         String desc = _getMetadata("Description");
         if(desc != null) {
             return desc;
@@ -283,7 +305,7 @@ public class CSAR {
     	return tempDir;
     }
         
-    public void decompress() throws IOException {
+    public void decompress() throws IOException, JToscaException {
         if(!isValidated) {
             validate();
         }
@@ -292,7 +314,7 @@ public class CSAR {
        
     }
     
-	private void _validateExternalReferences() {
+	private void _validateExternalReferences() throws JToscaException {
         // Extracts files referenced in the main template
 		// These references are currently supported:
         // * imports
@@ -339,7 +361,7 @@ public class CSAR {
                         			}
                         		}
                         		else {
-                                    ExceptionCollector.appendException(String.format(
+                                    ThreadLocalsHolder.getCollector().appendException(String.format(
                                         "ValueError: Unexpected artifact definition for \"%s\"",
                                         artifactKey));
                                         errorCaught = true;
@@ -407,12 +429,12 @@ public class CSAR {
                     return;
                 }
                 else {
-                    ExceptionCollector.appendException(msg);
+                    ThreadLocalsHolder.getCollector().appendException(msg);
                     errorCaught = true;
                 }
             }
             catch (Exception e) {
-                ExceptionCollector.appendException(msg);
+				ThreadLocalsHolder.getCollector().appendException(msg);
             }
         }
 
@@ -424,7 +446,7 @@ public class CSAR {
     	}
     	
 		if(raiseExc) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 				"ValueError: The resource \"%s\" does not exist",resourceFile));
 		}
 		errorCaught = true;

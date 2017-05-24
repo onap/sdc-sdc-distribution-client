@@ -1,6 +1,7 @@
 package org.openecomp.sdc.toscaparser.api.elements.constraints;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Length extends Constraint {
 	// Constraint class for "length"
@@ -22,7 +23,7 @@ public class Length extends Constraint {
 		super(name,type,c);
 		
 		if(!validTypes.contains(constraintValue.getClass().getSimpleName())) {
-	        ExceptionCollector.appendException("InvalidSchemaError: The property \"length\" expects an integer");
+	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"length\" expects an integer");
 		}
 	}
 	

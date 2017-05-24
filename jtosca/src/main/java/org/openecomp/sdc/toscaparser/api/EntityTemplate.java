@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.*;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public abstract class EntityTemplate {
     // Base class for TOSCA templates
@@ -92,7 +93,7 @@ public abstract class EntityTemplate {
             if(type == null) {
                 //msg = (_('Policy definition of "%(pname)s" must have'
                 //       ' a "type" ''attribute.') % dict(pname=name))
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"ValidationError: Policy definition of \"%s\" must have a \"type\" attribute",name));
             }
             typeDefinition = new PolicyType(type, customDef);
@@ -312,7 +313,7 @@ public abstract class EntityTemplate {
                         //           '"default_instances" value is not between '
                         //           '"min_instances" and "max_instances".' %
                         //           self.name)
-                        ExceptionCollector.appendException(String.format(
+                        ThreadLocalsHolder.getCollector().appendException(String.format(
                             "ValidationError: \"properties\" of template \"%s\": \"default_instances\" value is not between \"min_instances\" and \"max_instances\"",
                             name));
                     }
@@ -343,7 +344,7 @@ public abstract class EntityTemplate {
             }
             // Required properties found without value or a default value
             if(!reqPropsNoValueOrDefault.isEmpty()) {
-                ExceptionCollector.appendWarning(String.format(
+                ThreadLocalsHolder.getCollector().appendWarning(String.format(
                     "MissingRequiredFieldError: properties of template \"%s\" are missing field(s): %s",
                     name,reqPropsNoValueOrDefault.toString()));
             }
@@ -351,7 +352,7 @@ public abstract class EntityTemplate {
         else {
             // Required properties in schema, but not in template
             if(!requiredProps.isEmpty()) {
-                ExceptionCollector.appendWarning(String.format(
+                ThreadLocalsHolder.getCollector().appendWarning(String.format(
                         "MissingRequiredFieldError2: properties of template \"%s\" are missing field(s): %s",
                         name,requiredProps.toString()));
             }
@@ -361,7 +362,7 @@ public abstract class EntityTemplate {
     @SuppressWarnings("unchecked")
 	private void _validateField(LinkedHashMap<String,Object> template) {
         if(!(template instanceof LinkedHashMap)) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
             		"MissingRequiredFieldError: Template \"%s\" is missing required field \"%s\"",name,TYPE));
             return;//???
         }
@@ -379,7 +380,7 @@ public abstract class EntityTemplate {
        		bBad = (template.get(TYPE) == null);
         }
         if(bBad) {
-        	ExceptionCollector.appendException(String.format(
+        	ThreadLocalsHolder.getCollector().appendException(String.format(
             		"MissingRequiredFieldError: Template \"%s\" is missing required field \"%s\"",name,TYPE));
         }
     }
@@ -394,7 +395,7 @@ public abstract class EntityTemplate {
     			}
     		}
     		if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: Section \"%s\" of template \"%s\" contains unknown field \"%s\"",section,name,sname));
     		}
     	}

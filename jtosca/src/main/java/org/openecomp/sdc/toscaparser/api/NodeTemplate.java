@@ -7,6 +7,7 @@ import java.util.Map;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.*;
 import org.openecomp.sdc.toscaparser.api.utils.CopyUtils;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class NodeTemplate extends EntityTemplate {
 	
@@ -96,13 +97,13 @@ public class NodeTemplate extends EntityTemplate {
 				}
 			}
 			if(bFound || customDef.get(node) != null) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                 		"NotImplementedError: Lookup by TOSCA types is not supported. Requirement for \"%s\" can not be full-filled",
                 		getName()));
                 return null;
 			}
 			if(templates.get(node) == null) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "KeyError: Node template \"%s\" was not found",node));
                     return null;
 			}
@@ -117,7 +118,7 @@ public class NodeTemplate extends EntityTemplate {
 			if(relationship == null) {
 				ArrayList<Object> parentReqs = ((NodeType)typeDefinition).getAllRequirements();
 				if(parentReqs == null) {
-                    ExceptionCollector.appendException("ValidationError: parent_req is null");
+                    ThreadLocalsHolder.getCollector().appendException("ValidationError: parent_req is null");
 				}
 				else {
 					for(String key: req.keySet()) {
@@ -177,7 +178,7 @@ public class NodeTemplate extends EntityTemplate {
             	   	   		}
             	   	   	}
             	   	   	else {
-            	   	   			ExceptionCollector.appendException(String.format(
+            	   	   			ThreadLocalsHolder.getCollector().appendException(String.format(
             	   	   					"MissingRequiredFieldError: \"relationship\" used in template \"%s\" is missing required field \"type\"",
             	   	   					relatedTpl.getName()));
             		   	}
@@ -286,7 +287,7 @@ public class NodeTemplate extends EntityTemplate {
 		ArrayList<Object> requires = (ArrayList<Object>)((NodeType)typeDefinition).getValue(REQUIREMENTS, entityTpl, false);
 		if(requires != null) {
 			if(!(requires instanceof ArrayList)) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "TypeMismatchError: \"requirements\" of template \"%s\" are not of type \"list\"",name));
 			}
 			else {
@@ -331,7 +332,7 @@ public class NodeTemplate extends EntityTemplate {
         if(occurrences.size() != 2 || 
            !(0 <= (int)occurrences.get(0)  && (int)occurrences.get(0) <= (int)occurrences.get(1)) ||
            (int)occurrences.get(1) == 0) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidPropertyValueError: property has invalid value %s",occurrences.toString()));
         }
 	}
@@ -346,7 +347,7 @@ public class NodeTemplate extends EntityTemplate {
 				}
 			}
 			if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: \"requirements\" of template \"%s\" contains unknown field \"%s\"",name,key));
 			}
 		}
@@ -380,7 +381,7 @@ public class NodeTemplate extends EntityTemplate {
 					_commonValidateField(value,_collectCustomIfaceOperations(iname),"interfaces");
 				}
 				else {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: \"interfaces\" of template \"%s\" contains unknown field %s",name,iname));
 				}
 			}
@@ -432,7 +433,7 @@ public class NodeTemplate extends EntityTemplate {
 				
 			}
 			if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "UnknownFieldError: Node template \"%s\" has unknown field \"%s\"",name,ntname));
 			}
 		}

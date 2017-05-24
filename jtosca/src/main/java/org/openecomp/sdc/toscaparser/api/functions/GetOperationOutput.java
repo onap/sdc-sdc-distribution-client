@@ -2,14 +2,12 @@ package org.openecomp.sdc.toscaparser.api.functions;
 
 import java.util.ArrayList;
 
-import org.openecomp.sdc.toscaparser.api.EntityTemplate;
-import org.openecomp.sdc.toscaparser.api.NodeTemplate;
-import org.openecomp.sdc.toscaparser.api.RelationshipTemplate;
-import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
+import org.openecomp.sdc.toscaparser.api.*;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.InterfacesDef;
 import org.openecomp.sdc.toscaparser.api.elements.RelationshipType;
 import org.openecomp.sdc.toscaparser.api.elements.StatefulEntityType;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GetOperationOutput extends Function {
 
@@ -25,7 +23,7 @@ public class GetOperationOutput extends Function {
 	        _findOperationName(interfaceName,(String)args.get(2));
 	    }
 	    else {
-	        ExceptionCollector.appendException(
+	        ThreadLocalsHolder.getCollector().appendException(
 	            "ValueError: Illegal arguments for function \"get_operation_output\". " +
 	            "Expected arguments: \"template_name\",\"interface_name\"," +
 	            "\"operation_name\",\"output_variable_name\"");
@@ -44,7 +42,7 @@ public class GetOperationOutput extends Function {
 	        return _interfaceName;
 	    }
 	    else {
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 	        	"ValueError: invalid interface name \"%s\" in \"get_operation_output\"",
 	        	_interfaceName));
 	        return null;
@@ -66,7 +64,7 @@ public class GetOperationOutput extends Function {
 	 	        return operationName;
 		    }
  	        else {
- 	            ExceptionCollector.appendException(String.format(
+ 	            ThreadLocalsHolder.getCollector().appendException(String.format(
  	            	"ValueError: Invalid operation of Configure interface \"%s\" in \"get_operation_output\"",
  	            	operationName));
  	            return null;
@@ -85,14 +83,14 @@ public class GetOperationOutput extends Function {
  	 	        return operationName;
  		    }
   	        else {
-  	            ExceptionCollector.appendException(String.format(
+  	            ThreadLocalsHolder.getCollector().appendException(String.format(
  	            	"ValueError: Invalid operation of Configure interface \"%s\" in \"get_operation_output\"",
  	            	operationName));
  	            return null;
  	        }
 	    }
 	    else {
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 	            	"ValueError: Invalid interface name \"%s\" in \"get_operation_output\"",
  	            	interfaceName));
 	        return null;
@@ -102,7 +100,7 @@ public class GetOperationOutput extends Function {
 	private NodeTemplate _findNodeTemplate(String nodeTemplateName) {
 	    if(nodeTemplateName.equals(TARGET)) {
 	    	if(!(((EntityTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 	                "KeyError: \"TARGET\" keyword can only be used in context " +
 	                           " to \"Relationships\" target node");
 	            return null;
@@ -111,7 +109,7 @@ public class GetOperationOutput extends Function {
 	    }
 	    if(nodeTemplateName.equals(SOURCE)) {
 	    	if(!(((EntityTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 	                "KeyError: \"SOURCE\" keyword can only be used in context " +
 	                           " to \"Relationships\" source node");
 	            return null;
@@ -130,7 +128,7 @@ public class GetOperationOutput extends Function {
 	            return nt;
 	        }
 	    }
-	    ExceptionCollector.appendException(String.format(
+	    ThreadLocalsHolder.getCollector().appendException(String.format(
 	        "KeyError: Node template \"%s\" was not found",nodeTemplateName));
     	return null;
     }

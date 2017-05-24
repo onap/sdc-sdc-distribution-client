@@ -34,7 +34,7 @@ public class ValidateUtils {
 	
 	public static Object validateNumeric(Object value) {
 		if(!(value instanceof Number)) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "ValueError: \"%s\" is not a numeric",value.toString()));
 		}
 		return value;
@@ -46,7 +46,7 @@ public class ValidateUtils {
 			if(value instanceof Boolean) {
 				return (Boolean)value ? 1 : 0;
 			}
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \"%s\" is not an integer",value.toString()));
 		}
 	    return value;
@@ -54,7 +54,7 @@ public class ValidateUtils {
 
 	public static Object validateFloat(Object value) {
 		if(!(value instanceof Float || value instanceof Double)) {
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \"%s\" is not a float",value.toString()));
 		}
 	    return value;
@@ -62,7 +62,7 @@ public class ValidateUtils {
 
 	public static Object validateString(Object value) {
 		if(!(value instanceof String)) {
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \'%s\' is not a string",value.toString()));
 		}
 	    return value;
@@ -70,7 +70,7 @@ public class ValidateUtils {
 
 	public static Object validateList(Object value) {
 		if(!(value instanceof ArrayList)) {
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \"%s\" is not a list",value.toString()));
 		}
 	    return value;
@@ -83,7 +83,7 @@ public class ValidateUtils {
 	    validateList(range);
 	    // validate range list has a min and max
 	    if(range instanceof ArrayList && ((ArrayList<Object>)range).size() != 2) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \"%s\" is not a valid range",range.toString()));
 	        // too dangerous to continue...
 	        return range;
@@ -96,7 +96,7 @@ public class ValidateUtils {
 	    
 	    if(!(r0 instanceof Integer) && !(r0 instanceof Float) ||
 	       !(r1 instanceof Integer) && !(r1 instanceof Float)) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "ValueError: \"%s\" is not a valid range",range.toString()));
 		        // too dangerous to continue...
 	        return range;
@@ -121,7 +121,7 @@ public class ValidateUtils {
 	    if(!minTest && !maxTest) {
 	        // Note: min == max is allowed
 	        if(min > max) {
-	            ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "ValueError:\"%s\" is not a valid range",range.toString()));
 	        }
 	    }
@@ -132,7 +132,7 @@ public class ValidateUtils {
 	public static Object validateValueInRange(Object value,Object range,String propName) {
 		// verify all 3 are numeric and convert to Floats
 		if(!(value instanceof Integer || value instanceof Float)) {
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "ValueError: validateInRange: \"%s\" is not a number",range.toString()));
             return value;
 	    }
@@ -144,7 +144,7 @@ public class ValidateUtils {
 	    // better safe than sorry...
 	    // validate that range list has a min and max
 	    if(range instanceof ArrayList && ((ArrayList<Object>)range).size() != 2) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError: \"%s\" is not a valid range",range.toString()));
 	        // too dangerous to continue...
 	        return value;
@@ -157,7 +157,7 @@ public class ValidateUtils {
 	    
 	    if(!(r0 instanceof Integer) && !(r0 instanceof Float) ||
 	       !(r1 instanceof Integer) && !(r1 instanceof Float)) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 		            "ValueError: \"%s\" is not a valid range",range.toString()));
 		        // too dangerous to continue...
 	        return value;
@@ -182,7 +182,7 @@ public class ValidateUtils {
 	    if(!minTest && !maxTest) {
 	        // Note: min == max is allowed
 	        if(min > max) {
-	            ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "ValueError:\"%s\" is not a valid range",range.toString()));
 	        }
 	    }
@@ -201,7 +201,7 @@ public class ValidateUtils {
 	        }
 	    }
 	    if(bError) {
-            ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "RangeValueError: Property \"%s\", \"%s\" not in range [\"%s\" - \"%s\"",
 	                propName,value.toString(),r0.toString(),r1.toString()));
 	    }
@@ -210,7 +210,7 @@ public class ValidateUtils {
 	
 	public static Object validateMap(Object ob) {
 		if(!(ob instanceof LinkedHashMap)) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "ValueError\"%s\" is not a map.",ob.toString()));
 		}
 	    return ob;
@@ -226,7 +226,7 @@ public class ValidateUtils {
 				return normalized.equals("true");
 			}
 		}
-	    ExceptionCollector.appendException(String.format(
+		ThreadLocalsHolder.getCollector().appendException(String.format(
 		        "ValueError: \"%s\" is not a boolean",value.toString()));
 	    return value;
 	}
@@ -249,7 +249,7 @@ public class ValidateUtils {
 		
 		// timestamps are loaded as Date objects by the YAML parser
 		if(!(value instanceof Date)) {
-	        ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 		        "ValueError: \"%s\" is not a valid timestamp",
 		        value.toString()));
 			

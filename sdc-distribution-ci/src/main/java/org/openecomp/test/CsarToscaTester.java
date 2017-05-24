@@ -8,80 +8,66 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
+import org.openecomp.sdc.tosca.parser.impl.SdcPropertyNames;
 import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
-import org.openecomp.sdc.toscaparser.api.NodeTemplate;
-import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
-import org.openecomp.sdc.toscaparser.api.parameters.Input;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class CsarToscaTester {
 	public static void main(String[] args) throws Exception {
-		ClassLoader loader = CsarToscaTester.class.getClassLoader();
 		System.out.println("CsarToscaParser - path to CSAR's Directory is " + Arrays.toString(args));
 		SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
-		
-		File folder = new File(args[0].toString());
+
+		File folder = new File(args[0]);
 		File[] listOfFiles = folder.listFiles();
-		FileWriter fw;
-		
 		Date now = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("d-MM-y-HH_mm_ss");
 		String time = dateFormat.format(now);
-		String csarsDir = args[1].toString() + "/csar-reports-" + time;
+		String csarsDir = args[1] + "/csar-reports-" + time;
 		File dir = new File(csarsDir);
 		dir.mkdir();
-		
-		
+
+
 		for (File file : listOfFiles) {
 			if (file.isFile()) {  
-		        System.out.println("File " + file.getAbsolutePath());
-		        ExceptionCollector.clear();
-		        String name = file.getName();
-		        String currentCsarDir = csarsDir+"/"+name+"-"+time;
+				System.out.println("File " + file.getAbsolutePath());
+				String name = file.getName();
+				String currentCsarDir = csarsDir+"/"+name+"-"+time;
 				dir = new File(currentCsarDir);
 				dir.mkdir();
-		        ISdcCsarHelper csarHelper = factory.getSdcCsarHelper(file.getAbsolutePath());
-		        List<NodeTemplate> vflist = csarHelper.getServiceVfList();
-		        List<Input> inputs = csarHelper.getServiceInputs();
-		        List<String> exceptionReport = ExceptionCollector.getCriticalsReport();
-		        //System.out.println("CRITICALS during CSAR parsing are: " + (exceptionReport != null ? exceptionReport.toString() : "none"));
-		        List<String> warningsReport = ExceptionCollector.getWarningsReport();
-		        //System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
-		        
-		        
-				
-		        if (!exceptionReport.isEmpty())  {
-		        	
-					try {
-						fw = new FileWriter(new File(currentCsarDir + "/" + exceptionReport.size() / 2 + "-critical-" + name +"-"+time + ".txt"));
-						for (String exception : exceptionReport) {
-							fw.write(exception);
-							fw.write("\r\n");
-						}
-						fw.close();
-						
-						fw = new FileWriter(new File(currentCsarDir + "/" + warningsReport.size() / 2 +  "-warning-" + name +"-"+time + ".txt"));
-						for (String warning : warningsReport) {
-							fw.write(warning);
-							fw.write("\r\n");
-						}
-						fw.close();
-						
-						
-						//TODO
-						fw = new FileWriter(new File(currentCsarDir + "/" + exceptionReport.size() / 2 + "-critical-" + name +"-"+time + ".txt"));
-						for (String critical : exceptionReport) {
-							fw.write(critical);
-							fw.write("\r\n");
-						}
-						fw.close();
-						
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
+				try {
+					factory.getSdcCsarHelper(file.getAbsolutePath());
+				} catch (SdcToscaParserException e){
+					System.out.println("SdcToscaParserException caught. Code: "+e.getCode()+", message: "+ e.getMessage());
 				}
-		     }
-			
+				List<String> notAnalyzedReport = ThreadLocalsHolder.getCollector().getNotAnalyzedExceptionsReport();
+				System.out.println("NOT ANALYZED during CSAR parsing are: " + (notAnalyzedReport != null ? notAnalyzedReport.toString() : "none"));
+				List<String> warningsReport = ThreadLocalsHolder.getCollector().getWarningsReport();
+				//System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
+				List<String> criticalsReport = ThreadLocalsHolder.getCollector().getCriticalsReport();
+				System.out.println("CRITICALS during CSAR parsing are: " + (criticalsReport != null ? criticalsReport.toString() : "none"));
+
+				try {
+					generateReport(time, name, currentCsarDir, criticalsReport, "critical");
+					generateReport(time, name, currentCsarDir, warningsReport, "warning");
+					generateReport(time, name, currentCsarDir, notAnalyzedReport, "notAnalyzed");
+
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+
 		}		
+	}
+
+	private static void generateReport(String time, String name, String currentCsarDir, List<String> criticalsReport, String type)
+			throws IOException {
+		FileWriter fw;
+		fw = new FileWriter(new File(currentCsarDir + "/" + criticalsReport.size() + "-"+type+"-" + name +"-"+time + ".txt"));
+		for (String exception : criticalsReport) {
+			fw.write(exception);
+			fw.write("\r\n");
+		}
+		fw.close();
 	}
 }

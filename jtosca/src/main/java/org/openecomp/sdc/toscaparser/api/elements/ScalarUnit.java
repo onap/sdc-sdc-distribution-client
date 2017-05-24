@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public abstract class ScalarUnit {
 					return key;
 				}
 			}
-            ExceptionCollector.appendWarning(String.format(
+            ThreadLocalsHolder.getCollector().appendWarning(String.format(
             	"'The unit \"%s\" is not valid. Valid units are \n%s",
                 inputUnit,SCALAR_UNIT_DICT.keySet().toString()));
             return inputUnit;
@@ -67,7 +68,7 @@ public abstract class ScalarUnit {
 			value = matcher.group(1) + " " + scalarUnit;
 		}
 		else {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "ValueError: \"%s\" is not a valid scalar-unit",value.toString()));
 		}
 		return value;
@@ -135,7 +136,7 @@ public abstract class ScalarUnit {
 		if(type.equals(SCALAR_UNIT_FREQUENCY)) {
 			return (new ScalarUnitFrequency(value)).getNumFromScalarUnit(unit);
 		}
-        ExceptionCollector.appendException(String.format(
+        ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "TypeError: \"%s\" is not a valid scalar-unit type",type));
         return 0.0;
 	}

@@ -5,10 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.common.JToscaException;
@@ -18,6 +15,8 @@ import org.openecomp.sdc.toscaparser.api.extensions.ExtTools;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.openecomp.sdc.toscaparser.api.parameters.Output;
 import org.openecomp.sdc.toscaparser.api.prereq.CSAR;
+import org.openecomp.sdc.toscaparser.api.utils.JToscaErrorCodes;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -65,7 +64,6 @@ public class ToscaTemplate extends Object {
     private ArrayList<String> VALID_TEMPLATE_VERSIONS;
     private LinkedHashMap<String,ArrayList<String>> ADDITIONAL_SECTIONS;
 
-    private boolean bAbortOnParsingErrors = false;
 	private boolean isFile;
 	private String path;
 	private String inputPath;
@@ -96,6 +94,8 @@ public class ToscaTemplate extends Object {
 						 boolean aFile,
 						 LinkedHashMap<String,Object> yamlDictTpl) throws JToscaException {
 
+		ThreadLocalsHolder.setCollector(new ExceptionCollector(_path));
+
 		VALID_TEMPLATE_VERSIONS = new ArrayList<>();
 		VALID_TEMPLATE_VERSIONS.add("tosca_simple_yaml_1_0");
 	    VALID_TEMPLATE_VERSIONS.addAll(exttools.getVersions());
@@ -107,7 +107,6 @@ public class ToscaTemplate extends Object {
 
 		//long startTime = System.nanoTime();
 		
-		//ExceptionCollector.start();
 		
 		isFile = aFile;
 		inputPath = null;
@@ -158,7 +157,7 @@ public class ToscaTemplate extends Object {
                 tpl = yamlDictTpl;
 			}
             else {
-	                ExceptionCollector.appendException(
+				ThreadLocalsHolder.getCollector().appendException(
 	                    "ValueError: No path or yaml_dict_tpl was provided. There is nothing to parse");
 				log.debug("ToscaTemplate ValueError: No path or yaml_dict_tpl was provided. There is nothing to parse");
 
@@ -190,14 +189,14 @@ public class ToscaTemplate extends Object {
         	csarTempDir = null;
         }
         
-		//ExceptionCollector.stop();
 		verifyTemplate();
-	}
 
+	}
+	
 	private void _abort() throws JToscaException {
 		// print out all exceptions caught
 		verifyTemplate();
-		throw new JToscaException("jtosca aborting");
+		throw new JToscaException("jtosca aborting", JToscaErrorCodes.PATH_NOT_VALID.getValue());
 	}
 	private TopologyTemplate _topologyTemplate() {
 		return new TopologyTemplate(
@@ -429,7 +428,7 @@ public class ToscaTemplate extends Object {
 	private void _validateField() {
 		String sVersion = _tplVersion();
 		if(sVersion == null) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 					"MissingRequiredField: Template is missing required field \"%s\"",DEFINITION_VERSION));
 		}
 		else {
@@ -453,7 +452,7 @@ public class ToscaTemplate extends Object {
 				}
 			}
 			if(!bFound) {
-				ExceptionCollector.appendException(String.format(
+				ThreadLocalsHolder.getCollector().appendException(String.format(
 						"UnknownFieldError: Template contains unknown field \"%s\"",
 						sKey));
 			}
@@ -469,7 +468,7 @@ public class ToscaTemplate extends Object {
 			}
 		}
 		if(!bFound) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 				"InvalidTemplateVersion: \"%s\" is invalid. Valid versions are %s",
 				sVersion,VALID_TEMPLATE_VERSIONS.toString()));
 		}
@@ -478,7 +477,7 @@ public class ToscaTemplate extends Object {
 		}
 	}
 
-	private String _getPath(String _path) {
+	private String _getPath(String _path) throws JToscaException {
 		if (_path.toLowerCase().endsWith(".yaml") || _path.toLowerCase().endsWith(".yml")) {
 			return _path;
 		} 
@@ -501,49 +500,39 @@ public class ToscaTemplate extends Object {
 			}
 		} 
 		else {
-			ExceptionCollector.appendException("ValueError: " + _path + " is not a valid file");
+			ThreadLocalsHolder.getCollector().appendException("ValueError: " + _path + " is not a valid file");
 			return null;
 		}
 		return null;
 	}
 
 	private void verifyTemplate() throws JToscaException {
+		ThreadLocalsHolder.getCollector().setWantTrace(false);
+
 		//Warnings
-		List<String> warningsStrings = ExceptionCollector.getWarningsReport();
-		if (warningsStrings != null && warningsStrings.size() > 0) {
-			int nexcw = ExceptionCollector.warningsCaught();
+		int warningsCount = ThreadLocalsHolder.getCollector().warningsCaught();
+		if (warningsCount > 0) {
+			List<String> warningsStrings = ThreadLocalsHolder.getCollector().getWarningsReport();
 			log.warn("####################################################################################################");
-			log.warn("ToscaTemplate - verifyTemplate - {} Parsing Warning{} occurred...", nexcw, (nexcw > 1 ? "s" : ""));
+			log.warn("CSAR Warnings found! CSAR name - {}", inputPath);
+			log.warn("ToscaTemplate - verifyTemplate - {} Parsing Warning{} occurred...", warningsCount, (warningsCount > 1 ? "s" : ""));
 			for (String s : warningsStrings) {
-				if (s != null) {
-					log.debug("ToscaTemplate - verifyTemplate - {}", s);
-				}
+				log.warn("{}. CSAR name - {}", s, inputPath);
 			}
 			log.warn("####################################################################################################");
+		}
 
-			
-			List<String> exceptionStrings = ExceptionCollector.getCriticalsReport();
-			if (exceptionStrings != null && exceptionStrings.size() > 0) {
-				int nexc = ExceptionCollector.errorsCaught();
-				log.error("####################################################################################################");
-				log.error("ToscaTemplate - verifyTemplate - {} Parsing Critical{} occurred...", nexc, (nexc > 1 ? "s" : ""));
-				for (String s : exceptionStrings) {
-					if (s != null) {
-						log.debug("ToscaTemplate - verifyTemplate - {}", s);
-					}
-				}
-				log.error("####################################################################################################");
-				if(bAbortOnParsingErrors) {
-					throw new JToscaException("Aborting because of parsing errors");
-				}
-			} 
-			else {
-				if (inputPath != null) {
-					log.debug("ToscaTemplate - verifyTemplate - The input {} passed validation", inputPath);
-				}
+		//Criticals
+		int criticalsCount = ThreadLocalsHolder.getCollector().criticalsCaught();
+		if (criticalsCount > 0) {
+			List<String> criticalStrings = ThreadLocalsHolder.getCollector().getCriticalsReport();
+			log.error("####################################################################################################");
+			log.error("ToscaTemplate - verifyTemplate - {} Parsing Critical{} occurred...", criticalsCount, (criticalsCount > 1 ? "s" : ""));
+			for (String s : criticalStrings) {
+				log.error("{}. CSAR name - {}", s, inputPath);
 			}
-
-		} 
+			throw new JToscaException(String.format("CSAR Validation Failed. CSAR name - {}. Please check logs for details.", inputPath), JToscaErrorCodes.CSAR_TOSCA_VALIDATION_ERROR.getValue());
+		}
 	}
 
 	public String getPath() {
@@ -648,10 +637,6 @@ public class ToscaTemplate extends Object {
 	public ArrayList<TopologyTemplate> getNestedTemplates() {
 		return nestedToscaTemplatesWithTopology;
 	}
-	
-	public void setAbortOnParsingErrors(boolean b) {
-		bAbortOnParsingErrors = b;
-	}
 
 	@Override
 	public String toString() {
@@ -659,7 +644,6 @@ public class ToscaTemplate extends Object {
 				"exttools=" + exttools +
 				", VALID_TEMPLATE_VERSIONS=" + VALID_TEMPLATE_VERSIONS +
 				", ADDITIONAL_SECTIONS=" + ADDITIONAL_SECTIONS +
-				", bAbortOnParsingErrors=" + bAbortOnParsingErrors +
 				", isFile=" + isFile +
 				", path='" + path + '\'' +
 				", inputPath='" + inputPath + '\'' +
@@ -692,7 +676,7 @@ import logging
 import os
 
 from copy import deepcopy
-from toscaparser.common.exception import ExceptionCollector
+from toscaparser.common.exception import ExceptionCollector.collector
 from toscaparser.common.exception import InvalidTemplateVersion
 from toscaparser.common.exception import MissingRequiredFieldError
 from toscaparser.common.exception import UnknownFieldError
@@ -744,7 +728,7 @@ class ToscaTemplate(object):
     def __init__(self, path=None, parsed_params=None, a_file=True,
                  yaml_dict_tpl=None):
 
-        ExceptionCollector.start()
+        ExceptionCollector.collector.start()
         self.a_file = a_file
         self.input_path = None
         self.path = None
@@ -765,7 +749,7 @@ class ToscaTemplate(object):
             if yaml_dict_tpl:
                 self.tpl = yaml_dict_tpl
             else:
-                ExceptionCollector.appendException(
+                ExceptionCollector.collector.appendException(
                     ValueError(_('No path or yaml_dict_tpl was provided. '
                                  'There is nothing to parse.')))
 
@@ -785,7 +769,7 @@ class ToscaTemplate(object):
                 self._handle_nested_tosca_templates_with_topology()
                 self.graph = ToscaGraph(self.nodetemplates)
 
-        ExceptionCollector.stop()
+        ExceptionCollector.collector.stop()
         self.verify_template()
 
     def _topology_template(self):
@@ -921,7 +905,7 @@ class ToscaTemplate(object):
     def _validate_field(self):
         version = self._tpl_version()
         if not version:
-            ExceptionCollector.appendException(
+            ExceptionCollector.collector.appendException(
                 MissingRequiredFieldError(what='Template',
                                           required=DEFINITION_VERSION))
         else:
@@ -931,12 +915,12 @@ class ToscaTemplate(object):
         for name in self.tpl:
             if (name not in SECTIONS and
                name not in self.ADDITIONAL_SECTIONS.get(version, ())):
-                ExceptionCollector.appendException(
+                ExceptionCollector.collector.appendException(
                     UnknownFieldError(what='Template', field=name))
 
     def _validate_version(self, version):
         if version not in self.VALID_TEMPLATE_VERSIONS:
-            ExceptionCollector.appendException(
+            ExceptionCollector.collector.appendException(
                 InvalidTemplateVersion(
                     what=version,
                     valid_versions=', '. join(self.VALID_TEMPLATE_VERSIONS)))
@@ -955,23 +939,23 @@ class ToscaTemplate(object):
                 self.a_file = True  # the file has been decompressed locally
                 return os.path.join(csar.temp_dir, csar.get_main_template())
         else:
-            ExceptionCollector.appendException(
+            ExceptionCollector.collector.appendException(
                 ValueError(_('"%(path)s" is not a valid file.')
                            % {'path': path}))
 
     def verify_template(self):
-        if ExceptionCollector.exceptionsCaught():
+        if ExceptionCollector.collector.exceptionsCaught():
             if self.input_path:
                 raise ValidationError(
                     message=(_('\nThe input "%(path)s" failed validation with '
                                'the following error(s): \n\n\t')
                              % {'path': self.input_path}) +
-                    '\n\t'.join(ExceptionCollector.getExceptionsReport()))
+                    '\n\t'.join(ExceptionCollector.collector.getExceptionsReport()))
             else:
                 raise ValidationError(
                     message=_('\nThe pre-parsed input failed validation with '
                               'the following error(s): \n\n\t') +
-                    '\n\t'.join(ExceptionCollector.getExceptionsReport()))
+                    '\n\t'.join(ExceptionCollector.collector.getExceptionsReport()))
         else:
             if self.input_path:
                 msg = (_('The input "%(path)s" successfully passed '

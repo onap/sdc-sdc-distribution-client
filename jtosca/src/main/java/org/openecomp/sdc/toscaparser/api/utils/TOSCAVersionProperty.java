@@ -35,7 +35,7 @@ public class TOSCAVersionProperty {// test with functions/test_concat.yaml
 		Pattern pattern = Pattern.compile(versionRe);
 		Matcher matcher = pattern.matcher(version);
 		if(!matcher.find()) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidTOSCAVersionPropertyException: " +
                 "Value of TOSCA version property \"%s\" is invalid",
                 version));
@@ -77,7 +77,7 @@ public class TOSCAVersionProperty {// test with functions/test_concat.yaml
 		if((fixVersion == null && value != null) ||
 		   (minorVersion.equals("0") && majorVersion.equals("0") && 
 		      fixVersion.equals("0") &&  value != null)) {
-			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "InvalidTOSCAVersionPropertyException: " +
 	                "Value of TOSCA version property \"%s\" is invalid",
 	                version));
@@ -92,7 +92,7 @@ public class TOSCAVersionProperty {// test with functions/test_concat.yaml
         // Eg: version = 18.0.0-1 is invalid.
 
     	if(qualifier == null && value != null) {
-   			ExceptionCollector.appendException(String.format(
+			ThreadLocalsHolder.getCollector().appendException(String.format(
       	                "InvalidTOSCAVersionPropertyException: " +
        	                "Value of TOSCA version property \"%s\" is invalid",
        	                version));

@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api.elements.constraints;
 import java.util.Date;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class InRange extends Constraint {
 		super(name,type,c);
 
 		if(!(constraintValue instanceof ArrayList) || ((ArrayList<Object>)constraintValue).size() != 2) {
-            ExceptionCollector.appendException("InvalidSchemaError: The property \"in_range\" expects a list");
+            ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"in_range\" expects a list");
 			
 		}
 
@@ -53,11 +54,11 @@ public class InRange extends Constraint {
         String msg = "The property \"in_range\" expects comparable values";
         for(Object vo: alcv) {
     		if(!validTypes.contains(vo.getClass().getSimpleName())) {
-    	        ExceptionCollector.appendException("InvalidSchemaError: " + msg);
+    	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: " + msg);
     		}
             // The only string we allow for range is the special value 'UNBOUNDED'
             if((vo instanceof String) && !((String)vo).equals(UNBOUNDED)) { 
-				ExceptionCollector.appendException("InvalidSchemaError: " + msg);
+				ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: " + msg);
             }
         }
         min = alcv.get(0);

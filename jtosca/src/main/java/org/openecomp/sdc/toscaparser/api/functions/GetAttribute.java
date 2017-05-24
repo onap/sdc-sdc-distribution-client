@@ -3,11 +3,7 @@ package org.openecomp.sdc.toscaparser.api.functions;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import org.openecomp.sdc.toscaparser.api.Capability;
-import org.openecomp.sdc.toscaparser.api.EntityTemplate;
-import org.openecomp.sdc.toscaparser.api.NodeTemplate;
-import org.openecomp.sdc.toscaparser.api.RelationshipTemplate;
-import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
+import org.openecomp.sdc.toscaparser.api.*;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.AttributeDef;
 import org.openecomp.sdc.toscaparser.api.elements.CapabilityTypeDef;
@@ -18,6 +14,7 @@ import org.openecomp.sdc.toscaparser.api.elements.PropertyDef;
 import org.openecomp.sdc.toscaparser.api.elements.RelationshipType;
 import org.openecomp.sdc.toscaparser.api.elements.StatefulEntityType;
 import org.openecomp.sdc.toscaparser.api.elements.constraints.Schema;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class GetAttribute extends Function {
 	// Get an attribute value of an entity defined in the service template
@@ -49,7 +46,7 @@ public class GetAttribute extends Function {
 	@Override
 	void validate() {
 		if(args.size() < 2) {
-	        ExceptionCollector.appendException(
+	        ThreadLocalsHolder.getCollector().appendException(
 			    "ValueError: Illegal arguments for function \"get_attribute\". Expected arguments: \"node-template-name\", \"req-or-cap\" (optional), \"property name.\"");
 		    return;
 		}
@@ -80,7 +77,7 @@ public class GetAttribute extends Function {
 	        	for(Object elem: args.subList(index,args.size())) {
 	        		if(valueType.equals("list")) {
                         if(!(elem instanceof Integer)) {
-                            ExceptionCollector.appendException(String.format(
+                            ThreadLocalsHolder.getCollector().appendException(String.format(
                                 "ValueError: Illegal arguments for function \"get_attribute\" \"%s\". Expected positive integer argument",
                                 elem.toString()));
                         } 
@@ -102,7 +99,7 @@ public class GetAttribute extends Function {
 	        				}
 	        			}
 	        			if(bFound) {
-	                        ExceptionCollector.appendException(String.format(
+	                        ThreadLocalsHolder.getCollector().appendException(String.format(
 	                            "ValueError: 'Illegal arguments for function \"get_attribute\". Unexpected attribute/index value \"%d\"",
 	                            elem));
 	                        return;
@@ -116,7 +113,7 @@ public class GetAttribute extends Function {
 	                            valueType = (String)prop.getSchema().get("type");
 	                        }
 	                        else {
-	                            ExceptionCollector.appendException(String.format(
+	                            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                                "KeyError: Illegal arguments for function \"get_attribute\". Attribute name \"%s\" not found in \"%\"",
 	                                elem,valueType));
 	                        }
@@ -150,7 +147,7 @@ public class GetAttribute extends Function {
 		if(nodeTpl != null &&
 			!_attributeExistsInType(nodeTpl.getTypeDefinition()) &&
 			!nodeTpl.getProperties().keySet().contains(getAttributeName())) {
-	        ExceptionCollector.appendException(String.format(
+	        ThreadLocalsHolder.getCollector().appendException(String.format(
 	            "KeyError: Attribute \"%s\" was not found in node template \"%s\"",
 	            getAttributeName(),nodeTpl.getName()));
 		}
@@ -196,13 +193,13 @@ public class GetAttribute extends Function {
 	        // Currently this is the only way to tell whether the function
 	        // is used within the outputs section of the TOSCA template.
 	        if(context instanceof ArrayList) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 	                "ValueError: \"get_attribute: [ HOST, ... ]\" is not allowed in \"outputs\" section of the TOSCA template");
 	            return null;
 	        }
 	        NodeTemplate nodeTpl = _findHostContainingAttribute(SELF);
 	        if(nodeTpl == null) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "ValueError: \"get_attribute: [ HOST, ... ]\" was used in " +
 	                "node template \"%s\" but \"%s\" was not found in " +
 	                "the relationship chain",((NodeTemplate)context).getName(),HOSTED_ON));
@@ -212,7 +209,7 @@ public class GetAttribute extends Function {
 	    }
 	    if(nodeTemplateName.equals(TARGET)) {
 	    	if(!(((EntityTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 	                "KeyError: \"TARGET\" keyword can only be used in context " +
 	                           " to \"Relationships\" target node");
 	            return null;
@@ -221,7 +218,7 @@ public class GetAttribute extends Function {
 	    }
 	    if(nodeTemplateName.equals(SOURCE)) {
 	    	if(!(((EntityTemplate)context).getTypeDefinition() instanceof RelationshipType)) {
-	            ExceptionCollector.appendException(
+	            ThreadLocalsHolder.getCollector().appendException(
 	                "KeyError: \"SOURCE\" keyword can only be used in context " +
 	                           " to \"Relationships\" source node");
 	            return null;
@@ -240,7 +237,7 @@ public class GetAttribute extends Function {
 	            return nt;
 	        }
 	    }
-	    ExceptionCollector.appendException(String.format(
+	    ThreadLocalsHolder.getCollector().appendException(String.format(
 	        "KeyError: Node template \"%s\" was not found",nodeTemplateName));
     	return null;
     }
@@ -279,7 +276,7 @@ public class GetAttribute extends Function {
 	    		attribute = attrs.get(attrName);
 	    	}
 	        if(attribute == null) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                "KeyError: Attribute \"%s\" was not found in capability \"%s\" of node template \"%s\" referenced from node template \"%s\"",
 	                attrName,capabilityName,nodeTemplate.getName(),((NodeTemplate)context).getName()));
 	        }
@@ -288,7 +285,7 @@ public class GetAttribute extends Function {
 	    String msg = String.format(
 	    	"Requirement/Capability \"%s\" referenced from node template \"%s\" was not found in node template \"%s\"",
 	    	capabilityName,((NodeTemplate)context).getName(),nodeTemplate.getName());
-	    ExceptionCollector.appendException("KeyError: " + msg);
+	    ThreadLocalsHolder.getCollector().appendException("KeyError: " + msg);
 		return null;									  
 	}
 

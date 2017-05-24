@@ -9,7 +9,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-public class ToscaParserServiceInputTest extends BasicTest {
+public class ToscaParserServiceInputTest extends SdcToscaParserBasicTest {
 
     //region getServiceInputs
     @Test

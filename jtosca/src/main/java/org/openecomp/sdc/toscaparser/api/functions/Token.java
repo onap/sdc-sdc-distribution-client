@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
 import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Token extends Function {
     // Validate the function and provide an instance of the function
@@ -41,19 +42,19 @@ public class Token extends Function {
 	@Override
 	void validate() {
         if(args.size() < 3) {
-            ExceptionCollector.appendException(
+            ThreadLocalsHolder.getCollector().appendException(
                 "ValueError: Invalid arguments for function \"token\". " +
                 "Expected at least three arguments");
         }
         else {
             if(!(args.get(1) instanceof String) || 
                ((String)args.get(1)).length() != 1) {
-                ExceptionCollector.appendException(
+                ThreadLocalsHolder.getCollector().appendException(
                     "ValueError: Invalid arguments for function \"token\". " +
                     "Expected single char value as second argument");
             }
             if(!(args.get(2) instanceof Integer)) {
-                ExceptionCollector.appendException(
+                ThreadLocalsHolder.getCollector().appendException(
                     "ValueError: Invalid arguments for function \"token\"" +
                     "Expected integer value as third argument");
         	}

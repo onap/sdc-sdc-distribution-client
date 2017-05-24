@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api;
 import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.UrlUtils;
 
 public class Repository {
@@ -23,7 +24,7 @@ public class Repository {
 		if(reposit instanceof LinkedHashMap) {
 			url = (String)((LinkedHashMap<String,Object>)reposit).get("url");
             if(url == null) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "MissingRequiredFieldError: Repository \"%s\" is missing required field \"url\"",
                     name));
             }
@@ -44,7 +45,7 @@ public class Repository {
 					}
 				}
 				if(!bFound) {
-                    ExceptionCollector.appendException(String.format(
+                    ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: repositories \"%s\" contains unknown field \"%s\"",
                         keyname,key));
 				}
@@ -54,7 +55,7 @@ public class Repository {
 	        if(repositUrl != null) {
 	            boolean urlVal = UrlUtils.validateUrl(repositUrl);
 	            if(!urlVal) {
-	                ExceptionCollector.appendException(String.format(
+	                ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "URLException: repsositories \"%s\" Invalid Url",keyname));
 	            }
 	        }

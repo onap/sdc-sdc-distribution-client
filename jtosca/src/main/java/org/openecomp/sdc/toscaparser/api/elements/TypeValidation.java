@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.extensions.ExtTools;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class TypeValidation {
 
@@ -70,7 +71,7 @@ public class TypeValidation {
         		}
         	}
         	if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "UnknownFieldError: Template \"%s\" contains unknown field \"%s\"",
                     importDef.toString(),name));
         	}
@@ -88,7 +89,7 @@ public class TypeValidation {
     		}
     	}
     	if(!bFound) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "InvalidTemplateVersion: version \"%s\" in \"%s\" is not supported\n" +
                 "Allowed versions: [%s]",
                 sVersion,importDef.toString(),allowed));

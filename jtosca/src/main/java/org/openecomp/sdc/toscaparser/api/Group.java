@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
 import org.openecomp.sdc.toscaparser.api.elements.Metadata;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 
 public class Group extends EntityTemplate {
@@ -69,7 +70,7 @@ public class Group extends EntityTemplate {
     			}
     		}
     		if(!bFound) {
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                         "UnknownFieldError: Groups \"%s\" contains unknown field \"%s\"",
                         name,key));
     		}

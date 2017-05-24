@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import org.openecomp.sdc.toscaparser.api.DataEntity;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 
 public class PortSpec {
@@ -52,7 +53,7 @@ public class PortSpec {
             // verify one of the specified values is set
             if(source == null && sourceRange == null && 
                     target == null && targetRange == null) { 
-                ExceptionCollector.appendException(String.format(
+                ThreadLocalsHolder.getCollector().appendException(String.format(
                     "InvalidTypeAdditionalRequirementsError: Additional requirements for type \"%s\" not met",
                     TYPE_URI));
             }
@@ -74,7 +75,7 @@ public class PortSpec {
             }
         }
         catch(Exception e) {
-            ExceptionCollector.appendException(String.format(
+            ThreadLocalsHolder.getCollector().appendException(String.format(
                 "ValueError: \"%s\" do not meet requirements for type \"%s\"", 
                 _properties.toString(),SHORTNAME));
         }

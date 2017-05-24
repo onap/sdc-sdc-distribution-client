@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 import org.openecomp.sdc.toscaparser.api.utils.ValidateUtils;
 
 public class Policy extends EntityTemplate {
@@ -100,7 +101,7 @@ public class Policy extends EntityTemplate {
 				}
 			}
 			if(!bFound) {
-	            ExceptionCollector.appendException(String.format(
+	            ThreadLocalsHolder.getCollector().appendException(String.format(
 	                    "UnknownFieldError: Policy \"%s\" contains unknown field \"%s\"",
 	                    name,key));
 			}

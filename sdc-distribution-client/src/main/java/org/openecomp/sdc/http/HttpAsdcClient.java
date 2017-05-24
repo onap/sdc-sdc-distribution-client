@@ -70,7 +70,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 	private static final String TLS = "TLSv1.2";
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String HTTPS = "https://";
-	private static Logger log = LoggerFactory.getLogger(DistributionClientImpl.class.getName());
+	private static Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
 	private CloseableHttpClient httpClient = null;
 	private String serverFqdn = null;
 	private String authHeaderValue = "";

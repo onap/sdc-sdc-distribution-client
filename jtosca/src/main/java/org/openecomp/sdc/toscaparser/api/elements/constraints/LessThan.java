@@ -3,6 +3,7 @@ package org.openecomp.sdc.toscaparser.api.elements.constraints;
 import java.util.Date;
 
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class LessThan extends Constraint {
 
@@ -34,7 +35,7 @@ public class LessThan extends Constraint {
 		super(name,type,c);
 		
 		if(!validTypes.contains(constraintValue.getClass().getSimpleName())) {
-	        ExceptionCollector.appendException("InvalidSchemaError: The property \"less_than\" expects comparable values");
+	        ThreadLocalsHolder.getCollector().appendException("InvalidSchemaError: The property \"less_than\" expects comparable values");
 		}
 	}
 	

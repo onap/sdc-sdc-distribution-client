@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.common.ExceptionCollector;
+import org.openecomp.sdc.toscaparser.api.utils.ThreadLocalsHolder;
 
 public class Concat extends Function {
     // Validate the function and provide an instance of the function
@@ -36,7 +37,7 @@ public class Concat extends Function {
 	@Override
 	void validate() {
 		if(args.size() < 1) {
-	        ExceptionCollector.appendException(
+	        ThreadLocalsHolder.getCollector().appendException(
 	            "ValueError: Invalid arguments for function \"concat\". " +
 	            "Expected at least one argument");
 		}
