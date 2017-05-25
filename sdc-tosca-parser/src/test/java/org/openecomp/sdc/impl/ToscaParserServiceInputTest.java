@@ -34,6 +34,12 @@ public class ToscaParserServiceInputTest extends SdcToscaParserBasicTest {
         assertEquals("test service naming", serviceInputLeafValue);
     }
 
+//    @Test
+//    public void testGetServiceInputLeafValueWithGetInput(){
+//        String serviceInputLeafValue = fdntCsarHelperWithInputs.getServiceInputLeafValueOfDefault("my_input#default");
+//        assertEquals(null, serviceInputLeafValue);
+//    }
+
     @Test
     public void testGetServiceInputLeafValueNotExists(){
         String serviceInputLeafValue = fdntCsarHelper.getServiceInputLeafValueOfDefault("service_naming#default#kuku");

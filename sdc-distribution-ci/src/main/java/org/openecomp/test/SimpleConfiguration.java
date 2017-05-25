@@ -150,7 +150,7 @@ public class SimpleConfiguration implements IConfiguration{
 	}
 	
 	public static Boolean toDownload() {
-		return false;
+		return true;
 	}
 	
 	public static String downloadPath() {

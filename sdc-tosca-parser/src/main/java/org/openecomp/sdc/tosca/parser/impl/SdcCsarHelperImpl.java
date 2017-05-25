@@ -41,6 +41,7 @@ import org.openecomp.sdc.toscaparser.api.TopologyTemplate;
 import org.openecomp.sdc.toscaparser.api.ToscaTemplate;
 import org.openecomp.sdc.toscaparser.api.elements.Metadata;
 import org.openecomp.sdc.toscaparser.api.elements.NodeType;
+import org.openecomp.sdc.toscaparser.api.functions.Function;
 import org.openecomp.sdc.toscaparser.api.parameters.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +75,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
         String[] split = getSplittedPath(leafValuePath);
         LinkedHashMap<String, Property> properties = nodeTemplate.getProperties();
         Object property = processProperties(split, properties);
-        return property == null ? null : String.valueOf(property);
+        return property == null || property instanceof Function ? null : String.valueOf(property);
     }
 
     @Override
@@ -124,11 +125,12 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
                         String fullPathToSearch = PREFIX + cpName + "_" + item;
                         Object value = getNodeTemplatePropertyAsObject(vfc, fullPathToSearch);
                         if (value != null) {
-                            if (!cps.containsKey(cpName))
+                            if (!cps.containsKey(cpName)){
                                 cps.put(cpName, new HashMap<>());
+                            }
+                            cps.get(cpName).put(item, value);
                         }
 
-                        cps.get(cpName).put(item, value);
                     }
                 }
             }
@@ -250,7 +252,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
                 Input input = findFirst.get();
                 Object current = input.getDefault();
                 Object property = iterateProcessPath(2, current, split);
-                return property == null ? null : String.valueOf(property);
+                return property == null || property instanceof Function? null : String.valueOf(property);
             }
         }
         log.error("getServiceInputLeafValue - value not found");
@@ -360,7 +362,7 @@ public class SdcCsarHelperImpl implements ISdcCsarHelper {
         String[] split = getSplittedPath(leafValuePath);
         LinkedHashMap<String, Property> properties = group.getProperties();
         Object property = processProperties(split, properties);
-        return property == null ? null : String.valueOf(property);
+        return property == null || property instanceof Function? null : String.valueOf(property);
     }
 
     @Override

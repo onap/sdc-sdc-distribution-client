@@ -26,8 +26,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openecomp.sdc.api.IDistributionClient;
 import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
 import org.openecomp.sdc.api.consumer.INotificationCallback;
@@ -157,7 +160,7 @@ public class SimpleCallback implements INotificationCallback {
 			
 			
 			if (downloadResult.getDistributionActionResult() == DistributionActionResultEnum.SUCCESS) {
-				handleSuccessfullDownload(data, relevantArtifact);
+				handleSuccessfullDownload(data, relevantArtifact, downloadResult.getArtifactPayload());
 			} else {
 				handleFailedDownload(data, relevantArtifact);
 			}
@@ -207,7 +210,7 @@ public class SimpleCallback implements INotificationCallback {
 		postDownloadStatusSendLogic(sendDownloadStatus);
 	}
 
-	private void handleSuccessfullDownload(INotificationData data, IArtifactInfo relevantArtifact) {
+	private void handleSuccessfullDownload(INotificationData data, IArtifactInfo relevantArtifact, byte[] payload) {
 		// Send Download Status
 		IDistributionClientResult sendDownloadStatus = client.sendDownloadStatus(buildStatusMessage(client, data, relevantArtifact, DistributionStatusEnum.DOWNLOAD_OK));
 		
@@ -216,7 +219,7 @@ public class SimpleCallback implements INotificationCallback {
 		
 		// Doing deployment ...
 		postDownloadStatusSendLogic(sendDownloadStatus);
-		boolean isDeployedSuccessfully = handleDeployment();
+		boolean isDeployedSuccessfully = handleDeployment(data, relevantArtifact, payload);
 		IDistributionClientResult deploymentStatus;
 		try {
 			Thread.sleep(1000);
@@ -269,8 +272,37 @@ public class SimpleCallback implements INotificationCallback {
 		return false;
 	}
 
-	private boolean handleDeployment() {
-		return true;
+	private boolean handleDeployment(INotificationData data, IArtifactInfo relevantArtifact, byte[] payload) {
+		if (relevantArtifact.getArtifactType().equals(ArtifactTypeEnum.VF_MODULES_METADATA.name()))  {
+			
+			try {
+				List<IArtifactInfo> serviceArtifacts = data.getServiceArtifacts();
+				JSONArray jsonData = new JSONArray(new String(payload));
+				boolean artifactIsFound = true;
+				for (int index = 0 ; index < jsonData.length(); index++)  {
+					
+					JSONObject jsonObject = (JSONObject) jsonData.get(index);
+					JSONArray artifacts = (JSONArray) jsonObject.get("artifacts");
+					for (int i = 0 ; i < artifacts.length(); i++) {
+						String artifact = artifacts.getString(i).toString();
+						Optional<IArtifactInfo> serviceArtifactFound = serviceArtifacts.stream().filter(x -> x.getArtifactUUID().equals(artifact)).findFirst();
+						if (!serviceArtifactFound.isPresent()) {
+							artifactIsFound = false;
+							System.out.println("################ Artifact: " + artifact + " NOT FOUND in Notification Data ################");
+						}
+					}
+				}
+				return artifactIsFound;
+				
+			} catch (Exception e) {
+				System.out.println("################ Couldn't convert vf_modules_metadata.json to json : " + e.getMessage());
+				return false;
+			}
+		}
+		else {
+			return true;
+		}
+		
 //		to return deploy_error use return false
 //		return false;
 	}

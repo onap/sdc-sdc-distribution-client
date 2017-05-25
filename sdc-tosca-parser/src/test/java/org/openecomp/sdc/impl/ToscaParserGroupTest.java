@@ -76,6 +76,13 @@ public class ToscaParserGroupTest extends SdcToscaParserBasicTest{
         assertEquals("false", volumeGroup);
     }
 
+//    @Test
+//    public void testGroupFlatGetInputProperty() throws SdcToscaParserException {
+//        List<Group> vfModulesByVf = fdntCsarHelperWithInputs.getVfModulesByVf(VF_CUSTOMIZATION_UUID);
+//        String volumeGroup = fdntCsarHelperWithInputs.getGroupPropertyLeafValue(vfModulesByVf.get(1), "volume_group");
+//        assertEquals("false", volumeGroup);
+//    }
+
     @Test
     public void testGroupPropertyLeafValueByNullProperty() {
         List<Group> vfModulesByVf = fdntCsarHelper.getVfModulesByVf(VF_CUSTOMIZATION_UUID);

@@ -3,16 +3,18 @@ package org.openecomp.sdc.impl;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.testng.annotations.Test;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.toscaparser.api.Group;
 import org.openecomp.sdc.toscaparser.api.NodeTemplate;
+import org.testng.annotations.Test;
 
 public class ToscaParserNodeTemplateTest extends SdcToscaParserBasicTest {
 
@@ -43,6 +45,12 @@ public class ToscaParserNodeTemplateTest extends SdcToscaParserBasicTest {
 	}
 
 	@Test
+	public void testNodeTemplateFlatFunctionProperty() throws SdcToscaParserException {
+		List<NodeTemplate> serviceVfList = fdntCsarHelperWithInputs.getServiceVfList();
+		assertEquals(null, fdntCsarHelperWithInputs.getNodeTemplatePropertyLeafValue(serviceVfList.get(1), "target_network_role"));
+	}
+
+	@Test
 	public void testNodeTemplateNestedProperty() throws SdcToscaParserException {
 		List<NodeTemplate> serviceVlList = fdntCsarHelper.getServiceVlList();
 		NodeTemplate nodeTemplate = serviceVlList.get(0);
@@ -50,7 +58,7 @@ public class ToscaParserNodeTemplateTest extends SdcToscaParserBasicTest {
 		assertEquals("24", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_assignments#ipv4_subnet_default_assignment#cidr_mask"));
 		assertEquals("7a6520b-9982354-ee82992c-105720", fdntCsarHelper.getNodeTemplatePropertyLeafValue(nodeTemplate, "network_flows#vpn_binding"));
 	}
-	
+
 	@Test
 	public void testNodeTemplateNestedPropertyFromInput() throws SdcToscaParserException {
 		List<NodeTemplate> serviceVfList = fdntCsarHelper.getServiceVfList();
@@ -308,19 +316,42 @@ public class ToscaParserNodeTemplateTest extends SdcToscaParserBasicTest {
 	//region getCpPropertiesFromVfc
 	@Test
 	public void testGetCpPropertiesFromVfc() {
-		List<NodeTemplate> vfcs = complexCps.getVfcListByVf(VF_CUSTOMIZATION_UUID);
-		Map<String, Map<String, Object>> cps = complexCps.getCpPropertiesFromVfc(vfcs.get(0));
+		List<NodeTemplate> vfcs = complexCps.getVfcListByVf("f999e2ca-72c0-42d3-9b11-13f2122fb8ef");
+		boolean isChecked = false;
+		boolean isChecked1 = false;
+		for (int i = 0; i < vfcs.size(); i++) {
 
-		assertEquals(5, cps.size());
+			if(vfcs.get(i).getName().equalsIgnoreCase("abstract_ddc"))
+			{
+				isChecked = true;
+				Map<String, Map<String, Object>> cps = complexCps.getCpPropertiesFromVfc(vfcs.get(i));
 
-		assertEquals(1, cps.get("port_fe1_sigtran").get("ip_requirements#ip_count_required#count"));
-		assertEquals(true, cps.get("port_fe1_sigtran").get("ip_requirements#dhcp_enabled"));
-		assertEquals(4, cps.get("port_fe1_sigtran").get("ip_requirements#ip_version"));
+				assertEquals(3,cps.size());
 
-		assertEquals(2, cps.get("port_fe_cluster").get("ip_requirements#ip_count_required#count"));
-		assertEquals(true, cps.get("port_fe_cluster").get("ip_requirements#dhcp_enabled"));
-		assertEquals(4, cps.get("port_fe_cluster").get("ip_requirements#ip_version"));
+				assertEquals(new Integer(1), cps.get("ddc_int_imbl__port").get("ip_requirements#ip_count_required#count"));
+				assertEquals(new Boolean(true), cps.get("ddc_int_imbl__port").get("ip_requirements#dhcp_enabled"));			
+				assertEquals(new Integer(6), cps.get("ddc_int_imbl__port").get("ip_requirements#ip_version"));
+				assertEquals(null, cps.get("ddc_int_imbl__port").get("subnetpoolid"));
+
+				//assertEquals("\"int_imsp\"", cps.get("mon_ist_imsp__port").get("network_role_tag"));
+
+			}
+			
+			if(vfcs.get(i).getName().equalsIgnoreCase("abstract_mda"))
+			{
+				isChecked1 = true;
+				Map<String, Map<String, Object>> cps1 = complexCps.getCpPropertiesFromVfc(vfcs.get(i));			
+
+				assertEquals(new Integer(4), cps1.get("mda_int_imsp__port").get("ip_requirements#ip_version"));
+				assertEquals(null, cps1.get("mda_int_imsp__port").get("ip_requirements#ip_count_required#count"));
+
+			}
+
+		}
+		assertTrue(isChecked);
+		assertTrue(isChecked1);
 	}
+
 
 	@Test
 	public void testGetCpPropertiesFromVfcForNullVFC() {
