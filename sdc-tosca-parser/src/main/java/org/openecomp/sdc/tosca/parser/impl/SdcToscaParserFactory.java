@@ -41,7 +41,13 @@ public class SdcToscaParserFactory {
      *
      * @param csarPath - the absolute path to CSAR file.
      * @return ISdcCsarHelper object.
-     * @throws SdcToscaParserException - in case the path or CSAR are invalid.
+     * @throws SdcToscaParserException - in case the path or CSAR are invalid.<br>
+     * Possible codes of SdcToscaParserException:<br>
+     * TP0001 - CSAR file not found.<br>
+     * TP0002 - CSAR file bad format. Check the log for details.<br>
+     * TP0003 - CSAR version is unsupported by the parser.<br>
+     * TP0004 - Unexpected general error.<br>
+     * 
      */
     public ISdcCsarHelper getSdcCsarHelper(String csarPath) throws SdcToscaParserException {
         synchronized (SdcToscaParserFactory.class) {

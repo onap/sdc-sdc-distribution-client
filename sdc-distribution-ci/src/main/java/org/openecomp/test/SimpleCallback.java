@@ -277,6 +277,8 @@ public class SimpleCallback implements INotificationCallback {
 			
 			try {
 				List<IArtifactInfo> serviceArtifacts = data.getServiceArtifacts();
+				List<IResourceInstance> resourcesArtifacts = data.getResources();
+				
 				JSONArray jsonData = new JSONArray(new String(payload));
 				boolean artifactIsFound = true;
 				for (int index = 0 ; index < jsonData.length(); index++)  {
@@ -285,8 +287,16 @@ public class SimpleCallback implements INotificationCallback {
 					JSONArray artifacts = (JSONArray) jsonObject.get("artifacts");
 					for (int i = 0 ; i < artifacts.length(); i++) {
 						String artifact = artifacts.getString(i).toString();
+						
 						Optional<IArtifactInfo> serviceArtifactFound = serviceArtifacts.stream().filter(x -> x.getArtifactUUID().equals(artifact)).findFirst();
-						if (!serviceArtifactFound.isPresent()) {
+						
+						boolean isResourceFound = false;
+						for (int j = 0 ; j < resourcesArtifacts.size(); j++) {
+							Optional<IArtifactInfo> resourceArtifactFound = resourcesArtifacts.get(j).getArtifacts().stream().filter(x -> x.getArtifactUUID().equals(artifact)).findFirst();
+							isResourceFound = resourceArtifactFound.isPresent() || isResourceFound;
+						}
+						
+						if (!serviceArtifactFound.isPresent() && !isResourceFound) {
 							artifactIsFound = false;
 							System.out.println("################ Artifact: " + artifact + " NOT FOUND in Notification Data ################");
 						}
