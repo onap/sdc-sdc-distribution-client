@@ -1,0 +1,7 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Michael Lando <ml636r@att.com>
+Submitted-by: Michael Lando <ml636r@att.com>
+Submitted-at: Tue, 06 Jun 2017 08:59:10 +0000
+Reviewed-on: http://gerrit.onap.org/r/4689
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
