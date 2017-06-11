@@ -1,3 +1,0 @@
-[console_scripts]
-tosca-parser = toscaparser.shell:main
-
