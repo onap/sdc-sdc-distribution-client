@@ -30,7 +30,7 @@ public class CsarToscaTester {
 
 		for (File file : listOfFiles) {
 			if (file.isFile()) {  
-				System.out.println("File " + file.getAbsolutePath());
+				System.out.println("File  " + file.getAbsolutePath());
 				String name = file.getName();
 				String currentCsarDir = csarsDir+"/"+name+"-"+time;
 				dir = new File(currentCsarDir);
