@@ -41,6 +41,7 @@ public class Configuration implements IConfiguration{
 	private String keyStorePassword;
 	private boolean  activateServerTLSAuth;
 	private boolean filterInEmptyResources;
+	private Boolean useHttpsWithDmaap;
 
 	public Configuration(IConfiguration other) {
 		this.asdcAddress = other.getAsdcAddress();
@@ -56,6 +57,7 @@ public class Configuration implements IConfiguration{
 		this.keyStorePassword = other.getKeyStorePassword();
 		this.activateServerTLSAuth = other.activateServerTLSAuth();
 		this.filterInEmptyResources = other.isFilterInEmptyResources();
+		this.useHttpsWithDmaap = other.isUseHttpsWithDmaap();
 	}
 
 	@Override
@@ -161,17 +163,7 @@ public class Configuration implements IConfiguration{
 		this.keyStorePassword = keyStorePassword;
 	}
 
-	@Override
-	public String toString() {
-		return "Configuration [asdcAddress=" + asdcAddress + ", user=" + user
-				+ ", password=" + password + ", pollingInterval="
-				+ pollingInterval + ", pollingTimeout=" + pollingTimeout
-				+ ", relevantArtifactTypes=" + relevantArtifactTypes
-				+ ", consumerGroup=" + consumerGroup + ", environmentName="
-				+ environmentName + ", comsumerID=" + comsumerID + "]";
-	}
-
-	
+		
 	public void setactivateServerTLSAuth(boolean activateServerTLSAuth) {
 		this.activateServerTLSAuth = activateServerTLSAuth;
 	}
@@ -186,4 +178,23 @@ public class Configuration implements IConfiguration{
 		return this.filterInEmptyResources;
 	}
 
+	@Override
+	public Boolean isUseHttpsWithDmaap() {
+		return this.useHttpsWithDmaap;
+	}
+	
+	public void setUseHttpsWithDmaap(boolean useHttpsWithDmaap){
+		this.useHttpsWithDmaap = useHttpsWithDmaap;
+	}
+
+	@Override
+	public String toString() {
+		return "Configuration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
+				+ ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
+				+ ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
+				+ ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + ", keyStorePath="
+				+ keyStorePath + ", keyStorePassword=" + keyStorePassword + ", activateServerTLSAuth="
+				+ activateServerTLSAuth + ", filterInEmptyResources=" + filterInEmptyResources + ", useHttpsWithDmaap="
+				+ useHttpsWithDmaap + "]";
+	}
 }

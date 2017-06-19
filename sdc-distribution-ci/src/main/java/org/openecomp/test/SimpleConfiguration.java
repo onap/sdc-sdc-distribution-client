@@ -184,4 +184,9 @@ public class SimpleConfiguration implements IConfiguration{
 		return false;
 	}
 
+	@Override
+	public Boolean isUseHttpsWithDmaap() {
+		return true;
+	}
+
 }

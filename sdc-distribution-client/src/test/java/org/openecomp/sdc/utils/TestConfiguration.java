@@ -42,6 +42,7 @@ public class TestConfiguration implements IConfiguration {
 	private String keyStorePassword;
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
+	private boolean useHttpsWithDmaap;
 
 	public TestConfiguration(IConfiguration other) {
 		this.asdcAddress = other.getAsdcAddress();
@@ -281,5 +282,10 @@ public class TestConfiguration implements IConfiguration {
 
 	public void setFilterInEmptyResources(boolean isFilterInEmptyResources) {
 		this.isFilterInEmptyResources = isFilterInEmptyResources;
+	}
+
+	@Override
+	public Boolean isUseHttpsWithDmaap() {
+		return this.useHttpsWithDmaap;
 	}
 }

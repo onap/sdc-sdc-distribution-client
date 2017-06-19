@@ -108,6 +108,14 @@ public interface IConfiguration {
 	 * @return
 	 */
 	boolean isFilterInEmptyResources();
+
+	/**
+	 * By default, Distribution Client will use HTTPS (TLS 1.2) when connecting to DMAAP.
+	 * This param can be null, then default (HTTPS) behavior will be applied. 
+	 * If set to false, distribution client will use HTTP when connecting to DMAAP.
+	 * @return
+	 */
+	Boolean isUseHttpsWithDmaap();
 }
 
 
