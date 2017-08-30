@@ -64,4 +64,8 @@ public interface INotificationData {
 	 * Invariant UUID
 	 */
 	String getServiceInvariantUUID();
+
+	String getWorkloadContext();
+
+	void setWorkloadContext(String workloadContext);
 }

@@ -38,6 +38,7 @@ class NotificationDataImpl implements INotificationData {
 	private String serviceInvariantUUID;
 	private List<JsonContainerResourceInstance> resources;
 	private List<ArtifactInfoImpl> serviceArtifacts;
+	private String workloadContext;
 
 	@Override
 	public String getDistributionID() {
@@ -86,10 +87,21 @@ class NotificationDataImpl implements INotificationData {
 	}
 
 	@Override
+	public String getWorkloadContext() { 
+		return workloadContext; 
+	}
+
+	@Override
+	public void setWorkloadContext(String workloadContext) {
+		this.workloadContext = workloadContext;	
+	}
+
+	@Override
 	public String toString() {
-		return "NotificationDataImpl [distributionID=" + distributionID
-				+ ", serviceName=" + serviceName + ", serviceVersion="
-				+ serviceVersion + ", serviceUUID=" + serviceUUID+"]";
+		return "NotificationDataImpl [distributionID=" + distributionID + ", serviceName=" + serviceName
+				+ ", serviceVersion=" + serviceVersion + ", serviceUUID=" + serviceUUID + ", serviceDescription="
+				+ serviceDescription + ", serviceInvariantUUID=" + serviceInvariantUUID + ", resources=" + resources
+				+ ", serviceArtifacts=" + serviceArtifacts + ", workloadContext=" + workloadContext + "]";
 	}
 
 	@Override
