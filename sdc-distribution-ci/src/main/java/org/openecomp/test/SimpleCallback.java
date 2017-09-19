@@ -20,15 +20,6 @@
 
 package org.openecomp.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openecomp.sdc.api.IDistributionClient;
@@ -43,6 +34,15 @@ import org.openecomp.sdc.api.results.IDistributionClientResult;
 import org.openecomp.sdc.utils.ArtifactTypeEnum;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class SimpleCallback implements INotificationCallback {
@@ -76,7 +76,7 @@ public class SimpleCallback implements INotificationCallback {
 			IArtifactInfo artifactMetadataByUUID = data.getArtifactMetadataByUUID(iArtifactInfo.getArtifactUUID());
 			assertEquals("check artifact checksum", iArtifactInfo.getArtifactChecksum(), artifactMetadataByUUID.getArtifactChecksum());
 			System.out.println(artifactMetadataByUUID.getArtifactURL());
-			if (artifactMetadataByUUID.getArtifactType().equals(ArtifactTypeEnum.VF_MODULES_METADATA)){
+			if (artifactMetadataByUUID.getArtifactType().equals(ArtifactTypeEnum.VF_MODULES_METADATA.name())){
 				IDistributionClientDownloadResult download = client.download(iArtifactInfo);
 				if (download.getDistributionActionResult() == DistributionActionResultEnum.SUCCESS){
 					List<IVfModuleMetadata> decodeVfModuleArtifact = client.decodeVfModuleArtifact(download.getArtifactPayload());
