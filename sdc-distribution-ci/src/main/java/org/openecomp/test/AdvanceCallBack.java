@@ -22,48 +22,43 @@ package org.openecomp.test;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import org.openecomp.sdc.api.IDistributionClient;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class AdvanceCallBack extends SimpleCallback{
-	
-	
+public class AdvanceCallBack extends SimpleCallback {
 
-	public AdvanceCallBack(IDistributionClient client) {
-		super(client);
-		// TODO Auto-generated constructor stub
-	}
-	
-	@Override
-    protected void postDownloadLogic( IDistributionClientDownloadResult downloadResult) {
-           if( downloadResult.getDistributionActionResult() == DistributionActionResultEnum.SUCCESS){
-                  saveArtifactPayloadToDisk(downloadResult);
-           }
+    private static final Logger LOG = LoggerFactory.getLogger(AdvanceCallBack.class);
 
+    public AdvanceCallBack(IDistributionClient client) {
+        super(client);
+        // TODO Auto-generated constructor stub
     }
-    
+
+    @Override
+    protected void postDownloadLogic(IDistributionClientDownloadResult downloadResult) {
+        if (downloadResult.getDistributionActionResult() == DistributionActionResultEnum.SUCCESS) {
+            saveArtifactPayloadToDisk(downloadResult);
+        }
+    }
+
     protected void saveFile(byte[] bs, String fileName) {
-    	 try { 
-    		 String downloadPath = SimpleConfiguration.downloadPath();
-    		 FileOutputStream fileOuputStream = new FileOutputStream(downloadPath + fileName); 
-			 fileOuputStream.write(bs);
-			 fileOuputStream.close();
-    	 }   catch (IOException e) {
-		        // TODO Auto-generated catch block
-		        e.printStackTrace();
-		 }  
- }
- 
- protected void saveArtifactPayloadToDisk(IDistributionClientDownloadResult downloadResult) {
-        System.out.println("################ Downloaded Artifact Payload Start ################");
+        String downloadPath = SimpleConfiguration.downloadPath();
+        try (FileOutputStream fileOutputStream = new FileOutputStream(downloadPath + fileName)) {
+            fileOutputStream.write(bs);
+            fileOutputStream.close();
+        } catch (IOException e) {
+            LOG.error(e.getLocalizedMessage(), e);
+            // Auto-generated catch block
+        }
+    }
+
+    protected void saveArtifactPayloadToDisk(IDistributionClientDownloadResult downloadResult) {
+        LOG.info("################ Downloaded Artifact Payload Start ################");
         String fileName = downloadResult.getArtifactFilename();
         saveFile(downloadResult.getArtifactPayload(), fileName);
-        System.out.println("################ Downloaded Artifact Payload End ################");
- }
-
-
-	
-
+        LOG.info("################ Downloaded Artifact Payload End ################");
+    }
 }

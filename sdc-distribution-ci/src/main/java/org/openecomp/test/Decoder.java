@@ -23,40 +23,33 @@ package org.openecomp.test;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
 import org.apache.commons.codec.binary.Base64;
 
 public class Decoder {
 
-	public static String encode(byte[] byteArrayToEncode) {
+    public static String encode(byte[] byteArrayToEncode) {
+        return new String(Base64.encodeBase64(byteArrayToEncode));
+    }
 
-		byte[] bytesEncoded = Base64.encodeBase64(byteArrayToEncode);
-		String strEncoded = new String(bytesEncoded);
-		return strEncoded;
-	}
+    public static String decode(String strEncoded) {
+        return new String(Base64.decodeBase64(strEncoded));
+    }
 
-	public static String decode(String strEncoded) throws IOException {
+    public static String readFileToString(String file) throws IOException {
 
-		byte[] byteDecoded = Base64.decodeBase64(strEncoded);
-		String decoded = new String(byteDecoded);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            String ls = System.getProperty("line.separator");
 
-		return decoded;
-
-	}
-
-	public static String readFileToString(String file) throws IOException {
-
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String line = null;
-		StringBuilder stringBuilder = new StringBuilder();
-		String ls = System.getProperty("line.separator");
-
-		while ((line = reader.readLine()) != null) {
-			stringBuilder.append(line);
-			stringBuilder.append(ls);
-		}
-		reader.close();
-		return stringBuilder.toString();
-	}
-
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+                stringBuilder.append(ls);
+            }
+            reader.close();
+            return stringBuilder.toString();
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
+    }
 }
