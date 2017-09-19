@@ -7,7 +7,7 @@
 # Introduction
 
 OpenECOMP SDC Distribution client is delivered as helper JAR that can be used by clients that work with SDC.
-It register to SDC for getting notifications, listen for notification from SDC, download artifacts from SDC, and send respone back to SDC.
+It register to SDC for getting notifications, listen for notification from SDC, download artifacts from SDC, and send response back to SDC.
 
 
 # Compiling OpenECOMP SDC Distribution client
@@ -112,7 +112,7 @@ public class SimpleConfiguration implements IConfiguration{
 
 
 # Logging
-Loggin can be done using log4j
+Logging can be done using log4j
 Example of log.properties file:
 -------------------------------
 log4j.rootCategory=DEBUG, CONSOLE, LOGFILE
@@ -141,5 +141,5 @@ SDC@lists.openecomp.org
 
 SDC Javadoc and Maven site
  
-*** to be completed on rrelease ***
+*** to be completed on release ***
 
