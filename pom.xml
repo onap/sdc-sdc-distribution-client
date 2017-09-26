@@ -4,7 +4,7 @@
 	<groupId>org.openecomp.sdc</groupId>
 	<artifactId>sdc-distribution-client</artifactId>
 	<version>1.0.0</version>
-	<name>SDC Distribution Client</name>
+	<name>sdc-sdc-distribution-client</name>
 	<description>An SDC Client to be used by its consumers</description>
 	<properties>
 		<httpclient.version>4.5</httpclient.version>
