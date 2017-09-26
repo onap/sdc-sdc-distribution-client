@@ -28,50 +28,84 @@ import java.util.List;
  *
  */
 public enum ArtifactTypeEnum {
-	CHEF("CHEF"), PUPPET("PUPPET"), YANG("YANG"), SHELL_SCRIPT("SHELL_SCRIPT"), ICON("ICON"), UNKNOWN("UNKNOWN"), HEAT("HEAT"), DG_XML("DG_XML"), MURANO_PKG("MURANO_PKG"), 
-	HEAT_ENV("HEAT_ENV"), YANG_XML("YANG_XML"), HEAT_VOL("HEAT_VOL"), HEAT_NET("HEAT_NET"), OTHER("OTHER"), WORKFLOW("WORKFLOW"), NETWORK_CALL_FLOW("NETWORK_CALL_FLOW"), 
-	TOSCA_TEMPLATE("TOSCA_TEMPLATE"), TOSCA_CSAR("TOSCA_CSAR"), VNF_CATALOG("VNF_CATALOG"), VF_LICENSE("VF_LICENSE"), VENDOR_LICENSE("VENDOR_LICENSE"), 
-	MODEL_INVENTORY_PROFILE("MODEL_INVENTORY_PROFILE"), MODEL_QUERY_SPEC("MODEL_QUERY_SPEC"), APPC_CONFIG("APPC_CONFIG"), HEAT_NESTED("HEAT_NESTED"), 
-	HEAT_ARTIFACT("HEAT_ARTIFACT"), VF_MODULES_METADATA("VF_MODULES_METADATA"),
-	// DCAE Artifacts
-	DCAE_TOSCA("DCAE_TOSCA"), DCAE_JSON("DCAE_JSON"), DCAE_POLICY("DCAE_POLICY"), DCAE_DOC("DCAE_DOC"), DCAE_EVENT("DCAE_EVENT"), DCAE_INVENTORY_TOSCA("DCAE_INVENTORY_TOSCA"), 
-	DCAE_INVENTORY_JSON("DCAE_INVENTORY_JSON"), DCAE_INVENTORY_POLICY("DCAE_INVENTORY_POLICY"), DCAE_INVENTORY_DOC("DCAE_INVENTORY_DOC"), 
-	DCAE_INVENTORY_BLUEPRINT("DCAE_INVENTORY_BLUEPRINT"), DCAE_INVENTORY_EVENT("DCAE_INVENTORY_EVENT"),
-	// AAI Artifacts
-	AAI_SERVICE_MODEL("AAI_SERVICE_MODEL"), AAI_VF_MODEL("AAI_VF_MODEL"), AAI_VF_MODULE_MODEL("AAI_VF_MODULE_MODEL"), AAI_VF_INSTANCE_MODEL("AAI_VF_INSTANCE_MODEL"),
-	// MIB artifacts
-	SNMP_POLL ("SNMP_POLL"), SNMP_TRAP("SNMP_TRAP"), GUIDE("GUIDE")
-	;
 
-	ArtifactTypeEnum(String type) {
-		this.type = type;
-	}
+    CHEF("CHEF"),
+    PUPPET("PUPPET"),
+    YANG("YANG"),
+    SHELL_SCRIPT("SHELL_SCRIPT"),
+    ICON("ICON"),
+    UNKNOWN("UNKNOWN"),
+    HEAT("HEAT"),
+    DG_XML("DG_XML"),
+    MURANO_PKG("MURANO_PKG"),
+    HEAT_ENV("HEAT_ENV"),
+    YANG_XML("YANG_XML"),
+    HEAT_VOL("HEAT_VOL"),
+    HEAT_NET("HEAT_NET"),
+    OTHER("OTHER"),
+    WORKFLOW("WORKFLOW"),
+    NETWORK_CALL_FLOW("NETWORK_CALL_FLOW"),
+    TOSCA_TEMPLATE("TOSCA_TEMPLATE"),
+    TOSCA_CSAR("TOSCA_CSAR"),
+    VNF_CATALOG("VNF_CATALOG"),
+    VF_LICENSE("VF_LICENSE"),
+    VENDOR_LICENSE("VENDOR_LICENSE"),
+    MODEL_INVENTORY_PROFILE("MODEL_INVENTORY_PROFILE"),
+    MODEL_QUERY_SPEC("MODEL_QUERY_SPEC"),
+    APPC_CONFIG("APPC_CONFIG"),
+    HEAT_NESTED("HEAT_NESTED"),
+    HEAT_ARTIFACT("HEAT_ARTIFACT"),
+    VF_MODULES_METADATA("VF_MODULES_METADATA"),
 
-	private String type;
+    // DCAE Artifacts
+    DCAE_TOSCA("DCAE_TOSCA"),
+    DCAE_JSON("DCAE_JSON"),
+    DCAE_POLICY("DCAE_POLICY"),
+    DCAE_DOC("DCAE_DOC"),
+    DCAE_EVENT("DCAE_EVENT"),
+    DCAE_INVENTORY_TOSCA("DCAE_INVENTORY_TOSCA"),
+    DCAE_INVENTORY_JSON("DCAE_INVENTORY_JSON"),
+    DCAE_INVENTORY_POLICY("DCAE_INVENTORY_POLICY"),
+    DCAE_INVENTORY_DOC("DCAE_INVENTORY_DOC"),
+    DCAE_INVENTORY_BLUEPRINT("DCAE_INVENTORY_BLUEPRINT"),
+    DCAE_INVENTORY_EVENT("DCAE_INVENTORY_EVENT"),
 
-	public String getType() {
-		return type;
-	}
+    // AAI Artifacts
+    AAI_SERVICE_MODEL("AAI_SERVICE_MODEL"),
+    AAI_VF_MODEL("AAI_VF_MODEL"),
+    AAI_VF_MODULE_MODEL("AAI_VF_MODULE_MODEL"),
+    AAI_VF_INSTANCE_MODEL("AAI_VF_INSTANCE_MODEL"),
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    // MIB artifacts
+    SNMP_POLL("SNMP_POLL"),
+    SNMP_TRAP("SNMP_TRAP"),
+    GUIDE("GUIDE");
 
-	public static ArtifactTypeEnum findType(final String type) {
-		for (ArtifactTypeEnum ate : ArtifactTypeEnum.values()) {
-			// According to Pavel/Ella
-			if (ate.getType().equalsIgnoreCase(type)) {
-				return ate;
-			}
-		}
-		return null;
-	}
+    ArtifactTypeEnum(String type) {
+        this.type = type;
+    }
 
-	public static List<String> getAllTypes() {
-		List<String> types = new ArrayList<String>();
-		for (ArtifactTypeEnum ate : ArtifactTypeEnum.values()) {
-			types.add(ate.getType());
-		}
-		return types;
-	}
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public static ArtifactTypeEnum findType(final String type) {
+        for (ArtifactTypeEnum ate : ArtifactTypeEnum.values()) {
+            // According to Pavel/Ella
+            if (ate.getType().equalsIgnoreCase(type)) {
+                return ate;
+            }
+        }
+        return null;
+    }
+
+    public static List<String> getAllTypes() {
+        List<String> types = new ArrayList<>();
+        for (ArtifactTypeEnum ate : ArtifactTypeEnum.values()) {
+            types.add(ate.getType());
+        }
+        return types;
+    }
 }

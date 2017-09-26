@@ -44,7 +44,12 @@ import org.openecomp.sdc.utils.ArtifactTypeEnum;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
 
-
+/**
+ * 
+ * @author tg851x
+ * This is class used in testing and run locally in the IDE
+ * logging not needed it is monitored through the IDE console.
+ */
 public class SimpleCallback implements INotificationCallback {
 	protected IDistributionClient client;
 	public List<IArtifactInfo> iArtifactInfo;

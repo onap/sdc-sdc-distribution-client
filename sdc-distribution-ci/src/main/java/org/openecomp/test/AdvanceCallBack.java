@@ -27,13 +27,16 @@ import org.openecomp.sdc.api.IDistributionClient;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
 
+/**
+ * 
+ * @author tg851x
+ * This is class used in testing and run locally in the IDE
+ * logging not needed it is monitored through the IDE console.
+ */
 public class AdvanceCallBack extends SimpleCallback{
-	
-	
 
 	public AdvanceCallBack(IDistributionClient client) {
 		super(client);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -45,13 +48,11 @@ public class AdvanceCallBack extends SimpleCallback{
     }
     
     protected void saveFile(byte[] bs, String fileName) {
-    	 try { 
     		 String downloadPath = SimpleConfiguration.downloadPath();
-    		 FileOutputStream fileOuputStream = new FileOutputStream(downloadPath + fileName); 
+    	try(FileOutputStream fileOuputStream = new FileOutputStream(downloadPath + fileName);) {
 			 fileOuputStream.write(bs);
 			 fileOuputStream.close();
     	 }   catch (IOException e) {
-		        // TODO Auto-generated catch block
 		        e.printStackTrace();
 		 }  
  }
