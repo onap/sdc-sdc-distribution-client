@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>sdc-distribution-client</artifactId>
-	<name>SDC Distribution Client</name>
+	<name>sdc-sdc-distribution-client</name>
 	<description>Distribution client JAR file to use by consumers</description>
 	<packaging>jar</packaging>
 
