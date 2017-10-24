@@ -29,7 +29,6 @@
 		<org.glassfish.jersey.version>2.24</org.glassfish.jersey.version>
 		<functionaljava.version>4.2</functionaljava.version>
 		<httpclient.version>4.4.1</httpclient.version>
-		<commons-logging.version>1.2.1-SNAPSHOT</commons-logging.version>
 		<httpcore.version>4.4.1</httpcore.version>
 		<logback.version>1.1.2</logback.version>
 		<junit.version>4.12</junit.version>
