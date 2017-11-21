@@ -6,7 +6,7 @@
 	<artifactId>sdc-main-distribution-client</artifactId>
 	<version>1.1.50-SNAPSHOT</version>
 	<packaging>pom</packaging>
-        <name>sdc-sdc-distribution-client</name>
+	<name>sdc-sdc-distribution-client</name>
 
 	<modules>
 		<module>sdc-distribution-client</module>
@@ -180,6 +180,11 @@
 			<id>ecomp-staging</id>
 			<name>Staging Repository</name>
 			<url>${nexus.proxy}/content/repositories/staging/</url>
+		</repository>
+		<repository>
+			<id>ecomp-snapshots</id>
+			<name>Snapshots Repository</name>
+			<url>${nexus.proxy}/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 
