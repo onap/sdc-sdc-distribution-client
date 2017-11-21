@@ -46,17 +46,11 @@ public class CsarToscaTester {
 				} catch (SdcToscaParserException e){
 					System.out.println("SdcToscaParserException caught. Code: "+e.getCode()+", message: "+ e.getMessage());
 				}
-				List<String> notAnalyzedReport = ThreadLocalsHolder.getCollector().getNotAnalyzedExceptionsReport();
-				System.out.println("NOT ANALYZED during CSAR parsing are: " + (notAnalyzedReport != null ? notAnalyzedReport.toString() : "none"));
-				List<String> warningsReport = ThreadLocalsHolder.getCollector().getWarningsReport();
-				//System.out.println("WARNINGS during CSAR parsing are: " + (warningsReport != null ? warningsReport.toString() : "none"));
-				List<String> criticalsReport = ThreadLocalsHolder.getCollector().getCriticalsReport();
-				System.out.println("CRITICALS during CSAR parsing are: " + (criticalsReport != null ? criticalsReport.toString() : "none"));
+				List<String> validationIssueReport = ThreadLocalsHolder.getCollector().getValidationIssueReport();
+				System.out.println("Validation issues during CSAR parsing are: " + (validationIssueReport != null ? validationIssueReport.toString() : "none"));
 
 				try {
-					generateReport(time, name, currentCsarDir, criticalsReport, "critical");
-					generateReport(time, name, currentCsarDir, warningsReport, "warning");
-					generateReport(time, name, currentCsarDir, notAnalyzedReport, "notAnalyzed");
+					generateReport(time, name, currentCsarDir, validationIssueReport, "validationIssues");
 
 				} catch (IOException ex) {
 					ex.printStackTrace();
