@@ -21,43 +21,93 @@
 package org.openecomp.test;
 
 import org.openecomp.sdc.api.IDistributionClient;
-import org.openecomp.sdc.api.consumer.INotificationCallback;
+import org.openecomp.sdc.api.consumer.IComponentDoneStatusMessage;
+import org.openecomp.sdc.api.consumer.IStatusCallback;
+import org.openecomp.sdc.api.notification.INotificationData;
+import org.openecomp.sdc.api.notification.IStatusData;
 import org.openecomp.sdc.api.results.IDistributionClientResult;
 import org.openecomp.sdc.impl.DistributionClientFactory;
-import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
-import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
+import org.openecomp.sdc.utils.DistributionStatusEnum;
 
 public class ClientTest {
 	public static void main(String[] args) throws Exception {
-		
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		lc.getLogger("org.apache.http").setLevel(Level.INFO);
 
+		msoWdListner();
+		clientSender();
+
+	}
+
+	private static void clientSender() {
 		IDistributionClient client = DistributionClientFactory.createDistributionClient();
-		INotificationCallback callback;
-		Boolean download = SimpleConfiguration.toDownload();
-		if( download ){
-			callback = new AdvanceCallBack(client);
+		IDistributionClientResult result = client.init(new SimpleConfiguration(), new SimpleCallback(client));
+		System.err.println("Init Status: " + result.toString());
+		
+		IDistributionClientResult start = client.start();
+
+		System.err.println("Start Status: " + start.toString());
+		for( int i = 0; i < 2; i++ ){
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			client.sendComponentDoneStatus(new IComponentDoneStatusMessage() {
+				
+				@Override
+				public long getTimestamp() {
+					return System.currentTimeMillis();
+				}
+				
+				@Override
+				public DistributionStatusEnum getStatus() {
+					return DistributionStatusEnum.COMPONENT_DONE_OK;
+				}
+				
+				@Override
+				public String getDistributionID() {
+					// TODO Auto-generated method stub
+					return "";
+				}
+				
+				@Override
+				public String getConsumerID() {
+					return client.getConfiguration().getConsumerID();
+				}
+				
+				@Override
+				public String getComponentName() {
+					return "MSO";
+				}
+			});
 		}
-		else{
-			callback = new SimpleCallback(client);
-		}
-		IDistributionClientResult result = client.init(new SimpleConfiguration(), callback);
+		
+	}
 
-		System.out.println(result.getDistributionMessageResult());
+	private static void msoWdListner() {
+		IDistributionClient client = DistributionClientFactory.createDistributionClient();
+		IDistributionClientResult result = client.init(new SimpleConfiguration() {
+			@Override
+			public boolean isConsumeProduceStatusTopic() {
+				return true;
+			}
+		}, new SimpleCallback(client) {
+			@Override
+			public void activateCallback(INotificationData data) {
+				System.err.println("Monitor Recieved Notification: " + data.toString());
 
-		System.out.println("Starting client...");
-		IDistributionClientResult startResult = client.start();
+			}
+		}, new IStatusCallback() {
 
-		// Thread.sleep(10000);
-		// client.stop();
+			@Override
+			public void activateCallback(IStatusData data) {
+				System.err.println("Monitor Recieved Status: " + data.toString());
 
-		System.out.println(startResult.getDistributionMessageResult());
+			}
+		});
+		System.err.println("Init Status: " + result.toString());
+		IDistributionClientResult start = client.start();
 
+		System.err.println("Start Status: " + start.toString());
 	}
 
 }

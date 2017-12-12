@@ -90,7 +90,7 @@ public class AsdcConnectorClient {
 		this.httpClient = httpClient;
 	}
 
-	public Either<List<String>, IDistributionClientResult> getServerList() {
+	/*public Either<List<String>, IDistributionClientResult> getServerList() {
 		Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_CLUSTER_SERVER_LIST);
 		HttpAsdcResponse getServersResponse = getServersResponsePair.getFirst();
 
@@ -105,7 +105,7 @@ public class AsdcConnectorClient {
 		handeAsdcConnectionClose(getServersResponsePair);
 		return response;
 
-	}
+	}*/
 
 	public Either<List<String>, IDistributionClientResult> getValidArtifactTypesList() {
 		Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_VALID_ARTIFACT_TYPES);
@@ -151,7 +151,7 @@ public class AsdcConnectorClient {
 		String requestId = UUID.randomUUID().toString();
 		Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
-		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName());
+		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonRequest = gson.toJson(registrationRequest);
 		StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
@@ -183,7 +183,7 @@ public class AsdcConnectorClient {
 		HttpAsdcClient httpClient = new HttpAsdcClient(configuration);
 		Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
-		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName());
+		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonRequest = gson.toJson(registrationRequest);
 		StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
@@ -275,7 +275,7 @@ public class AsdcConnectorClient {
 		return result;
 	}
 
-	private Either<TopicRegistrationResponse, DistributionClientResultImpl> parseRegistrationResponse(HttpAsdcResponse registerResponse) {
+	Either<TopicRegistrationResponse, DistributionClientResultImpl> parseRegistrationResponse(HttpAsdcResponse registerResponse) {
 
 		String jsonMessage;
 		try {
@@ -302,8 +302,8 @@ public class AsdcConnectorClient {
 		}
 	}
 
-	private Map<String, String> addHeadersToHttpRequest(String requestId) {
-		Map<String, String> requestHeaders = new HashMap<String, String>();
+	protected Map<String, String> addHeadersToHttpRequest(String requestId) {
+		Map<String, String> requestHeaders = new HashMap<>();
 		requestHeaders.put(DistributionClientConstants.HEADER_REQUEST_ID, requestId);
 		requestHeaders.put(DistributionClientConstants.HEADER_INSTANCE_ID, configuration.getConsumerID());
 		requestHeaders.put(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());

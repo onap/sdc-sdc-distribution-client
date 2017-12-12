@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.openecomp.sdc.api.consumer.IConfiguration;
-import org.openecomp.sdc.utils.ArtifactTypeEnum;
-import org.openecomp.sdc.utils.DistributionClientConstants;
 
 public class TestConfiguration implements IConfiguration {
 
@@ -43,6 +41,7 @@ public class TestConfiguration implements IConfiguration {
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
 	private boolean useHttpsWithDmaap;
+	private List<String> msgBusAddress;
 
 	public TestConfiguration(IConfiguration other) {
 		this.asdcAddress = other.getAsdcAddress();
@@ -75,11 +74,20 @@ public class TestConfiguration implements IConfiguration {
 		this.keyStorePassword = "Aa123456";
 		this.activateServerTLSAuth = false;
 		this.isFilterInEmptyResources = false;
+		msgBusAddress = new ArrayList<String>();
+		msgBusAddress.add("www.att.com");
+		msgBusAddress.add("www.att.com");
+		msgBusAddress.add("www.att.com");
 	}
 
 	@Override
 	public String getAsdcAddress() {
 		return asdcAddress;
+	}
+
+	@Override
+	public List<String> getMsgBusAddress() {
+		return msgBusAddress;
 	}
 
 	@Override

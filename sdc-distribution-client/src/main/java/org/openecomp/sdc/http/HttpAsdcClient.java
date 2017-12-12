@@ -47,6 +47,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -60,7 +61,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.openecomp.sdc.api.consumer.IConfiguration;
-import org.openecomp.sdc.impl.DistributionClientImpl;
 import org.openecomp.sdc.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,21 +73,55 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 	private static Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
 	private CloseableHttpClient httpClient = null;
 	private String serverFqdn = null;
+	private List<String> msgBusAddressList = null;
 	private String authHeaderValue = "";
 
-	public HttpAsdcClient(IConfiguration configuraion/* String serverFqdn, String username, String password */) {
+	public HttpAsdcClient(IConfiguration configuraion) {
+		this.msgBusAddressList = configuraion.getMsgBusAddress();
 		this.serverFqdn = configuraion.getAsdcAddress();
+
 		String username = configuraion.getUser();
 		String password = configuraion.getPassword();
-
-		initSSL(serverFqdn, username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
+		initSSL(username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
 
 		String userNameAndPassword = username + ":" + password;
 		this.authHeaderValue = "Basic " + Base64.encodeBase64String(userNameAndPassword.getBytes());
 	}
 
+	private String getCorrectFqdnFromAddressList(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest, List<String> msgBusAddressList) {
+		Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+		CloseableHttpResponse httpResponse = null;
+		for (String fqdn : msgBusAddressList) {
+
+			String url = HTTPS + fqdn + requestUrl;
+			log.debug("url to send  " + url);
+			HttpGet httpGet = new HttpGet(url);
+			List<Header> headers = addHeadersToHttpRequest(headersMap);
+			for (Header header : headers) {
+				httpGet.addHeader(header);
+			}
+
+			httpGet.setHeader(AUTHORIZATION_HEADER, this.authHeaderValue);
+
+			HttpAsdcResponse response = null;
+			try {
+				httpResponse = httpClient.execute(httpGet);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if (httpResponse !=/*OK200*/null) {
+				continue;
+			} else {
+				return fqdn;
+			}
+		}
+		return null;
+	}
+
 	// @SuppressWarnings("deprecation")
-	private void initSSL(String serverFqdn, String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
+	private void initSSL(String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
 
 		try {
 			HostnameVerifier hostnameVerifier = new HostnameVerifier() {
@@ -245,9 +279,9 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 						log.error("failed to close http response");
 					}
 				}
-				ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, null);
+				ret = new Pair<>(response, null);
 			} else {
-				ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, httpResponse);
+				ret = new Pair<>(response, httpResponse);
 			}
 		}
 
@@ -261,6 +295,9 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 	}
 
 	public Pair<HttpAsdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
+		if(serverFqdn == null){
+
+		}
 		Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
 		CloseableHttpResponse httpResponse = null;
 		String url = HTTPS + serverFqdn + requestUrl;

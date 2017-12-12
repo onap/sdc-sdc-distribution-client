@@ -22,12 +22,15 @@ package org.openecomp.sdc.impl;
 
 import java.util.List;
 
+import fj.data.Either;
 import org.openecomp.sdc.api.consumer.IConfiguration;
+import org.openecomp.sdc.api.results.IDistributionClientResult;
+import org.openecomp.sdc.utils.DistributionActionResultEnum;
 import org.openecomp.sdc.utils.DistributionClientConstants;
 
-public class Configuration implements IConfiguration{
+public class Configuration implements IConfiguration {
 
-	
+	private List<String> msgBusAddressList;
 	private String asdcAddress;
 	private String user;
 	private String password;
@@ -39,12 +42,14 @@ public class Configuration implements IConfiguration{
 	private String comsumerID;
 	private String keyStorePath;
 	private String keyStorePassword;
-	private boolean  activateServerTLSAuth;
+	private boolean activateServerTLSAuth;
 	private boolean filterInEmptyResources;
 	private Boolean useHttpsWithDmaap;
+	private boolean consumeProduceStatusTopic;
 
 	public Configuration(IConfiguration other) {
 		this.asdcAddress = other.getAsdcAddress();
+		this.msgBusAddressList = other.getMsgBusAddress();
 		this.comsumerID = other.getConsumerID();
 		this.consumerGroup = other.getConsumerGroup();
 		this.environmentName = other.getEnvironmentName();
@@ -58,11 +63,17 @@ public class Configuration implements IConfiguration{
 		this.activateServerTLSAuth = other.activateServerTLSAuth();
 		this.filterInEmptyResources = other.isFilterInEmptyResources();
 		this.useHttpsWithDmaap = other.isUseHttpsWithDmaap();
+		this.consumeProduceStatusTopic = other.isConsumeProduceStatusTopic();
 	}
 
 	@Override
 	public String getAsdcAddress() {
 		return asdcAddress;
+	}
+
+	@Override
+	public List<String> getMsgBusAddress() {
+		return msgBusAddressList;
 	}
 
 	@Override
@@ -104,11 +115,11 @@ public class Configuration implements IConfiguration{
 	public String getConsumerID() {
 		return comsumerID;
 	}
-	
+
 	@Override
 	public String getKeyStorePath() {
 		return keyStorePath;
-	}	
+	}
 
 	@Override
 	public String getKeyStorePassword() {
@@ -154,7 +165,7 @@ public class Configuration implements IConfiguration{
 	public void setEnvironmentName(String environmentName) {
 		this.environmentName = environmentName;
 	}
-	
+
 	public void setKeyStorePath(String keyStorePath) {
 		this.keyStorePath = keyStorePath;
 	}
@@ -163,7 +174,6 @@ public class Configuration implements IConfiguration{
 		this.keyStorePassword = keyStorePassword;
 	}
 
-		
 	public void setactivateServerTLSAuth(boolean activateServerTLSAuth) {
 		this.activateServerTLSAuth = activateServerTLSAuth;
 	}
@@ -172,7 +182,7 @@ public class Configuration implements IConfiguration{
 	public boolean activateServerTLSAuth() {
 		return this.activateServerTLSAuth;
 	}
-	
+
 	@Override
 	public boolean isFilterInEmptyResources() {
 		return this.filterInEmptyResources;
@@ -182,19 +192,37 @@ public class Configuration implements IConfiguration{
 	public Boolean isUseHttpsWithDmaap() {
 		return this.useHttpsWithDmaap;
 	}
-	
-	public void setUseHttpsWithDmaap(boolean useHttpsWithDmaap){
+
+	public void setUseHttpsWithDmaap(boolean useHttpsWithDmaap) {
 		this.useHttpsWithDmaap = useHttpsWithDmaap;
 	}
 
 	@Override
-	public String toString() {
-		return "Configuration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
-				+ ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
-				+ ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
-				+ ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + ", keyStorePath="
-				+ keyStorePath + ", keyStorePassword=" + keyStorePassword + ", activateServerTLSAuth="
-				+ activateServerTLSAuth + ", filterInEmptyResources=" + filterInEmptyResources + ", useHttpsWithDmaap="
-				+ useHttpsWithDmaap + "]";
+	public boolean isConsumeProduceStatusTopic() {
+		return this.consumeProduceStatusTopic;
 	}
+
+	@Override
+	public String toString() {
+		//@formatter:off
+		return "Configuration ["+
+				"asdcAddress=" + asdcAddress + 
+				", user=" + user + 
+				", password=" + password + 
+				", pollingInterval=" + pollingInterval + 
+				", pollingTimeout=" + pollingTimeout + 
+				", relevantArtifactTypes=" + relevantArtifactTypes + 
+				", consumerGroup=" + consumerGroup + 
+				", environmentName=" + environmentName + 
+				", comsumerID=" + comsumerID + 
+				", keyStorePath=" + keyStorePath + 
+				", keyStorePassword=" + keyStorePassword + 
+				", activateServerTLSAuth=" + activateServerTLSAuth + 
+				", filterInEmptyResources=" + filterInEmptyResources + 
+				", useHttpsWithDmaap=" + useHttpsWithDmaap + 
+				", consumeProduceStatusTopic=" + consumeProduceStatusTopic + 
+				"]";
+		//@formatter:on
+	}
+
 }

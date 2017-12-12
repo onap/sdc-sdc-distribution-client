@@ -20,12 +20,22 @@
 
 package org.openecomp.sdc.utils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
+import org.openecomp.sdc.api.results.IDistributionClientResult;
+import org.openecomp.sdc.impl.DistributionClientResultImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import fj.data.Either;
 
 public class GeneralUtils {
-	
+	private static final Logger log = LoggerFactory.getLogger(GeneralUtils.class.getName());
 	public static String calculateMD5 (String data){
 		String calculatedMd5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(data);
 		// encode base-64 result
@@ -59,4 +69,24 @@ public class GeneralUtils {
 	       return isEncoded;
 	}
 
+
+	public static Either<List<String>, IDistributionClientResult> convertToValidHostName(List<String> msgBusAddresses) {
+		List<String> uebLocalHostsNames = new ArrayList<>();
+		for(String name : msgBusAddresses){
+			try {
+				uebLocalHostsNames.add(InetAddress.getByName(name).getHostName());
+			} catch (UnknownHostException e) {
+				log.debug("UnknownHost: {}", e.getMessage(), e);
+			}
+		}
+		Either<List<String>, IDistributionClientResult> response;
+		if( uebLocalHostsNames.isEmpty() ){
+			response = 	Either.right(new DistributionClientResultImpl(DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS, "configuration is invalid: " + DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS.name()));
+
+		}
+		else{
+			response = Either.left(uebLocalHostsNames);
+		}
+		return response;
+	}
 }

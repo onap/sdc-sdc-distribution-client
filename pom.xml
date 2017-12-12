@@ -4,13 +4,13 @@
 
 	<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
 	<artifactId>sdc-main-distribution-client</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.2.2</version>
 	<packaging>pom</packaging>
 	<name>sdc-sdc-distribution-client</name>
 
 	<modules>
 		<module>sdc-distribution-client</module>
-		<module>sdc-distribution-ci</module>
+		<!-- <module>sdc-distribution-ci</module> -->
 	</modules>
 
 	<properties>

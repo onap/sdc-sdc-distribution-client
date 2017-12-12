@@ -20,6 +20,7 @@
 
 package org.openecomp.test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.openecomp.sdc.api.consumer.IConfiguration;
@@ -162,6 +163,11 @@ public class SimpleConfiguration implements IConfiguration{
 	}
 
 	@Override
+	public List<String> getMsgBusAddress() {
+		return Arrays.asList("uebsb92sfdc.it.att.com");
+	}
+
+	@Override
 	public String getKeyStorePath() {
 		//return "";
 		return "etc/asdc-client.jks";
@@ -187,6 +193,11 @@ public class SimpleConfiguration implements IConfiguration{
 	@Override
 	public Boolean isUseHttpsWithDmaap() {
 		return true;
+	}
+
+	@Override
+	public boolean isConsumeProduceStatusTopic() {
+		return false;
 	}
 
 }

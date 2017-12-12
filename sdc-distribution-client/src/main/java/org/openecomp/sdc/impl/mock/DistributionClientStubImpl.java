@@ -23,18 +23,14 @@ package org.openecomp.sdc.impl.mock;
 import java.util.List;
 
 import org.openecomp.sdc.api.IDistributionClient;
-import org.openecomp.sdc.api.consumer.IConfiguration;
-import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
-import org.openecomp.sdc.api.consumer.INotificationCallback;
+import org.openecomp.sdc.api.consumer.*;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.IVfModuleMetadata;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.api.results.IDistributionClientResult;
 /** Mock Implementation */
 public class DistributionClientStubImpl implements IDistributionClient{
-	public DistributionClientStubImpl(){
-		
-	}
+
 	
 	public IDistributionClientResult updateConfiguration(IConfiguration newConf) {
 		return new DistributionClientResultStubImpl();
@@ -67,6 +63,12 @@ public class DistributionClientStubImpl implements IDistributionClient{
 	}
 
 	@Override
+	public IDistributionClientResult init(IConfiguration conf, INotificationCallback notificationCallback,
+			IStatusCallback statusCallback) {
+		return new DistributionClientResultStubImpl();
+	}
+	
+	@Override
 	public IConfiguration getConfiguration() {
 		// TODO Auto-generated method stub
 		return null;
@@ -87,10 +89,36 @@ public class DistributionClientStubImpl implements IDistributionClient{
 	}
 
 	@Override
+	public IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage) {
+		return null;
+	}
+
+	@Override
+	public IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage) {
+		return null;
+	}
+
+	@Override
 	public List<IVfModuleMetadata> decodeVfModuleArtifact(byte[] artifactPayload) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage,
+			String errorReason) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage, String errorReason) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
 	
 
 
