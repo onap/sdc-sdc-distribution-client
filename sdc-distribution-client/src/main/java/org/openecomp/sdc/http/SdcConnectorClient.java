@@ -57,9 +57,9 @@ import com.google.gson.reflect.TypeToken;
 
 import fj.data.Either;
 
-public class AsdcConnectorClient {
+public class SdcConnectorClient {
 	String contentDispositionHeader = "Content-Disposition";
-	private static Logger log = LoggerFactory.getLogger(AsdcConnectorClient.class.getName());
+	private static Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
 	private IConfiguration configuration;
 	private HttpAsdcClient httpClient = null;
 
@@ -90,22 +90,6 @@ public class AsdcConnectorClient {
 		this.httpClient = httpClient;
 	}
 
-	public Either<List<String>, IDistributionClientResult> getServerList() {
-		Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_CLUSTER_SERVER_LIST);
-		HttpAsdcResponse getServersResponse = getServersResponsePair.getFirst();
-
-		Either<List<String>, IDistributionClientResult> response;
-		if (getServersResponse.getStatus() == HttpStatus.SC_OK) {
-			response = parseGetServersResponse(getServersResponse);
-		} else {
-			IDistributionClientResult asdcError = handleAsdcError(getServersResponse);
-			response = Either.right(asdcError);
-
-		}
-		handeAsdcConnectionClose(getServersResponsePair);
-		return response;
-
-	}
 
 	public Either<List<String>, IDistributionClientResult> getValidArtifactTypesList() {
 		Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_VALID_ARTIFACT_TYPES);
@@ -151,7 +135,7 @@ public class AsdcConnectorClient {
 		String requestId = UUID.randomUUID().toString();
 		Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
-		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName());
+		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonRequest = gson.toJson(registrationRequest);
 		StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
@@ -183,7 +167,7 @@ public class AsdcConnectorClient {
 		HttpAsdcClient httpClient = new HttpAsdcClient(configuration);
 		Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
-		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName());
+		RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String jsonRequest = gson.toJson(registrationRequest);
 		StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
@@ -275,7 +259,7 @@ public class AsdcConnectorClient {
 		return result;
 	}
 
-	private Either<TopicRegistrationResponse, DistributionClientResultImpl> parseRegistrationResponse(HttpAsdcResponse registerResponse) {
+	Either<TopicRegistrationResponse, DistributionClientResultImpl> parseRegistrationResponse(HttpAsdcResponse registerResponse) {
 
 		String jsonMessage;
 		try {
@@ -302,8 +286,8 @@ public class AsdcConnectorClient {
 		}
 	}
 
-	private Map<String, String> addHeadersToHttpRequest(String requestId) {
-		Map<String, String> requestHeaders = new HashMap<String, String>();
+	protected Map<String, String> addHeadersToHttpRequest(String requestId) {
+		Map<String, String> requestHeaders = new HashMap<>();
 		requestHeaders.put(DistributionClientConstants.HEADER_REQUEST_ID, requestId);
 		requestHeaders.put(DistributionClientConstants.HEADER_INSTANCE_ID, configuration.getConsumerID());
 		requestHeaders.put(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());

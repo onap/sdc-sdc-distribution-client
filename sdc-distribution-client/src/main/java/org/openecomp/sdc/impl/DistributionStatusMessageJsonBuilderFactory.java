@@ -21,7 +21,9 @@
 package org.openecomp.sdc.impl;
 
 import org.openecomp.sdc.api.IDistributionStatusMessageJsonBuilder;
+import org.openecomp.sdc.api.consumer.IComponentDoneStatusMessage;
 import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
+import org.openecomp.sdc.api.consumer.IFinalDistrStatusMessage;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
 
 import com.google.gson.Gson;
@@ -35,11 +37,37 @@ public class DistributionStatusMessageJsonBuilderFactory {
 		
 		return prepareBuilderFromImpl(message);
 	}
+
+	public static IDistributionStatusMessageJsonBuilder getSimpleBuilder(IComponentDoneStatusMessage statusMessage){
+		DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
+
+		return prepareBuilderFromImpl(message);
+	}
+
+	public static IDistributionStatusMessageJsonBuilder getSimpleBuilder(IFinalDistrStatusMessage statusMessage){
+		DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
+
+		return prepareBuilderFromImpl(message);
+	}
 	
 	public static IDistributionStatusMessageJsonBuilder getErrorReasonBuilder(IDistributionStatusMessage statusMessage, String errorReason){
 		DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
 		message.setErrorReason(errorReason);
 		
+		return prepareBuilderFromImpl(message);
+	}
+
+	public static IDistributionStatusMessageJsonBuilder getErrorReasonBuilder(IComponentDoneStatusMessage statusMessage,
+			String errorReason) {
+		DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
+		message.setErrorReason(errorReason);
+		return prepareBuilderFromImpl(message);
+	}
+	
+	public static IDistributionStatusMessageJsonBuilder getErrorReasonBuilder(IFinalDistrStatusMessage statusMessage,
+			String errorReason) {
+		DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
+		message.setErrorReason(errorReason);
 		return prepareBuilderFromImpl(message);
 	}
 	
@@ -112,6 +140,9 @@ public class DistributionStatusMessageJsonBuilderFactory {
 	private enum DistributionStatusNotificationEnum {
 		NOTIFIED, NOT_NOTIFIED
 	}
+
+	
+
 	
 	
 }

@@ -22,16 +22,14 @@ package org.openecomp.sdc.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.openecomp.sdc.api.IDistributionClient;
@@ -39,7 +37,7 @@ import org.openecomp.sdc.api.consumer.IConfiguration;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.IVfModuleMetadata;
 import org.openecomp.sdc.api.results.IDistributionClientResult;
-import org.openecomp.sdc.http.AsdcConnectorClient;
+import org.openecomp.sdc.http.SdcConnectorClient;
 import org.openecomp.sdc.http.TopicRegistrationResponse;
 import org.openecomp.sdc.utils.ArtifactTypeEnum;
 import org.openecomp.sdc.utils.ArtifactsUtils;
@@ -51,28 +49,17 @@ import org.openecomp.sdc.utils.Wrapper;
 import com.att.nsa.apiClient.credentials.ApiCredential;
 import com.att.nsa.apiClient.http.HttpException;
 import com.att.nsa.cambria.client.CambriaClient.CambriaApiException;
-import com.att.nsa.cambria.client.CambriaClientBuilders;
 import com.att.nsa.cambria.client.CambriaIdentityManager;
-import com.att.nsa.cambria.client.CambriaTopicManager;
 
 import fj.data.Either;
 
 public class DistributionClientTest {
 
 	static CambriaIdentityManager cc;
-	static List<String> serverList;
-	DistributionClientImpl client = new DistributionClientImpl();
+	DistributionClientImpl client = Mockito.spy(new DistributionClientImpl());
 	IConfiguration testConfiguration = new TestConfiguration();
-	AsdcConnectorClient connector = Mockito.mock(AsdcConnectorClient.class);
+	SdcConnectorClient connector = Mockito.mock(SdcConnectorClient.class);
 
-	@BeforeClass
-	public static void setup() {
-		serverList = new ArrayList<String>();
-		serverList.add("uebsb91sfdc.it.open.com:3904");
-		serverList.add("uebsb92sfdc.it.open.com:3904");
-		serverList.add("uebsb93sfdc.it.open.com:3904");
-
-	}
 
 	@After
 	public void afterTest() {
@@ -150,9 +137,6 @@ public class DistributionClientTest {
 	@Test
 	public void initWithMocksBadConfigurationTest() throws HttpException, CambriaApiException, IOException {
 
-		// connectorMock
-		Either<List<String>, IDistributionClientResult> serversResult = Either.left(serverList);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
 
 		TopicRegistrationResponse topics = new TopicRegistrationResponse();
 		topics.setDistrNotificationTopicName("notificationTopic");
@@ -222,7 +206,7 @@ public class DistributionClientTest {
 		validationResult = client.init(testEnv, new TestNotificationCallback());
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_ENVIRONMENT_NAME, validationResult.getDistributionActionResult());
 
-		Mockito.verify(connector, Mockito.times(0)).getServerList();
+		Mockito.verify(client, Mockito.times(0)).getUEBServerList();
 		Mockito.verify(cambriaMock, Mockito.times(0)).createApiKey(Mockito.anyString(), Mockito.anyString());
 		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 	}
@@ -252,8 +236,6 @@ public class DistributionClientTest {
 	@Test
 	public void getConfigurationTest() throws HttpException, CambriaApiException, IOException {
 		// connectorMock
-		Either<List<String>, IDistributionClientResult> serversResult = Either.left(serverList);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
 		mockArtifactTypeList();
 		TopicRegistrationResponse topics = new TopicRegistrationResponse();
 		topics.setDistrNotificationTopicName("notificationTopic");
@@ -300,9 +282,6 @@ public class DistributionClientTest {
 	@Test
 	public void initWithMocksTest() throws HttpException, CambriaApiException, IOException {
 
-		// connectorMock
-		Either<List<String>, IDistributionClientResult> serversResult = Either.left(serverList);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
 		mockArtifactTypeList();
 
 		TopicRegistrationResponse topics = new TopicRegistrationResponse();
@@ -323,7 +302,7 @@ public class DistributionClientTest {
 
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.SUCCESS, initResponse.getDistributionActionResult());
-		Mockito.verify(connector, Mockito.times(1)).getServerList();
+		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
 		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
 		Mockito.verify(connector, Mockito.times(1)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 		System.out.println(initResponse);
@@ -352,7 +331,7 @@ public class DistributionClientTest {
 		// connectorMock
 		IDistributionClientResult getServersResult = new DistributionClientResultImpl(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, "problem");
 		Either<List<String>, IDistributionClientResult> serversResult = Either.right(getServersResult);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
+		doReturn(serversResult).when(client).getUEBServerList();
 
 		TopicRegistrationResponse topics = new TopicRegistrationResponse();
 		topics.setDistrNotificationTopicName("notificationTopic");
@@ -371,7 +350,7 @@ public class DistributionClientTest {
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, initResponse.getDistributionActionResult());
 
-		Mockito.verify(connector, Mockito.times(1)).getServerList();
+		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
 		Mockito.verify(cambriaMock, Mockito.times(0)).createApiKey(Mockito.anyString(), Mockito.anyString());
 		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 
@@ -382,8 +361,6 @@ public class DistributionClientTest {
 	public void initCreateKeysFailedTest() throws HttpException, CambriaApiException, IOException {
 
 		// connectorMock
-		Either<List<String>, IDistributionClientResult> serversResult = Either.left(serverList);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
 		mockArtifactTypeList();
 
 		TopicRegistrationResponse topics = new TopicRegistrationResponse();
@@ -403,7 +380,7 @@ public class DistributionClientTest {
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.UEB_KEYS_CREATION_FAILED, initResponse.getDistributionActionResult());
 
-		Mockito.verify(connector, Mockito.times(1)).getServerList();
+		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
 		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
 		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 		System.out.println(initResponse);
@@ -413,8 +390,6 @@ public class DistributionClientTest {
 	public void initRegistrationFailedTest() throws HttpException, CambriaApiException, IOException {
 
 		// connectorMock
-		Either<List<String>, IDistributionClientResult> serversResult = Either.left(serverList);
-		Mockito.when(connector.getServerList()).thenReturn(serversResult);
 		mockArtifactTypeList();
 		DistributionClientResultImpl failureResult = new DistributionClientResultImpl(DistributionActionResultEnum.BAD_REQUEST, "Bad Request");
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.right(failureResult);
@@ -430,7 +405,7 @@ public class DistributionClientTest {
 
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.BAD_REQUEST, initResponse.getDistributionActionResult());
-		Mockito.verify(connector, Mockito.times(1)).getServerList();
+		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
 		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
 		Mockito.verify(connector, Mockito.times(1)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 		System.out.println(initResponse);
@@ -450,7 +425,7 @@ public class DistributionClientTest {
 	}
 
 	// ########### TESTS TO ADD TO CI START ###########
-	public void createKeysTestCI() throws MalformedURLException, GeneralSecurityException {
+	/*public void createKeysTestCI() throws MalformedURLException, GeneralSecurityException {
 		validateConfigurationTest();
 		CambriaIdentityManager trueCambria = new CambriaClientBuilders.IdentityManagerBuilder().usingHttps().usingHosts(serverList).build();
 		client.cambriaIdentityManager = trueCambria;
@@ -462,7 +437,7 @@ public class DistributionClientTest {
 		System.out.println(keysResult);
 		System.out.println("keys: public=" + client.credential.getApiKey() + " | secret=" + client.credential.getApiSecret());
 	}
-
+*/
 	public void initTestCI() {
 		IDistributionClient distributionClient = DistributionClientFactory.createDistributionClient();
 		IDistributionClientResult init = distributionClient.init(testConfiguration, new TestNotificationCallback());
@@ -507,59 +482,9 @@ public class DistributionClientTest {
 	}
 
 
-	// @Test
-	public void registerProducerCI() {
-
-		try {
-			CambriaTopicManager topicManager = new CambriaClientBuilders.TopicManagerBuilder().usingHttps().usingHosts(serverList).authenticatedBy("sSJc5qiBnKy2qrlc", "4ZRPzNJfEUK0sSNBvccd2m7X").build();
-			topicManager.allowProducer("ASDC-DISTR-STATUS-TOPIC-TESTER", "1FSVAA3bRjhSKNAI");
-		} catch (HttpException | IOException | GeneralSecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// publish
-		// StringBuilder sb = new StringBuilder();
-		// for (String s : serverList)
-		// {
-		// sb.append(s);
-		// sb.append(",");
-		// }
-		// CambriaBatchingPublisher pub = CambriaClientFactory.createSimplePublisher(sb.toString(), "ASDC-DISTR-STATUS-TOPIC-TESTER");
-		// pub.setApiCredentials("yPMwjhmOgHUyJEeW", "3RYpgvBsjpA8Y2CHdA1PM8xK" );
-		//
-		//
-		// try {
-		// pub.send("MyPartitionKey", "{\"artifactURL\":\"artifactURL_Val\", \"consumerID\" : \"123\", \"distributionID\" : \"AAA\", \"status\" : \"DOWNLOAD_OK\", \"timestamp\" : 1000}");
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		//
-		// finally{
-		//
-		//
-		// try {
-		// List<message> stuck = pub.close(15L, TimeUnit.SECONDS);
-		// assertTrue(stuck.isEmpty());
-		// } catch (IOException | InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// }
-
-	}
-
-	public void connectorGetServersTestCI() {
-		AsdcConnectorClient connector = new AsdcConnectorClient();
-		connector.init(testConfiguration);
-
-		Either<List<String>, IDistributionClientResult> serverListFromAsdc = connector.getServerList();
-		assertTrue(serverListFromAsdc.isLeft());
-		assertEquals(serverList, serverListFromAsdc.left().value());
-	}
 
 	public void connectorRegisterCI() {
-		AsdcConnectorClient connector = new AsdcConnectorClient();
+		SdcConnectorClient connector = new SdcConnectorClient();
 		connector.init(testConfiguration);
 
 		ApiCredential creds = new ApiCredential("publicKey", "secretKey");
@@ -569,7 +494,7 @@ public class DistributionClientTest {
 	}
 
 	public void downloadArtifactTestCI() {
-		AsdcConnectorClient connector = new AsdcConnectorClient();
+		SdcConnectorClient connector = new SdcConnectorClient();
 		connector.init(testConfiguration);
 		IArtifactInfo artifactInfo = initArtifactInfo();
 		connector.dowloadArtifact(artifactInfo);
