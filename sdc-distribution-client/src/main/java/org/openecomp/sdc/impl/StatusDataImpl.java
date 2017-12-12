@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * sdc-distribution-client
+ * SDC
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
@@ -20,94 +20,76 @@
 
 package org.openecomp.sdc.impl;
 
-import org.openecomp.sdc.api.consumer.IComponentDoneStatusMessage;
-import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
-import org.openecomp.sdc.api.consumer.IFinalDistrStatusMessage;
+import org.openecomp.sdc.api.notification.IStatusData;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
 
-class DistributionStatusMessageImpl implements IDistributionStatusMessage {
+public class StatusDataImpl implements IStatusData{
 
 	String distributionID;
 	String consumerID;
 	long timestamp;
 	String artifactURL;
 	DistributionStatusEnum status;
+	String componentName;
 	String errorReason;
-	private String componentName;
-
-	public DistributionStatusMessageImpl(IDistributionStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		artifactURL = message.getArtifactURL();
-		status = message.getStatus();
-
-	}
-
-	public DistributionStatusMessageImpl(IComponentDoneStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		artifactURL = message.getArtifactURL();
-		status = message.getStatus();
-		componentName = message.getComponentName();
-	}
-
-	public DistributionStatusMessageImpl(IFinalDistrStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		 
-		artifactURL = "";
-		status = message.getStatus();
-		componentName = message.getComponentName();
-	}
-
+	
 	@Override
 	public String getDistributionID() {
-
 		return distributionID;
 	}
 
+	public void setDistributionID(String distributionId) {
+		this.distributionID = distributionId;
+	}
 	@Override
 	public String getConsumerID() {
-
 		return consumerID;
 	}
 
+	public void setConsumerID(String consumerId) {
+		this.consumerID = consumerId;
+	}
 	@Override
-	public long getTimestamp() {
-
+	public Long getTimestamp() {
 		return timestamp;
 	}
 
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 	@Override
 	public String getArtifactURL() {
-
 		return artifactURL;
 	}
 
+	public void setArtifactURL(String artifactURL) {
+		this.artifactURL = artifactURL;
+	}
 	@Override
 	public DistributionStatusEnum getStatus() {
-
 		return status;
 	}
 
-	public String getErrorReason() {
-		return errorReason;
+	public void setStatus(DistributionStatusEnum status) {
+		this.status = status;
 	}
 
-	public void setErrorReason(String errorReason) {
-		this.errorReason = errorReason;
-	}
 
+	@Override
+	public String toString() {
+		return "StatusDataImpl [distributionId=" + distributionID + ", consumerId=" + consumerID + ", timestamp=" + timestamp + ", artifactURL=" + artifactURL + ", status=" + status  +", errorReason=" + errorReason+ "]";
+	}
+	@Override
 	public String getComponentName() {
 		return componentName;
 	}
 
+	@Override
+	public String getErrorReason() {
+		return errorReason;
+	}
+
 	
 
+	
 }

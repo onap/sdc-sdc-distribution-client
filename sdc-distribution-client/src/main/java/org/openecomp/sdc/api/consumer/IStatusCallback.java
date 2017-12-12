@@ -18,39 +18,18 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.openecomp.sdc.api.asdc;
+package org.openecomp.sdc.api.consumer;
 
-import java.util.List;
+import org.openecomp.sdc.api.notification.IStatusData;
 
-public class RegistrationRequest {
+/**
+ * When a relevant status will be found activateCallback method will be
+ * activated with the status data.<br>
+ * Please implement it according to your desired callback logic.
+ */
+@FunctionalInterface
+public interface IStatusCallback {
+	void activateCallback(IStatusData data);
 
-	String apiPublicKey;
-	String distrEnvName;
-	Boolean isConsumerToSdcDistrStatusTopic;
-	List<String> distEnvEndPoints;
-
-	public RegistrationRequest(String apiPublicKey, String distrEnvName, boolean isConsumerToSdcDistrStatusTopic, List<String> distEnvEndPoints) {
-		this.apiPublicKey = apiPublicKey;
-		this.distrEnvName = distrEnvName;
-		this.isConsumerToSdcDistrStatusTopic = isConsumerToSdcDistrStatusTopic;
-		this.distEnvEndPoints = distEnvEndPoints;
-	}
-
-	public String getApiPublicKey() {
-		return apiPublicKey;
-	}
-
-	public String getDistrEnvName() {
-		return distrEnvName;
-	}
-
-	public Boolean getIsConsumerToSdcDistrStatusTopic() {
-		return isConsumerToSdcDistrStatusTopic;
-	}
-
-	public List<String> getDistEnvEndPoints() {
-		return distEnvEndPoints;
-	}
-
-
+	
 }

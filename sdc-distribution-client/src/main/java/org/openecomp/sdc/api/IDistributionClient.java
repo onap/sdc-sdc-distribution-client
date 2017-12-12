@@ -22,33 +22,34 @@ package org.openecomp.sdc.api;
 
 import java.util.List;
 
-import org.openecomp.sdc.api.consumer.IConfiguration;
-import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
-import org.openecomp.sdc.api.consumer.INotificationCallback;
+import org.openecomp.sdc.api.consumer.*;
+import org.openecomp.sdc.api.consumer.IStatusCallback;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.IVfModuleMetadata;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.api.results.IDistributionClientResult;
 
 public interface IDistributionClient {
-	
+
 	/**
 	 * Update the configuration of the distribution client <br>
-	 * Updatable configuration parameters are: pollingInterval, pollingTimeout, consumerGroup and relevantArtifactTypes
+	 * Updatable configuration parameters are: pollingInterval, pollingTimeout,
+	 * consumerGroup and relevantArtifactTypes
 	 * 
-	 * @param newConf - contains updated configuration
+	 * @param newConf
+	 *            - contains updated configuration
 	 * 
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult updateConfiguration(IConfiguration newConf);
-	
+
 	/**
 	 * Retrieve the configuration of the distribution client <br>
 	 * 
 	 * @return IConfiguration
 	 */
 	IConfiguration getConfiguration();
-	
+
 	/**
 	 * Start distribution client <br>
 	 * - start polling notification topic <br>
@@ -56,17 +57,17 @@ public interface IDistributionClient {
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult start();
-	
+
 	/**
 	 * Stop distribution client <br>
 	 * - stop polling notification topic <br>
 	 * - unregister topics (via ASDC) <br>
-	 * - delete keys from UEB 
+	 * - delete keys from UEB
 	 * 
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult stop();
-	
+
 	/**
 	 * Downloads an artifact from ASDC Catalog <br>
 	 * 
@@ -74,66 +75,136 @@ public interface IDistributionClient {
 	 * @return IDistributionClientDownloadResult
 	 */
 	IDistributionClientDownloadResult download(IArtifactInfo artifactInfo);
-	
+
 	/**
-	 *  Initialize the distribution client <br>
-	 *  - fetch the UEB server list from ASDC <br>
-	 *  - create keys in UEB <br>
-	 *  - register for topics (via ASDC) <br>
-	 *  - set the notification callback <br>
-	 *  
-	 *  Note: all configuration fields are mandatory. <br> 
-	 *  Password must be in clear text and not encrypted  <br>
-	 *  ECOMP-Component MUST store password as SHA-2 (256) hashed with dynamically generated salt value <br>  
+	 * Initialize the distribution client <br>
+	 * - fetch the UEB server list from ASDC <br>
+	 * - create keys in UEB <br>
+	 * - register for topics (via ASDC) <br>
+	 * - set the notification callback <br>
+	 * 
+	 * Note: all configuration fields are mandatory. <br>
+	 * Password must be in clear text and not encrypted <br>
+	 * ONAP-Component MUST store password as SHA-2 (256) hashed with
+	 * dynamically generated salt value <br>
 	 * 
 	 * @param conf
 	 * @param callback
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult init(IConfiguration conf, INotificationCallback callback);
-	
-	
+
 	/**
-	 * Build and publish Distribution Download Status event to Distribution Status Topic
+	 * Initialize the distribution client <br>
+	 * - fetch the UEB server list from ASDC <br>
+	 * - create keys in UEB <br>
+	 * - register for topics (via ASDC) <br>
+	 * - set the notification callback <br>
+	 * 
+	 * Note: all configuration fields are mandatory. <br>
+	 * Password must be in clear text and not encrypted <br>
+	 * ONAP-Component MUST store password as SHA-2 (256) hashed with
+	 * dynamically generated salt value <br>
+	 * 
+	 * @param conf
+	 * @param notificationCallback
+	 * @param statusCallback
+	 * @return IDistributionClientResult
+	 */
+	IDistributionClientResult init(IConfiguration conf, INotificationCallback notificationCallback,
+			IStatusCallback statusCallback);
+
+	/**
+	 * Build and publish Distribution Download Status event to Distribution
+	 * Status Topic
 	 * 
 	 * @param statusMessage
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage);
-	
+
 	/**
-	 * Build and publish Distribution Download Status event to Distribution Status Topic With Error Reason.
+	 * Build and publish Distribution Download Status event to Distribution
+	 * Status Topic With Error Reason.
 	 * 
 	 * @param statusMessage
 	 * @param errorReason
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage, String errorReason);
-	
-	
+
 	/**
-	 * Build and publish Distribution Deployment Status event to Distribution Status Topic 
+	 * Build and publish Distribution Deployment Status event to Distribution
+	 * Status Topic
 	 * 
 	 * @param statusMessage
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage);
-	
+
 	/**
-	 * Build and publish Distribution Deployment Status event to Distribution Status Topic With Error Reason.
+	 * Build and publish Distribution Deployment Status event to Distribution
+	 * Status Topic With Error Reason.
 	 * 
 	 * @param statusMessage
 	 * @param errorReason
 	 * @return IDistributionClientResult
 	 */
 	IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage, String errorReason);
+
+	/**
+	 * Build and publish Distribution Component Status event to Distribution
+	 * Status Topic
+	 * 
+	 * @param statusMessage
+	 * @return IDistributionClientResult
+	 */
+	IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage);
 	
-	/**This method parses artifact of type VF_MODULES_METADATA payload data .<br>
-	 * Method is deprecated due to VF Module changes. Only backward compatibility is supported.<br>
+	/**
+	 * Build and publish Distribution Component Status event to Distribution
+	 * Status Topic With Error Reason.
+	 * 
+	 * @param statusMessage
+	 * @param errorReason
+	 * @return IDistributionClientResult
+	 */
+	IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage, String errorReason);
+	
+	
+	/**
+	 * Build and publish Distribution Final Status event to Distribution
+	 * Status Topic
+	 * 
+	 * @param statusMessage
+	 * @return IDistributionClientResult
+	 */
+	IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage);
+	
+	
+	/**
+	 * Build and publish Distribution Final Status event to Distribution
+	 * Status Topic With Error Reason.
+	 * 
+	 * @param statusMessage
+	 * @param errorReason
+	 * @return IDistributionClientResult
+	 */
+	IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage, String errorReason);
+
+	
+	/**
+	 * This method parses artifact of type VF_MODULES_METADATA payload data
+	 * .<br>
+	 * Method is deprecated due to VF Module changes. Only backward
+	 * compatibility is supported.<br>
+	 * 
 	 * @param artifactPayload
 	 * @return IVfModuleMetadata list
 	 */
-	@Deprecated 
+	@Deprecated
 	List<IVfModuleMetadata> decodeVfModuleArtifact(byte[] artifactPayload);
+
+
 
 }
