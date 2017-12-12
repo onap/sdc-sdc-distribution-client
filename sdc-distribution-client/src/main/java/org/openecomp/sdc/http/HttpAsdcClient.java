@@ -60,7 +60,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.openecomp.sdc.api.consumer.IConfiguration;
-import org.openecomp.sdc.impl.DistributionClientImpl;
 import org.openecomp.sdc.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,19 +74,19 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 	private String serverFqdn = null;
 	private String authHeaderValue = "";
 
-	public HttpAsdcClient(IConfiguration configuraion/* String serverFqdn, String username, String password */) {
+	public HttpAsdcClient(IConfiguration configuraion) {
 		this.serverFqdn = configuraion.getAsdcAddress();
+
 		String username = configuraion.getUser();
 		String password = configuraion.getPassword();
-
-		initSSL(serverFqdn, username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
+		initSSL(username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
 
 		String userNameAndPassword = username + ":" + password;
 		this.authHeaderValue = "Basic " + Base64.encodeBase64String(userNameAndPassword.getBytes());
 	}
 
 	// @SuppressWarnings("deprecation")
-	private void initSSL(String serverFqdn, String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
+	private void initSSL(String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
 
 		try {
 			HostnameVerifier hostnameVerifier = new HostnameVerifier() {
@@ -245,9 +244,9 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 						log.error("failed to close http response");
 					}
 				}
-				ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, null);
+				ret = new Pair<>(response, null);
 			} else {
-				ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, httpResponse);
+				ret = new Pair<>(response, httpResponse);
 			}
 		}
 
@@ -264,7 +263,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 		Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
 		CloseableHttpResponse httpResponse = null;
 		String url = HTTPS + serverFqdn + requestUrl;
-		log.debug("url to send  " + url);
+		log.debug("url to send {}", url);
 		HttpGet httpGet = new HttpGet(url);
 		List<Header> headers = addHeadersToHttpRequest(headersMap);
 		for (Header header : headers) {
@@ -277,16 +276,16 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 		try {
 			httpResponse = httpClient.execute(httpGet);
 
-			log.debug("GET Response Status " + httpResponse.getStatusLine().getStatusCode());
+			log.debug("GET Response Status {}", httpResponse.getStatusLine().getStatusCode());
 			Header[] headersRes = httpResponse.getAllHeaders();
-			Map<String, String> headersResMap = new HashMap<String, String>();
+			Map<String, String> headersResMap = new HashMap<>();
 			for (Header header : headersRes) {
 				headersResMap.put(header.getName(), header.getValue());
 			}
 			response = new HttpAsdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity(), headersResMap);
 
 		} catch (UnknownHostException | ConnectException e) {
-			log.error("failed to connect to url: " + requestUrl, e);
+			log.error("failed to connect to url: {}", requestUrl, e);
 			StringEntity errorEntity = null;
 			try {
 				errorEntity = new StringEntity("failed to connect");

@@ -37,5 +37,20 @@ public enum DistributionStatusEnum {
 	DEPLOY_ERROR, 
 	
 	/**Sent  when  the  repeated  distribution notification  event is sent for already  stored  in the  local  repository  service artifact  ( artifact's version and  checksum match the one stored  in the local repository)*/
-	ALREADY_DEPLOYED
+	ALREADY_DEPLOYED,
+	/**
+	 * ECOMP component is requested to publish this status once component successfully complete downloading and storing all the data it needs from the service.
+	 */
+	COMPONENT_DONE_OK,
+
+	/**ECOMP component is requested to publish this status when component failed to download or failed to store one or more of the mandatory information it requires from the service model.
+
+	 It is recommended to populate the errorReason field with appropriate description of the error
+*/
+	 COMPONENT_DONE_ERROR,
+	/** The DISTRIBUTION_COMPLETE_OK/ERROR status indicating the overall ECOMP components status of retrieving and storing the information.
+*/
+	DISTRIBUTION_COMPLETE_OK,
+
+	DISTRIBUTION_COMPLETE_ERROR
 }
