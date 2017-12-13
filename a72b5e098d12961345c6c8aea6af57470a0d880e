@@ -1,0 +1,268 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_2de2e29f",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "do not remove the snapshot from the pom",
+      "range": {
+        "startLine": 7,
+        "startChar": 10,
+        "endLine": 7,
+        "endChar": 16
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cdeede8b",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "why is this commented out is it no longer used?",
+      "range": {
+        "startLine": 13,
+        "startChar": 2,
+        "endLine": 13,
+        "endChar": 47
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0de5a6a7",
+        "filename": "sdc-distribution-ci/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "do not change the pom version to release it should remain a snapshot",
+      "range": {
+        "startLine": 9,
+        "startChar": 11,
+        "endLine": 9,
+        "endChar": 16
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6dd8eaef",
+        "filename": "sdc-distribution-ci/src/main/java/org/openecomp/test/ClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "please change mso to the new naming so",
+      "range": {
+        "startLine": 86,
+        "startChar": 21,
+        "endLine": 86,
+        "endChar": 25
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4ddbaeed",
+        "filename": "sdc-distribution-client/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "do not change the pom version.\nit should remain a snapshot",
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8dd1b6cf",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/http/AsdcConnectorClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "if the code is not used please remove it.",
+      "range": {
+        "startLine": 93,
+        "startChar": 14,
+        "endLine": 93,
+        "endChar": 36
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2d4bc2b1",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "do not use concert in the log change this to {} and provide parameter to the log call",
+      "range": {
+        "startLine": 97,
+        "startChar": 26,
+        "endLine": 97,
+        "endChar": 30
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_edccfa37",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "is they\u0027re a need for this line?",
+      "range": {
+        "startLine": 298,
+        "startChar": 10,
+        "endLine": 298,
+        "endChar": 20
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_ed65da45",
+        "filename": "sdc-distribution-client/src/test/java/org/openecomp/sdc/http/AsdcConnectorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "please rename class to sdc we do not use asdc any longer",
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2d7422fc",
+        "filename": "sdc-distribution-client/src/test/java/org/openecomp/sdc/impl/DistributionClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "if the code is not used please delete it",
+      "range": {
+        "startLine": 489,
+        "startChar": 3,
+        "endLine": 489,
+        "endChar": 19
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cd601e38",
+        "filename": "sdc-distribution-client/src/test/java/org/openecomp/sdc/impl/DistributionClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "if the code is not used, please delete it.",
+      "range": {
+        "startLine": 527,
+        "startChar": 9,
+        "endLine": 527,
+        "endChar": 22
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0d77e603",
+        "filename": "sdc-distribution-client/src/test/java/org/openecomp/sdc/utils/TestConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-13T06:44:39Z",
+      "side": 1,
+      "message": "please remove the reference to att from the code.",
+      "range": {
+        "startLine": 78,
+        "startChar": 2,
+        "endLine": 78,
+        "endChar": 35
+      },
+      "revId": "a72b5e098d12961345c6c8aea6af57470a0d880e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
