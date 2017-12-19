@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a93c517_2abcffba",
+        "filename": "sdc-distribution-ci/src/main/java/org/openecomp/test/SimpleConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "please remove the use of att from code",
+      "range": {
+        "startLine": 167,
+        "startChar": 24,
+        "endLine": 167,
+        "endChar": 46
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6ac1a72d",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/IDistributionClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 9
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0adee311",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/IDistributionClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 9
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2ae39fda",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/consumer/IConfiguration.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 34,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 41
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cae79be3",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/consumer/IDistributionStatusMessageBasic.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to sdc",
+      "range": {
+        "startLine": 10,
+        "startChar": 57,
+        "endLine": 10,
+        "endChar": 61
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cab0fbdf",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/consumer/IDistributionStatusMessageBasic.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "please change to onap",
+      "range": {
+        "startLine": 18,
+        "startChar": 20,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eab5b7cd",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/notification/IStatusData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to sdc",
+      "range": {
+        "startLine": 27,
+        "startChar": 54,
+        "endLine": 27,
+        "endChar": 58
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_8acaf34d",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/notification/IStatusData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 36,
+        "startChar": 18,
+        "endLine": 36,
+        "endChar": 23
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_aac7af44",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/api/notification/IStatusData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 39,
+        "startChar": 20,
+        "endLine": 39,
+        "endChar": 25
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_2a0abf8a",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 30,
+        "startChar": 93,
+        "endLine": 30,
+        "endChar": 98
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_0a058379",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 33,
+        "startChar": 22,
+        "endLine": 33,
+        "endChar": 27
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_6ad8c71d",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 36,
+        "startChar": 21,
+        "endLine": 36,
+        "endChar": 26
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_eaecd7c9",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "change to onap",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 9
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_4adb8b1b",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "ECOM",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5a93c517_cafebb6b",
+        "filename": "sdc-distribution-client/src/main/java/org/openecomp/sdc/utils/DistributionStatusEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 69
+      },
+      "writtenOn": "2017-12-19T12:59:57Z",
+      "side": 1,
+      "message": "ECOM",
+      "range": {
+        "startLine": 51,
+        "startChar": 70,
+        "endLine": 51,
+        "endChar": 75
+      },
+      "revId": "ef958fe66b1672dd202b45b99136b58c3597bbb0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
