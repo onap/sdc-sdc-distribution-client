@@ -36,13 +36,13 @@ activateServerTLSAuth	: Sets whether ASDC server TLS authentication is activated
 
 Example of configuration file implementing IConfiguration interface:
 --------------------------------------------------------------------
-package org.openecomp.conf;
+package org.onap.conf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openecomp.asdc.api.consumer.IConfiguration;
-import org.openecomp.asdc.utils.ArtifactTypeEnum;
+import org.onap.asdc.api.consumer.IConfiguration;
+import org.onap.asdc.utils.ArtifactTypeEnum;
 
 public class SimpleConfiguration implements IConfiguration{
 	int randomSeed;
@@ -116,7 +116,7 @@ Loggin can be done using log4j
 Example of log.properties file:
 -------------------------------
 log4j.rootCategory=DEBUG, CONSOLE, LOGFILE
-log4j.logger.org.openecomp=TRACE, CONSOLE, LOGFILE
+log4j.logger.org.onap=TRACE, CONSOLE, LOGFILE
 
 # CONSOLE is set to be a ConsoleAppender using a PatternLayout.
 log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
@@ -137,7 +137,7 @@ log4j.appender.LOGFILE.MaxBackupIndex=10
 
 *** to be completed on release ***
 
-SDC@lists.openecomp.org
+SDC@lists.onap.org
 
 SDC Javadoc and Maven site
  
