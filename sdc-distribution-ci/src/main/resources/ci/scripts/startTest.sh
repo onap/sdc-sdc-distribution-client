@@ -33,7 +33,7 @@ LOGS_PROP_FILE=file:${FULL_PATH}/conf/log4j.properties
 TARGET_DIR=${FULL_PATH}/target
 CONF_FILE=${FULL_PATH}/conf/attsdc.yaml
 DEBUG=true
-MainClass=org.openecomp.sdc.ci.tests.run.StartTest
+MainClass=org.onap.sdc.ci.tests.run.StartTest
 
 JAR_FILE=$1
 
