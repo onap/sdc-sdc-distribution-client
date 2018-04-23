@@ -29,7 +29,8 @@ import java.util.regex.Pattern;
  */
 public final class DistributionClientConstants {
 	public static final String CLIENT_DESCRIPTION = "ASDC Distribution Client Key for %s";
-	public static final Pattern FQDN_PATTERN = Pattern.compile("^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])(\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9]))*(:[0-9]{2,4})*$", Pattern.CASE_INSENSITIVE);
+	public static final Pattern FQDN_PATTERN = Pattern.compile("^" +
+			"([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])(\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9]))*(:[0-9]{2,5})*$", Pattern.CASE_INSENSITIVE);
 	public static final String EMAIL = "";
 	public static final int MIN_POLLING_INTERVAL_SEC = 15;
 	public static final int POOL_SIZE = 10;
