@@ -7,7 +7,7 @@
 # Introduction
 
 ONAP SDC Distribution client is delivered as helper JAR that can be used by clients that work with SDC.
-It register to SDC for getting notifications, listen for notification from SDC, download artifacts from SDC, and send respone back to SDC.
+It register to SDC for getting notifications, listen for notification from SDC, download artifacts from SDC, and send response back to SDC.
 
 
 # Compiling ONAP SDC Distribution client
