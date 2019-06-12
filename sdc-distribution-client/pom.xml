@@ -105,13 +105,13 @@
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
 			<scope>test</scope>
-			<version>9.2.10.v20150310</version>
+			<version>${jetty.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
-			<version>9.2.10.v20150310</version>
+			<version>${jetty.version}</version>
 			<scope>test</scope>
 		</dependency>
 

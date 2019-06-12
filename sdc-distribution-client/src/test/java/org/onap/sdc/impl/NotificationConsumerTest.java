@@ -3,6 +3,7 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (C) 2019 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +30,13 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.eclipse.jetty.util.ArrayQueue;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,7 +57,7 @@ import com.google.gson.GsonBuilder;
 public class NotificationConsumerTest {
 	private CambriaConsumer cambriaConsumer = mock(CambriaConsumer.class);
 	private INotificationCallback clientCallback = spy(INotificationCallback.class);
-	private Queue<Iterable<String>> notificationsQueue = new ArrayQueue<>(100);
+	private Queue<Iterable<String>> notificationsQueue = new LinkedList<>();
 	private DistributionClientImpl distributionClient = Mockito.spy(DistributionClientImpl.class);
 	private List<String> artifactsTypes = Arrays.asList(ArtifactTypeEnum.HEAT.name());
 	private List<Boolean> notificationStatusResults = new ArrayList<>();
