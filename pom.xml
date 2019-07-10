@@ -8,6 +8,13 @@
 	<packaging>pom</packaging>
 	<name>sdc-sdc-distribution-client</name>
 
+	<parent>
+		<groupId>org.onap.oparent</groupId>
+		<artifactId>oparent</artifactId>
+		<version>2.0.0</version>
+		<relativePath/>
+	</parent>
+
 	<modules>
 		<module>sdc-distribution-client</module>
 		<!-- <module>sdc-distribution-ci</module> -->
@@ -79,6 +86,14 @@
 	
 	<build>
 		<plugins>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.17</version>
+				<configuration>
+					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+					<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
