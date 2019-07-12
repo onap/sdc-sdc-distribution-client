@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4b9b8db_f15c036f",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 3717
+      },
+      "writtenOn": "2019-07-12T12:32:41Z",
+      "side": 1,
+      "message": "Looks like a not resolved merge conflict",
+      "revId": "2818647ff635ac68d89e9ca6e20812b4afb4f37f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
