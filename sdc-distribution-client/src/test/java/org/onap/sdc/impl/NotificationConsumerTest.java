@@ -22,7 +22,6 @@
 package org.onap.sdc.impl;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -55,9 +54,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class NotificationConsumerTest {
+	public static final int NOTIFICATION_QUEUE_CAPACITY = 100;
+
 	private CambriaConsumer cambriaConsumer = mock(CambriaConsumer.class);
 	private INotificationCallback clientCallback = spy(INotificationCallback.class);
+<<<<<<< Updated upstream
 	private Queue<Iterable<String>> notificationsQueue = new LinkedList<>();
+=======
+	private Queue<Iterable<String>> notificationsQueue = new ArrayQueue<>(NOTIFICATION_QUEUE_CAPACITY);
+>>>>>>> Stashed changes
 	private DistributionClientImpl distributionClient = Mockito.spy(DistributionClientImpl.class);
 	private List<String> artifactsTypes = Arrays.asList(ArtifactTypeEnum.HEAT.name());
 	private List<Boolean> notificationStatusResults = new ArrayList<>();
