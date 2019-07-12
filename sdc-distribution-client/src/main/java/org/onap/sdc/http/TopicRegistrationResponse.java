@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,21 +21,23 @@
 package org.onap.sdc.http;
 
 public class TopicRegistrationResponse {
-	String distrNotificationTopicName;
-	String distrStatusTopicName;
-	
-	
-	public void setDistrNotificationTopicName(String distrNotificationTopicName) {
-		this.distrNotificationTopicName = distrNotificationTopicName;
-	}
-	public void setDistrStatusTopicName(String distrStatusTopicName) {
-		this.distrStatusTopicName = distrStatusTopicName;
-	}
-	
-	public String getDistrNotificationTopicName() {
-		return distrNotificationTopicName;
-	}
-	public String getDistrStatusTopicName() {
-		return distrStatusTopicName;
-	}
+    private String distrNotificationTopicName;
+    private String distrStatusTopicName;
+
+
+    public void setDistrNotificationTopicName(String distrNotificationTopicName) {
+        this.distrNotificationTopicName = distrNotificationTopicName;
+    }
+
+    public void setDistrStatusTopicName(String distrStatusTopicName) {
+        this.distrStatusTopicName = distrStatusTopicName;
+    }
+
+    public String getDistrNotificationTopicName() {
+        return distrNotificationTopicName;
+    }
+
+    public String getDistrStatusTopicName() {
+        return distrStatusTopicName;
+    }
 }
