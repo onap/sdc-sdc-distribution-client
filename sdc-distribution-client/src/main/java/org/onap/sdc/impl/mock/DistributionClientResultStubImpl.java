@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,16 +22,19 @@ package org.onap.sdc.impl.mock;
 
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.DistributionActionResultEnum;
-/** Mock Implementation */
-public class DistributionClientResultStubImpl implements IDistributionClientResult {
-	@Override
-	public DistributionActionResultEnum getDistributionActionResult() {
-		return DistributionActionResultEnum.SUCCESS;
-	}
 
-	@Override
-	public String getDistributionMessageResult() {
-		return "Stub Result, method not implemented!";
-	}
+/**
+ * Mock Implementation
+ */
+public class DistributionClientResultStubImpl implements IDistributionClientResult {
+    @Override
+    public DistributionActionResultEnum getDistributionActionResult() {
+        return DistributionActionResultEnum.SUCCESS;
+    }
+
+    @Override
+    public String getDistributionMessageResult() {
+        return "Stub Result, method not implemented!";
+    }
 
 }

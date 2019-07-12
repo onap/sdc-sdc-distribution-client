@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,117 +39,117 @@ import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 public class YamlToObjectConverter {
 
-	private static Logger log = LoggerFactory
-			.getLogger(YamlToObjectConverter.class.getName());
+    private static Logger log = LoggerFactory
+            .getLogger(YamlToObjectConverter.class.getName());
 
-	private static HashMap<String, Yaml> yamls = new HashMap<String, Yaml>();
+    private static HashMap<String, Yaml> yamls = new HashMap<String, Yaml>();
 
-	private static Yaml defaultYaml = new Yaml();
+    private static Yaml defaultYaml = new Yaml();
 
-	static {
+    static {
 
-		org.yaml.snakeyaml.constructor.Constructor heatConstructor = new org.yaml.snakeyaml.constructor.Constructor(HeatConfiguration.class);
-		TypeDescription heatDescription = new TypeDescription(HeatConfiguration.class);
-		//heatDescription.putListPropertyType("parameters", HeatParameterConfiguration.class);
-		heatConstructor.addTypeDescription(heatDescription);
-		PropertyUtils propertyUtils = new PropertyUtils() {
-			@Override
-			//This is in order to workaround "default" field in HeatParameterEntry, since default is Java keyword
-			public Property getProperty(Class<? extends Object> type, String name, BeanAccess bAccess)
-					throws IntrospectionException {
-				name = name.substring(0, 1).toLowerCase() + name.substring(1);
-				return super.getProperty(type, name, bAccess);
-			}
+        org.yaml.snakeyaml.constructor.Constructor heatConstructor = new org.yaml.snakeyaml.constructor.Constructor(HeatConfiguration.class);
+        TypeDescription heatDescription = new TypeDescription(HeatConfiguration.class);
+        //heatDescription.putListPropertyType("parameters", HeatParameterConfiguration.class);
+        heatConstructor.addTypeDescription(heatDescription);
+        PropertyUtils propertyUtils = new PropertyUtils() {
+            @Override
+            //This is in order to workaround "default" field in HeatParameterEntry, since default is Java keyword
+            public Property getProperty(Class<? extends Object> type, String name, BeanAccess bAccess)
+                    throws IntrospectionException {
+                name = name.substring(0, 1).toLowerCase() + name.substring(1);
+                return super.getProperty(type, name, bAccess);
+            }
 
-		};
-		//Skip properties which are not found - we only are interested in "parameters"
-		propertyUtils.setSkipMissingProperties(true);
-		heatConstructor.setPropertyUtils(propertyUtils);
+        };
+        //Skip properties which are not found - we only are interested in "parameters"
+        propertyUtils.setSkipMissingProperties(true);
+        heatConstructor.setPropertyUtils(propertyUtils);
 
-		Yaml yaml = new Yaml(heatConstructor);
+        Yaml yaml = new Yaml(heatConstructor);
 
-		yamls.put(HeatConfiguration.class.getName(), yaml);
+        yamls.put(HeatConfiguration.class.getName(), yaml);
 
-	}
+    }
 
-	private static <T> Yaml getYamlByClassName(Class<T> className) {
+    private static <T> Yaml getYamlByClassName(Class<T> className) {
 
-		Yaml yaml = yamls.get(className.getName());
-		if (yaml == null) {
-			yaml = defaultYaml;
-		}
+        Yaml yaml = yamls.get(className.getName());
+        if (yaml == null) {
+            yaml = defaultYaml;
+        }
 
-		return yaml;
-	}
+        return yaml;
+    }
 
-	public <T> T convert(String dirPath, Class<T> className,
-			String configFileName) {
+    public <T> T convert(String dirPath, Class<T> className,
+                         String configFileName) {
 
-		T config = null;
+        T config = null;
 
-		try {
+        try {
 
-			String fullFileName = dirPath + File.separator + configFileName;
+            String fullFileName = dirPath + File.separator + configFileName;
 
-			config = convert(fullFileName, className);
+            config = convert(fullFileName, className);
 
-		} catch (Exception e) {
-			log.error("Failed to convert yaml file " + configFileName
-					+ " to object.", e);
-		} 
+        } catch (Exception e) {
+            log.error("Failed to convert yaml file " + configFileName
+                    + " to object.", e);
+        }
 
-		return config;
-	}
+        return config;
+    }
 
-	public <T> T convert(String fullFileName, Class<T> className) {
+    public <T> T convert(String fullFileName, Class<T> className) {
 
-		T config = null;
+        T config = null;
 
-		Yaml yaml = getYamlByClassName(className);
+        Yaml yaml = getYamlByClassName(className);
 
-		InputStream in = null;
-		try {
+        InputStream in = null;
+        try {
 
-			File f = new File(fullFileName);
-			if (false == f.exists()) {
-				log.warn("The file " + fullFileName
-						+ " cannot be found. Ignore reading configuration.");
-				return null;
-			}
-			in = Files.newInputStream(Paths.get(fullFileName));
+            File f = new File(fullFileName);
+            if (!f.exists()) {
+                log.warn("The file " + fullFileName
+                        + " cannot be found. Ignore reading configuration.");
+                return null;
+            }
+            in = Files.newInputStream(Paths.get(fullFileName));
 
-			config = yaml.loadAs(in, className);
+            config = yaml.loadAs(in, className);
 
-			// System.out.println(config.toString());
-		} catch (Exception e) {
-			log.error("Failed to convert yaml file " + fullFileName
-					+ " to object.", e);
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+            // System.out.println(config.toString());
+        } catch (Exception e) {
+            log.error("Failed to convert yaml file " + fullFileName
+                    + " to object.", e);
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
 
-		return config;
-	}
+        return config;
+    }
 
-	public <T> T convertFromString(String yamlContents, Class<T> className) {
+    public <T> T convertFromString(String yamlContents, Class<T> className) {
 
-		T config = null;
+        T config = null;
 
-		Yaml yaml = getYamlByClassName(className);
+        Yaml yaml = getYamlByClassName(className);
 
-		try {
-			config = yaml.loadAs(yamlContents, className);
-		} catch (Exception e){
-			log.error("Failed to convert YAML {} to object." , yamlContents, e);
-		}
+        try {
+            config = yaml.loadAs(yamlContents, className);
+        } catch (Exception e) {
+            log.error("Failed to convert YAML {} to object.", yamlContents, e);
+        }
 
-		return config;
-	}
+        return config;
+    }
 }

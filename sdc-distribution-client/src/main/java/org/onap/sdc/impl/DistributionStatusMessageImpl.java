@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,87 +27,86 @@ import org.onap.sdc.utils.DistributionStatusEnum;
 
 class DistributionStatusMessageImpl implements IDistributionStatusMessage {
 
-	String distributionID;
-	String consumerID;
-	long timestamp;
-	String artifactURL;
-	DistributionStatusEnum status;
-	String errorReason;
-	private String componentName;
+    private String distributionID;
+    private String consumerID;
+    private long timestamp;
+    private String artifactURL;
+    private DistributionStatusEnum status;
+    private String errorReason;
+    private String componentName;
 
-	public DistributionStatusMessageImpl(IDistributionStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		artifactURL = message.getArtifactURL();
-		status = message.getStatus();
+    DistributionStatusMessageImpl(IDistributionStatusMessage message) {
+        super();
+        distributionID = message.getDistributionID();
+        consumerID = message.getConsumerID();
+        timestamp = message.getTimestamp();
+        artifactURL = message.getArtifactURL();
+        status = message.getStatus();
 
-	}
+    }
 
-	public DistributionStatusMessageImpl(IComponentDoneStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		artifactURL = message.getArtifactURL();
-		status = message.getStatus();
-		componentName = message.getComponentName();
-	}
+    DistributionStatusMessageImpl(IComponentDoneStatusMessage message) {
+        super();
+        distributionID = message.getDistributionID();
+        consumerID = message.getConsumerID();
+        timestamp = message.getTimestamp();
+        artifactURL = message.getArtifactURL();
+        status = message.getStatus();
+        componentName = message.getComponentName();
+    }
 
-	public DistributionStatusMessageImpl(IFinalDistrStatusMessage message) {
-		super();
-		distributionID = message.getDistributionID();
-		consumerID = message.getConsumerID();
-		timestamp = message.getTimestamp();
-		 
-		artifactURL = "";
-		status = message.getStatus();
-		componentName = message.getComponentName();
-	}
+    DistributionStatusMessageImpl(IFinalDistrStatusMessage message) {
+        super();
+        distributionID = message.getDistributionID();
+        consumerID = message.getConsumerID();
+        timestamp = message.getTimestamp();
 
-	@Override
-	public String getDistributionID() {
+        artifactURL = "";
+        status = message.getStatus();
+        componentName = message.getComponentName();
+    }
 
-		return distributionID;
-	}
+    @Override
+    public String getDistributionID() {
 
-	@Override
-	public String getConsumerID() {
+        return distributionID;
+    }
 
-		return consumerID;
-	}
+    @Override
+    public String getConsumerID() {
 
-	@Override
-	public long getTimestamp() {
+        return consumerID;
+    }
 
-		return timestamp;
-	}
+    @Override
+    public long getTimestamp() {
 
-	@Override
-	public String getArtifactURL() {
+        return timestamp;
+    }
 
-		return artifactURL;
-	}
+    @Override
+    public String getArtifactURL() {
 
-	@Override
-	public DistributionStatusEnum getStatus() {
+        return artifactURL;
+    }
 
-		return status;
-	}
+    @Override
+    public DistributionStatusEnum getStatus() {
 
-	public String getErrorReason() {
-		return errorReason;
-	}
+        return status;
+    }
 
-	public void setErrorReason(String errorReason) {
-		this.errorReason = errorReason;
-	}
+    public String getErrorReason() {
+        return errorReason;
+    }
 
-	public String getComponentName() {
-		return componentName;
-	}
+    void setErrorReason(String errorReason) {
+        this.errorReason = errorReason;
+    }
 
-	
+    public String getComponentName() {
+        return componentName;
+    }
+
 
 }

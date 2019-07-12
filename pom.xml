@@ -41,7 +41,7 @@
 		<junit.version>4.12</junit.version>
 		<snakeyaml.version>1.14</snakeyaml.version>
 		<guava.version>21.0</guava.version>
-		<jetty.version>9.4.18.v20190429</jetty.version>
+		<jetty.version>9.2.10.v20150310</jetty.version>
 		
 		
 		<!--<sonar.skipDesign>true</sonar.skipDesign>-->
