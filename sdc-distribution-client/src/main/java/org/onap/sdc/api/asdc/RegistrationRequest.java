@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,33 +24,33 @@ import java.util.List;
 
 public class RegistrationRequest {
 
-	String apiPublicKey;
-	String distrEnvName;
-	Boolean isConsumerToSdcDistrStatusTopic;
-	List<String> distEnvEndPoints;
+    private String apiPublicKey;
+    private String distrEnvName;
+    private Boolean isConsumerToSdcDistrStatusTopic;
+    private List<String> distEnvEndPoints;
 
-	public RegistrationRequest(String apiPublicKey, String distrEnvName, boolean isConsumerToSdcDistrStatusTopic, List<String> distEnvEndPoints) {
-		this.apiPublicKey = apiPublicKey;
-		this.distrEnvName = distrEnvName;
-		this.isConsumerToSdcDistrStatusTopic = isConsumerToSdcDistrStatusTopic;
-		this.distEnvEndPoints = distEnvEndPoints;
-	}
+    public RegistrationRequest(String apiPublicKey, String distrEnvName, boolean isConsumerToSdcDistrStatusTopic, List<String> distEnvEndPoints) {
+        this.apiPublicKey = apiPublicKey;
+        this.distrEnvName = distrEnvName;
+        this.isConsumerToSdcDistrStatusTopic = isConsumerToSdcDistrStatusTopic;
+        this.distEnvEndPoints = distEnvEndPoints;
+    }
 
-	public String getApiPublicKey() {
-		return apiPublicKey;
-	}
+    public String getApiPublicKey() {
+        return apiPublicKey;
+    }
 
-	public String getDistrEnvName() {
-		return distrEnvName;
-	}
+    public String getDistrEnvName() {
+        return distrEnvName;
+    }
 
-	public Boolean getIsConsumerToSdcDistrStatusTopic() {
-		return isConsumerToSdcDistrStatusTopic;
-	}
+    public Boolean getIsConsumerToSdcDistrStatusTopic() {
+        return isConsumerToSdcDistrStatusTopic;
+    }
 
-	public List<String> getDistEnvEndPoints() {
-		return distEnvEndPoints;
-	}
+    public List<String> getDistEnvEndPoints() {
+        return distEnvEndPoints;
+    }
 
 
 }
