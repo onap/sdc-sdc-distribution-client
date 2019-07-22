@@ -1,0 +1,10 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Piotr Darosz <piotr.darosz@nokia.com>
+Code-Review+1: Tomasz Golabek <tomasz.golabek@nokia.com>
+Code-Review+1: Michał Bańka <michal.banka@nokia.com>
+Code-Review+2: Ofir Sonsino <ofir.sonsino@intl.att.com>
+Submitted-by: Ofir Sonsino <ofir.sonsino@intl.att.com>
+Submitted-at: Mon, 22 Jul 2019 08:32:49 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/91156
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
