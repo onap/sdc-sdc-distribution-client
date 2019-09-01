@@ -118,6 +118,7 @@
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
+							<argLine>${argLine} -Xmx2048m</argLine>
 							<destFile>${sonar.jacoco.reportPath}</destFile>
 						</configuration>
 					</execution>
