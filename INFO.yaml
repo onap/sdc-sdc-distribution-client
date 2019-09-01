@@ -7,7 +7,7 @@ project_lead: &onap_releng_ptl
     email: 'ofir.sonsino@intl.att.com'
     company: 'ATT'
     id: 'os0695'
-    timezone: 'Israel/Lod'
+    timezone: 'Asia/Jerusalem'
 primary_contact: *onap_releng_ptl
 issue_tracking:
     type: 'jira'
@@ -27,17 +27,17 @@ committers:
         email: 'ia096e@intl.att.com'
         company: 'ATT'
         id: 'idanamit'
-        timezone: 'Israel/Aviv'
+        timezone: 'Asia/Jerusalem'
     - name: 'Tal Gitelman'
         email: 'tg851x@intl.att.com'
         company: 'ATT'
         id: 'tgitelman'
-        timezone: 'Israel/Aviv'
+        timezone: 'Asia/Jerusalem'
     - name: 'Yuli Shlosberg'
         email: 'ys9693@att.com'
         company: 'ATT'
         id: 'ys9693'
-        timezone: 'Israel/Aviv'
+        timezone: 'Asia/Jerusalem'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
