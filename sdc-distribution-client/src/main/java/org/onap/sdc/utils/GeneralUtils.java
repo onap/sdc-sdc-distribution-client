@@ -3,6 +3,7 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (C) 2019 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +21,15 @@
 
 package org.onap.sdc.utils;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.codec.binary.Base64;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientResultImpl;
 import org.slf4j.Logger;
@@ -36,24 +39,21 @@ import fj.data.Either;
 
 public class GeneralUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneralUtils.class.getName());
-    public static final int STRING_LENGTH_DIVIDER = 4;
+    private static final int STRING_LENGTH_DIVIDER = 4;
 
     private  GeneralUtils() {
-
     }
 
     public static String calculateMD5(String data) {
-        String calculatedMd5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(data);
+        String calculatedMd5 = Hashing.md5().hashString(data, Charsets.UTF_8).toString();
         // encode base-64 result
-        byte[] encodeBase64 = Base64.encodeBase64(calculatedMd5.getBytes());
-        String encodeBase64Str = new String(encodeBase64);
-        return encodeBase64Str;
-
+        byte[] encodeBase64 = Base64.getEncoder().encode(calculatedMd5.getBytes());
+        return new String(encodeBase64);
     }
 
     public static String calculateMD5(byte[] decodedPayload) {
-        String decodedMd5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(decodedPayload);
-        byte[] encodeMd5 = Base64.encodeBase64(decodedMd5.getBytes());
+        String decodedMd5 = Hashing.md5().hashBytes(decodedPayload).toString();
+        byte[] encodeMd5 = Base64.getEncoder().encode(decodedMd5.getBytes());
         return new String(encodeMd5);
     }
 
@@ -61,7 +61,7 @@ public class GeneralUtils {
         boolean isEncoded = false;
         try {
             // If no exception is caught, then it is possibly a base64 encoded string
-            byte[] data = Base64.decodeBase64(str);
+            byte[] data = Base64.getDecoder().decode(str);
             // checks if the string was properly padded to the
             isEncoded = ((str.length() % STRING_LENGTH_DIVIDER == 0) && (Pattern.matches("\\A[a-zA-Z0-9/+]+={1,2}\\z", str)));
 

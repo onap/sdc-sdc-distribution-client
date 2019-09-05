@@ -3,6 +3,7 @@
  * SDC
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (C) 2019 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +28,7 @@ public class StatusDataImpl implements IStatusData {
 
     private String distributionID;
     private String consumerID;
-    private long timestamp;
+    private Long timestamp;
     private String artifactURL;
     private DistributionStatusEnum status;
     private String componentName;
@@ -56,7 +57,7 @@ public class StatusDataImpl implements IStatusData {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -81,7 +82,7 @@ public class StatusDataImpl implements IStatusData {
 
     @Override
     public String toString() {
-        return "StatusDataImpl [distributionId=" + distributionID + ", consumerId=" + consumerID + ", timestamp=" + timestamp + ", artifactURL=" + artifactURL + ", status=" + status + ", errorReason=" + errorReason + "]";
+        return "StatusDataImpl [distributionID=" + distributionID + ", consumerID=" + consumerID + ", timestamp=" + timestamp + ", artifactURL=" + artifactURL + ", status=" + status + ", errorReason=" + errorReason + "]";
     }
 
     @Override

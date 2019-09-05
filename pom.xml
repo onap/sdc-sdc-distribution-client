@@ -42,6 +42,7 @@
 		<snakeyaml.version>1.14</snakeyaml.version>
 		<guava.version>21.0</guava.version>
 		<jetty.version>9.4.18.v20190429</jetty.version>
+		<bean-matchers.version>0.11</bean-matchers.version>
 		
 		
 		<!--<sonar.skipDesign>true</sonar.skipDesign>-->

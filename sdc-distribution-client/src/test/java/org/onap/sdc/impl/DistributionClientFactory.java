@@ -19,30 +19,17 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.impl;
 
+import org.onap.sdc.api.IDistributionClient;
 
-import java.util.Base64;
-import org.onap.sdc.impl.mock.DistributionClientDownloadResultStubImpl;
+public class DistributionClientFactory {
 
-
-public class ArtifactsUtils {
-
-    static DistributionClientDownloadResultStubImpl distributionClientDownloadResultStubImpl =
-            new DistributionClientDownloadResultStubImpl();
-
-    public static byte[] getArtifactPayload() {
-        return distributionClientDownloadResultStubImpl.getArtifactPayload();
+    private DistributionClientFactory() {
     }
 
-    public static String getValidChecksum() {
-
-        String payloadStr = new String(distributionClientDownloadResultStubImpl.getArtifactPayload());
-
-        byte[] decodedPayload = Base64.getDecoder().decode(payloadStr);
-        String checkSum = GeneralUtils.calculateMD5(new String(decodedPayload));
-
-        return checkSum;
+    public static IDistributionClient createDistributionClient() {
+        return new DistributionClientImpl();
     }
 
 }

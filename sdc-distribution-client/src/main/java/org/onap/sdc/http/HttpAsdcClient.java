@@ -3,6 +3,7 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Modifications copyright (C) 2019 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +30,7 @@ import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +43,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -83,7 +84,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         initSSL(username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
 
         String userNameAndPassword = username + ":" + password;
-        this.authHeaderValue = "Basic " + Base64.encodeBase64String(userNameAndPassword.getBytes());
+        this.authHeaderValue = "Basic " + Base64.getEncoder().encodeToString(userNameAndPassword.getBytes());
     }
 
     // @SuppressWarnings("deprecation")

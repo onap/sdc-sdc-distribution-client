@@ -62,13 +62,6 @@
 			<version>2.5</version>
 		</dependency>
 
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.9</version>
-			<scope>compile</scope>
-		</dependency>
-
 		<!-- http client -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -98,6 +91,12 @@
 			<artifactId>httpcore</artifactId>
 			<version>${httpcore.version}</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 
 		<!-- TEST -->
@@ -130,9 +129,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
+			<groupId>com.google.code.bean-matchers</groupId>
+			<artifactId>bean-matchers</artifactId>
+			<version>${bean-matchers.version}</version>
 			<scope>test</scope>
 		</dependency>
 
