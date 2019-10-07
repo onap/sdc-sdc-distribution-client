@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7ff6aa3_6d221819",
+        "filename": "releases/1.4.1.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 481
+      },
+      "writtenOn": "2019-10-07T17:05:29Z",
+      "side": 1,
+      "message": "Artifacts in this job are not 1.4.1",
+      "range": {
+        "startLine": 4,
+        "startChar": 9,
+        "endLine": 4,
+        "endChar": 61
+      },
+      "revId": "602d06b6527a315a79677286300d6f1a720bc0de",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
