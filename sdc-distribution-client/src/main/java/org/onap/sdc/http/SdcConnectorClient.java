@@ -3,7 +3,6 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modifications copyright (C) 2019 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +58,7 @@ import com.google.gson.reflect.TypeToken;
 import fj.data.Either;
 
 public class SdcConnectorClient {
-    String contentDispositionHeader = "Content-Disposition";
+    private String contentDispositionHeader = "Content-Disposition";
     private static Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
     private IConfiguration configuration;
     private HttpAsdcClient httpClient = null;
@@ -165,7 +164,7 @@ public class SdcConnectorClient {
         DistributionClientResultImpl response = null;
 
         String requestId = UUID.randomUUID().toString();
-        HttpAsdcClient httpClient = createNewHttpClient();
+        HttpAsdcClient httpClient = new HttpAsdcClient(configuration);
         Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
         RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
@@ -190,10 +189,6 @@ public class SdcConnectorClient {
 
         return response;
 
-    }
-
-    HttpAsdcClient createNewHttpClient() {
-        return new HttpAsdcClient(configuration);
     }
 
     public DistributionClientDownloadResultImpl dowloadArtifact(IArtifactInfo artifactInfo) {

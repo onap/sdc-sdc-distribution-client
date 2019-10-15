@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.onap.sdc.sdc-distribution-client</groupId>
 		<artifactId>sdc-main-distribution-client</artifactId>
-		<version>1.4.1-SNAPSHOT</version>
+		<version>1.4.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>sdc-distribution-client</artifactId>
@@ -62,17 +62,18 @@
 			<version>2.5</version>
 		</dependency>
 
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+			<scope>compile</scope>
+		</dependency>
+
 		<!-- http client -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>${httpclient.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
-				</exclusion>
-			</exclusions>
 			<scope>compile</scope>
 		</dependency>
 
@@ -97,12 +98,6 @@
 			<artifactId>httpcore</artifactId>
 			<version>${httpcore.version}</version>
 			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
 		</dependency>
 
 		<!-- TEST -->
@@ -135,9 +130,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.code.bean-matchers</groupId>
-			<artifactId>bean-matchers</artifactId>
-			<version>${bean-matchers.version}</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 			<scope>test</scope>
 		</dependency>
 

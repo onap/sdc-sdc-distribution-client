@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * SDC
+ * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2019 Nokia. All rights reserved.
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,22 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.sdc.api.asdc;
 
-import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
-import static org.junit.Assert.assertThat;
+package org.onap.sdc.impl;
 
-import org.junit.Test;
+import org.onap.sdc.api.IDistributionClient;
+import org.onap.sdc.impl.mock.DistributionClientStubImpl;
 
-public class ServerListResponseTest {
-    @Test
-    public void shouldHaveValidGettersAndSetters() {
-        assertThat(ServerListResponse.class, hasValidGettersAndSetters());
+public class DistributionClientFactory {
+
+    private DistributionClientFactory() {
+    }
+
+    public static IDistributionClient createDistributionClient() {
+        return new DistributionClientImpl();
+    }
+
+    public static IDistributionClient createMockDistributionClient() {
+        return new DistributionClientStubImpl();
     }
 }
