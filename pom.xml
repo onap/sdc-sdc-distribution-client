@@ -44,15 +44,14 @@
 		<jetty.version>9.4.18.v20190429</jetty.version>
 		<bean-matchers.version>0.11</bean-matchers.version>
 		
-		
-		<!--<sonar.skipDesign>true</sonar.skipDesign>-->
-		<!--<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>-->
-		<sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
 		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<sitePath>/content/sites/site/org/onap/sdc/sdc-distribution-client/${project.version}</sitePath>
 		<snapshots.path>snapshots</snapshots.path>
 		<releases.path>releases</releases.path>
 		<!-- Sonar properties -->
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.reporting.outputDirectory}/jacoco-ut/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
 		<sonar.skipDesign>true</sonar.skipDesign>
 		<sonar.projectBaseDir>${project.basedir}</sonar.projectBaseDir>
