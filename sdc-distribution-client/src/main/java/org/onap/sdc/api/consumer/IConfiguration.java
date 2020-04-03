@@ -45,6 +45,16 @@ public interface IConfiguration {
     String getUser();
 
     /**
+     * Return True if ssl is needed, false otherwise.
+     * This param can be null, then default (HTTPS) behavior will be
+     * applied. If set to false, distribution client will use HTTP when
+     * connecting to SDC.
+     *
+     * @return
+     */
+    Boolean isUseHttpsWithSDC();
+
+    /**
      * User Password for SDC distribution consumer authentication.
      *
      * @return User Password.
