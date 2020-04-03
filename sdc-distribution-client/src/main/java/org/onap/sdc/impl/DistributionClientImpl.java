@@ -545,6 +545,11 @@ public class DistributionClientImpl implements IDistributionClient {
             generateConsumerGroup();
         }
 
+        //Default use HTTPS with SDC
+        if (conf.isUseHttpsWithSDC() == null) {
+            configuration.setUseHttpsWithSDC(true);
+        }
+
         //Default use HTTPS with DMAAP
         if (conf.isUseHttpsWithDmaap() == null) {
             configuration.setUseHttpsWithDmaap(true);

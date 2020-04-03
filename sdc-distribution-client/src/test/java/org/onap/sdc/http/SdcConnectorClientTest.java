@@ -128,6 +128,7 @@ public class SdcConnectorClientTest {
         IConfiguration conf = Mockito.mock(IConfiguration.class);
         when(conf.getUser()).thenReturn("user");
         when(conf.getPassword()).thenReturn("password");
+        when(conf.isUseHttpsWithSDC()).thenReturn(true);
 
         when(conf.activateServerTLSAuth()).thenReturn(false);
         SdcConnectorClient client = new SdcConnectorClient();
