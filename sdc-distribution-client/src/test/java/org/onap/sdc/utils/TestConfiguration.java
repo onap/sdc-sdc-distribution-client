@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,6 +41,7 @@ public class TestConfiguration implements IConfiguration {
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
 	private boolean useHttpsWithDmaap;
+	private boolean useHttpsWithSDC;
 	private List<String> msgBusAddress;
 
 	public TestConfiguration(IConfiguration other) {
@@ -74,6 +75,7 @@ public class TestConfiguration implements IConfiguration {
 		this.keyStorePassword = "Aa123456";
 		this.activateServerTLSAuth = false;
 		this.isFilterInEmptyResources = false;
+		this.useHttpsWithSDC = true;
 		msgBusAddress = new ArrayList<String>();
 		msgBusAddress.add("www.cnn.com");
 		msgBusAddress.add("www.cnn.com");
@@ -281,7 +283,7 @@ public class TestConfiguration implements IConfiguration {
 		return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password + ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout + ", relevantArtifactTypes=" + relevantArtifactTypes
 				+ ", consumerGroup=" + consumerGroup + ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
 	}
-	
+
 	@Override
 	public boolean isFilterInEmptyResources() {
 		return isFilterInEmptyResources;
@@ -295,5 +297,14 @@ public class TestConfiguration implements IConfiguration {
 	@Override
 	public Boolean isUseHttpsWithDmaap() {
 		return this.useHttpsWithDmaap;
+	}
+
+	@Override
+	public Boolean isUseHttpsWithSDC() {
+		return this.useHttpsWithSDC;
+	}
+
+	public void setUseHttpsWithSDC(Boolean useHttpsWithSDC) {
+		this.useHttpsWithSDC = useHttpsWithSDC;
 	}
 }

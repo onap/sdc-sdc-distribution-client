@@ -70,18 +70,28 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     private static final String TLS = "TLSv1.2";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String HTTPS = "https://";
+    private static final String HTTP = "http://";
     public static final int AUTHORIZATION_SCOPE_PORT = 443;
+    public static final int AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
     private static Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
     private CloseableHttpClient httpClient = null;
     private String serverFqdn = null;
     private String authHeaderValue = "";
+    private Boolean use_ssl = true;
 
-    public HttpAsdcClient(IConfiguration configuraion) {
-        this.serverFqdn = configuraion.getAsdcAddress();
+    public HttpAsdcClient(IConfiguration configuration) {
+        this.serverFqdn = configuration.getAsdcAddress();
 
-        String username = configuraion.getUser();
-        String password = configuraion.getPassword();
-        initSSL(username, password, configuraion.getKeyStorePath(), configuraion.getKeyStorePassword(), configuraion.activateServerTLSAuth());
+        String username = configuration.getUser();
+        String password = configuration.getPassword();
+        this.use_ssl = configuration.isUseHttpsWithSDC();
+        if (this.use_ssl) {
+            initSSL(username, password, configuration.getKeyStorePath(), configuration.getKeyStorePassword(), configuration.activateServerTLSAuth());
+        } else {
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PLAIN_PORT), new UsernamePasswordCredentials(username, password));
+            httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build();
+        }
 
         String userNameAndPassword = username + ":" + password;
         this.authHeaderValue = "Basic " + Base64.getEncoder().encodeToString(userNameAndPassword.getBytes());
@@ -217,7 +227,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
         CloseableHttpResponse httpResponse = null;
         HttpAsdcResponse response = null;
-        HttpPost httpPost = new HttpPost(HTTPS + serverFqdn + requestUrl);
+        HttpPost httpPost = new HttpPost(getScheme() + serverFqdn + requestUrl);
         List<Header> headers = addHeadersToHttpRequest(headersMap);
         for (Header header : headers) {
             httpPost.addHeader(header);
@@ -268,7 +278,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     public Pair<HttpAsdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
         Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
         CloseableHttpResponse httpResponse = null;
-        String url = HTTPS + serverFqdn + requestUrl;
+        String url = getScheme() + serverFqdn + requestUrl;
         log.debug("url to send {}", url);
         HttpGet httpGet = new HttpGet(url);
         List<Header> headers = addHeadersToHttpRequest(headersMap);
@@ -352,6 +362,13 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         }
 
         return requestHeaders;
+    }
+
+    private String getScheme() {
+        if (this.use_ssl) {
+            return HTTPS;
+        }
+        return HTTP;
     }
 
 }

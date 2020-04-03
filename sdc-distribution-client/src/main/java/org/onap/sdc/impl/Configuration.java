@@ -42,6 +42,7 @@ public class Configuration implements IConfiguration {
     private boolean activateServerTLSAuth;
     private boolean filterInEmptyResources;
     private Boolean useHttpsWithDmaap;
+    private Boolean useHttpsWithSDC;
     private boolean consumeProduceStatusTopic;
 
     public Configuration(IConfiguration other) {
@@ -55,6 +56,7 @@ public class Configuration implements IConfiguration {
         this.pollingTimeout = other.getPollingTimeout();
         this.relevantArtifactTypes = other.getRelevantArtifactTypes();
         this.user = other.getUser();
+        this.useHttpsWithSDC = other.isUseHttpsWithSDC();
         this.keyStorePath = other.getKeyStorePath();
         this.keyStorePassword = other.getKeyStorePassword();
         this.activateServerTLSAuth = other.activateServerTLSAuth();
@@ -71,6 +73,11 @@ public class Configuration implements IConfiguration {
     @Override
     public List<String> getMsgBusAddress() {
         return msgBusAddressList;
+    }
+
+    @Override
+    public Boolean isUseHttpsWithSDC() {
+        return useHttpsWithSDC;
     }
 
     @Override
@@ -190,6 +197,10 @@ public class Configuration implements IConfiguration {
         return this.useHttpsWithDmaap;
     }
 
+    public void setUseHttpsWithSDC(boolean useHttpsWithSDC) {
+        this.useHttpsWithSDC = useHttpsWithSDC;
+    }
+
     public void setUseHttpsWithDmaap(boolean useHttpsWithDmaap) {
         this.useHttpsWithDmaap = useHttpsWithDmaap;
     }
@@ -206,6 +217,7 @@ public class Configuration implements IConfiguration {
                 + "asdcAddress=" + asdcAddress
                 + ", user=" + user
                 + ", password=" + password
+                + ", useHttpsWithSDC=" + useHttpsWithSDC
                 + ", pollingInterval=" + pollingInterval
                 + ", pollingTimeout=" + pollingTimeout
                 + ", relevantArtifactTypes=" + relevantArtifactTypes
