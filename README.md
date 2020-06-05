@@ -12,7 +12,9 @@ It register to SDC for getting notifications, listen for notification from SDC, 
 
 # Compiling ONAP SDC Distribution client
 
-ONAP SDC Distribution client can be compiled easily using maven command: `mvn clean install`
+As mentioned in the onap wiki https://wiki.onap.org/display/DW/Setting+Up+Your+Development+Environment, the settings.xml (https://git.onap.org/oparent/plain/settings.xml) from the oparent project must be installed in your ~/.m2 folder and referenced by your IDE.
+
+Once maven is set up properly, ONAP SDC Distribution client can be compiled easily using maven command: `mvn clean install`
 The result is JAR file under "target" folder
 
 
