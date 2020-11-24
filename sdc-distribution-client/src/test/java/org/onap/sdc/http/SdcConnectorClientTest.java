@@ -115,7 +115,7 @@ public class SdcConnectorClientTest {
         doAnswer(new Answer<Pair<HttpAsdcResponse, CloseableHttpResponse>>() {
             @Override
             public Pair<HttpAsdcResponse, CloseableHttpResponse> answer(InvocationOnMock invocation) throws Throwable {
-                lastHttpEntity = invocation.getArgumentAt(1, HttpEntity.class);
+                lastHttpEntity = invocation.getArgument(1, HttpEntity.class);
                 return mockPair;
             }
         }).when(httpClient).postRequest(Mockito.eq(AsdcUrls.POST_FOR_TOPIC_REGISTRATION), Mockito.any(HttpEntity.class),
