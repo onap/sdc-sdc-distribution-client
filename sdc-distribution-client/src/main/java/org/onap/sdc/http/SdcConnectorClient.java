@@ -58,7 +58,7 @@ import com.google.gson.reflect.TypeToken;
 import fj.data.Either;
 
 public class SdcConnectorClient {
-    private final static Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
     static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
 
     private final IConfiguration configuration;
