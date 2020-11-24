@@ -3,7 +3,7 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modifications copyright (C) 2019 Nokia. All rights reserved.
+ * Modifications copyright (C) 2020 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,28 +21,6 @@
 
 package org.onap.sdc.http;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.ConnectException;
-import java.net.UnknownHostException;
-import java.security.KeyStore;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -59,11 +37,32 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.apache.http.ssl.TrustStrategy;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class HttpAsdcClient implements IHttpAsdcClient {
 
@@ -73,24 +72,27 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     private static final String HTTP = "http://";
     public static final int AUTHORIZATION_SCOPE_PORT = 443;
     public static final int AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
-    private static Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
-    private CloseableHttpClient httpClient = null;
-    private String serverFqdn = null;
-    private String authHeaderValue = "";
-    private Boolean use_ssl = true;
+    private static final KeyStore DEFAULT_INIT_KEY_STORE_VALUE = null;
+    private static final Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
+    private final CloseableHttpClient httpClient;
+    private final String serverFqdn;
+    private final String authHeaderValue;
+    private final String httpSchema;
 
     public HttpAsdcClient(IConfiguration configuration) {
         this.serverFqdn = configuration.getAsdcAddress();
 
         String username = configuration.getUser();
         String password = configuration.getPassword();
-        this.use_ssl = configuration.isUseHttpsWithSDC();
-        if (this.use_ssl) {
-            initSSL(username, password, configuration.getKeyStorePath(), configuration.getKeyStorePassword(), configuration.activateServerTLSAuth());
+        boolean isHttpsRequired = configuration.isUseHttpsWithSDC();
+        if (isHttpsRequired) {
+            this.httpSchema = HTTPS;
+            this.httpClient = initSSL(username, password, configuration.getKeyStorePath(), configuration.getKeyStorePassword(), configuration.activateServerTLSAuth());
         } else {
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PLAIN_PORT), new UsernamePasswordCredentials(username, password));
-            httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build();
+            this.httpSchema = HTTP;
+            this.httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build();
         }
 
         String userNameAndPassword = username + ":" + password;
@@ -98,16 +100,9 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     }
 
     // @SuppressWarnings("deprecation")
-    private void initSSL(String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
+    private CloseableHttpClient initSSL(String username, String password, String keyStorePath, String keyStorePass, boolean isSupportSSLVerification) {
 
         try {
-            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
 
             // SSLContextBuilder is not thread safe
             // @SuppressWarnings("deprecation")
@@ -115,16 +110,11 @@ public class HttpAsdcClient implements IHttpAsdcClient {
             credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PORT), new UsernamePasswordCredentials(username, password));
             SSLContext sslContext;
             sslContext = SSLContext.getInstance(TLS);
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-            KeyStore trustStore = null;
-            tmf.init(trustStore);
+            TrustManagerFactory tmf = createTrustManagerFactory();
             TrustManager[] tms = tmf.getTrustManagers();
             if (isSupportSSLVerification) {
 
                 if (keyStorePath != null && !keyStorePath.isEmpty()) {
-                    // trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                    // trustStore.load(new FileInputStream(keyStorePath), keyStoePass.toCharArray());
-
                     // Using null here initialises the TMF with the default trust store.
 
                     // Get hold of the default trust manager
@@ -138,8 +128,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
                     // Do the same with your trust store this time
                     // Adapt how you load the keystore to your needs
-                    trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                    trustStore.load(new FileInputStream(keyStorePath), keyStoePass.toCharArray());
+                    KeyStore trustStore = loadKeyStore(keyStorePath, keyStorePass);
 
                     tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
                     tmf.init(trustStore);
@@ -196,27 +185,20 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
                 SSLContextBuilder builder = new SSLContextBuilder();
 
-                builder.loadTrustMaterial(null, new TrustStrategy() {
-                    public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                        return true;
-                    }
-                });
+                builder.loadTrustMaterial(null, (chain, authType) -> true);
 
                 sslContext = builder.build();
             }
 
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1.2"}, null, hostnameVerifier);
-            httpClient = HttpClientBuilder.create().
+            HostnameVerifier hostnameVerifier = (hostname, session) -> true;
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{TLS}, null, hostnameVerifier);
+            return HttpClientBuilder.create().
                     setDefaultCredentialsProvider(credsProvider).
                     setSSLSocketFactory(sslsf).
                     build();
-
         } catch (Exception e) {
-            log.error("Failed to create https client", e);
-
+            throw new HttpAsdcClientException("Failed to create https client", e);
         }
-
-        return;
     }
 
     public HttpAsdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap) {
@@ -226,59 +208,37 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     public Pair<HttpAsdcResponse, CloseableHttpResponse> postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap, boolean closeTheRequest) {
         Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
         CloseableHttpResponse httpResponse = null;
-        HttpAsdcResponse response = null;
-        HttpPost httpPost = new HttpPost(getScheme() + serverFqdn + requestUrl);
+        HttpPost httpPost = new HttpPost(this.httpSchema + serverFqdn + requestUrl);
         List<Header> headers = addHeadersToHttpRequest(headersMap);
         for (Header header : headers) {
             httpPost.addHeader(header);
         }
 
         httpPost.setHeader(AUTHORIZATION_HEADER, this.authHeaderValue);
-
         httpPost.setEntity(entity);
+
+        HttpAsdcResponse response = null;
         try {
             httpResponse = httpClient.execute(httpPost);
             response = new HttpAsdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity());
-
         } catch (IOException e) {
-            log.error("failed to send request to url: " + requestUrl);
-            StringEntity errorEntity = null;
-            try {
-                errorEntity = new StringEntity("failed to send request");
-            } catch (UnsupportedEncodingException e1) {
-            }
-
-            response = new HttpAsdcResponse(HttpStatus.SC_INTERNAL_SERVER_ERROR, errorEntity);
-
+            log.error(String.format("failed to send request to url: %s", requestUrl));
+            response = createHttpResponse(HttpStatus.SC_INTERNAL_SERVER_ERROR, "failed to send request");
         } finally {
-            if (closeTheRequest) {
-                if (httpResponse != null) {
-                    try {
-                        httpResponse.close();
-
-                    } catch (IOException e) {
-                        log.error("failed to close http response");
-                    }
-                }
-                ret = new Pair<>(response, null);
-            } else {
-                ret = new Pair<>(response, httpResponse);
-            }
+            ret = finalizeHttpRequest(closeTheRequest, httpResponse, response);
         }
 
         return ret;
     }
 
     public HttpAsdcResponse getRequest(String requestUrl, Map<String, String> headersMap) {
-
         return getRequest(requestUrl, headersMap, true).getFirst();
-
     }
 
     public Pair<HttpAsdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
         Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
         CloseableHttpResponse httpResponse = null;
-        String url = getScheme() + serverFqdn + requestUrl;
+        String url = this.httpSchema + serverFqdn + requestUrl;
         log.debug("url to send {}", url);
         HttpGet httpGet = new HttpGet(url);
         List<Header> headers = addHeadersToHttpRequest(headersMap);
@@ -302,73 +262,72 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
         } catch (UnknownHostException | ConnectException e) {
             log.error("failed to connect to url: {}", requestUrl, e);
-            StringEntity errorEntity = null;
-            try {
-                errorEntity = new StringEntity("failed to connect");
-            } catch (UnsupportedEncodingException e1) {
-            }
-
-            response = new HttpAsdcResponse(HttpStatus.SC_BAD_GATEWAY, errorEntity);
-
+            response = createHttpResponse(HttpStatus.SC_BAD_GATEWAY, "failed to connect");
         } catch (IOException e) {
-            log.error("failed to send request to url: " + requestUrl + " error " + e.getMessage());
-            StringEntity errorEntity = null;
-            try {
-                errorEntity = new StringEntity("failed to send request " + e.getMessage());
-            } catch (UnsupportedEncodingException e1) {
-            }
-
-            response = new HttpAsdcResponse(HttpStatus.SC_BAD_GATEWAY, errorEntity);
-
+            log.error(String.format("failed to send request to url: %s error %s", requestUrl, e.getMessage()));
+            response = createHttpResponse(HttpStatus.SC_BAD_GATEWAY, "failed to send request " + e.getMessage());
         } finally {
-
-            if (closeTheRequest) {
-                if (httpResponse != null) {
-                    try {
-                        httpResponse.close();
-
-                    } catch (IOException e) {
-                        log.error("failed to close http response");
-                    }
-                }
-                ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, null);
-            } else {
-                ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, httpResponse);
-            }
+            ret = finalizeHttpRequest(closeTheRequest, httpResponse, response);
         }
 
         return ret;
+    }
 
+    private TrustManagerFactory createTrustManagerFactory() throws NoSuchAlgorithmException, KeyStoreException {
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(DEFAULT_INIT_KEY_STORE_VALUE);
+        return tmf;
+    }
+
+    private KeyStore loadKeyStore(String keyStorePath, String keyStorePass) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        try (FileInputStream keyStoreData = new FileInputStream(keyStorePath)) {
+            trustStore.load(keyStoreData, keyStorePass.toCharArray());
+        }
+        return trustStore;
+    }
+
+    private Pair<HttpAsdcResponse, CloseableHttpResponse> finalizeHttpRequest(boolean closeTheRequest, CloseableHttpResponse httpResponse, HttpAsdcResponse response) {
+        Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+        if (closeTheRequest) {
+            if (httpResponse != null) {
+                try {
+                    httpResponse.close();
+
+                } catch (IOException e) {
+                    log.error("failed to close http response");
+                }
+            }
+            ret = new Pair<>(response, null);
+        } else {
+            ret = new Pair<>(response, httpResponse);
+        }
+
+        return ret;
+    }
+
+    static HttpAsdcResponse createHttpResponse(int httpStatusCode, String httpMessage) {
+        return new HttpAsdcResponse(httpStatusCode, new StringEntity(httpMessage, StandardCharsets.UTF_8));
     }
 
     public void closeHttpClient() {
         try {
             httpClient.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             log.error("failed to close http client");
         }
-
     }
 
     private List<Header> addHeadersToHttpRequest(Map<String, String> headersMap) {
 
-        List<Header> requestHeaders = new ArrayList<Header>();
+        List<Header> requestHeaders = new ArrayList<>();
 
-        Set<String> headersKyes = headersMap.keySet();
-        for (String key : headersKyes) {
+        Set<String> headersKeys = headersMap.keySet();
+        for (String key : headersKeys) {
             Header requestHeader = new BasicHeader(key, headersMap.get(key));
             requestHeaders.add(requestHeader);
         }
 
         return requestHeaders;
     }
-
-    private String getScheme() {
-        if (this.use_ssl) {
-            return HTTPS;
-        }
-        return HTTP;
-    }
-
 }
