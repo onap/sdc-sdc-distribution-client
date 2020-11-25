@@ -22,11 +22,11 @@ package org.onap.sdc.utils;
 
 import java.beans.IntrospectionException;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.onap.sdc.utils.heat.HeatConfiguration;
 import org.slf4j.Logger;
@@ -42,15 +42,17 @@ public class YamlToObjectConverter {
     private static Logger log = LoggerFactory
             .getLogger(YamlToObjectConverter.class.getName());
 
-    private static HashMap<String, Yaml> yamls = new HashMap<String, Yaml>();
+    private static final Map<String, Yaml> YAMLS = new HashMap<>();
 
-    private static Yaml defaultYaml = new Yaml();
+    private static final Yaml DEFAULT_YAML = new Yaml();
 
     static {
+        YAMLS.put(HeatConfiguration.class.getName(), provideYamlForHeatConfiguration());
+    }
 
+    private static Yaml provideYamlForHeatConfiguration() {
         org.yaml.snakeyaml.constructor.Constructor heatConstructor = new org.yaml.snakeyaml.constructor.Constructor(HeatConfiguration.class);
         TypeDescription heatDescription = new TypeDescription(HeatConfiguration.class);
-        //heatDescription.putListPropertyType("parameters", HeatParameterConfiguration.class);
         heatConstructor.addTypeDescription(heatDescription);
         PropertyUtils propertyUtils = new PropertyUtils() {
             @Override
@@ -66,90 +68,63 @@ public class YamlToObjectConverter {
         propertyUtils.setSkipMissingProperties(true);
         heatConstructor.setPropertyUtils(propertyUtils);
 
-        Yaml yaml = new Yaml(heatConstructor);
-
-        yamls.put(HeatConfiguration.class.getName(), yaml);
-
-    }
-
-    private static <T> Yaml getYamlByClassName(Class<T> className) {
-
-        Yaml yaml = yamls.get(className.getName());
-        if (yaml == null) {
-            yaml = defaultYaml;
-        }
-
-        return yaml;
+        return new Yaml(heatConstructor);
     }
 
     public <T> T convert(String dirPath, Class<T> className,
                          String configFileName) {
-
         T config = null;
 
         try {
-
             String fullFileName = dirPath + File.separator + configFileName;
-
             config = convert(fullFileName, className);
-
         } catch (Exception e) {
-            log.error("Failed to convert yaml file " + configFileName
-                    + " to object.", e);
+            log.error(String.format("Failed to convert yaml file %s to object.", configFileName), e);
         }
 
         return config;
     }
 
     public <T> T convert(String fullFileName, Class<T> className) {
-
         T config = null;
 
         Yaml yaml = getYamlByClassName(className);
 
-        InputStream in = null;
         try {
-
             File f = new File(fullFileName);
             if (!f.exists()) {
-                log.warn("The file " + fullFileName
-                        + " cannot be found. Ignore reading configuration.");
-                return null;
-            }
-            in = Files.newInputStream(Paths.get(fullFileName));
-
-            config = yaml.loadAs(in, className);
-
-            // System.out.println(config.toString());
-        } catch (Exception e) {
-            log.error("Failed to convert yaml file " + fullFileName
-                    + " to object.", e);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                log.warn(String.format("The file %s cannot be found. Ignore reading configuration.", fullFileName));
+            } else {
+                try (InputStream in = Files.newInputStream(Paths.get(fullFileName))) {
+                    config = yaml.loadAs(in, className);
                 }
             }
+        } catch (Exception e) {
+            log.error(String.format("Failed to convert yaml file %s to object.", fullFileName), e);
         }
 
         return config;
     }
 
     public <T> T convertFromString(String yamlContents, Class<T> className) {
-
         T config = null;
 
-        Yaml yaml = getYamlByClassName(className);
-
         try {
+            Yaml yaml = getYamlByClassName(className);
             config = yaml.loadAs(yamlContents, className);
         } catch (Exception e) {
             log.error("Failed to convert YAML {} to object.", yamlContents, e);
         }
 
         return config;
+    }
+
+    private static synchronized <T> Yaml getYamlByClassName(Class<T> className) {
+        Yaml yaml = YAMLS.get(className.getName());
+        if (yaml == null) {
+            yaml = DEFAULT_YAML;
+        }
+
+        return yaml;
     }
 }
