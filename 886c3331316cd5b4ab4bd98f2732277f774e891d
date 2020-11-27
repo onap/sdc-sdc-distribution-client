@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "86ee2c8a_52e599e9",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "are they used elsewhere? could be private?",
+      "range": {
+        "startLine": 72,
+        "startChar": 49,
+        "endLine": 74,
+        "endChar": 64
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "444e79e4_50c0a3c4",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "remove commented code",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 39
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "127516b9_e8f5e288",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "remove commented code",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 47
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b7b8cea_7f04a73e",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "\"Server hostnames should be verified during SSL/TLS connections\"\n\nHostnameVerifier hostnameVerifier \u003d (hostname, session) -\u003e hostname.equalsIgnoreCase(session.getPeerHost());",
+      "range": {
+        "startLine": 193,
+        "startChar": 71,
+        "endLine": 193,
+        "endChar": 75
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dac0c97e_6e5f6455",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "needless to use String.format(), could be:\nlog.error(\"failed to send request to url: {}\", requestUrl);",
+      "range": {
+        "startLine": 225,
+        "startChar": 0,
+        "endLine": 225,
+        "endChar": 86
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bfdd991_13e2a73e",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "needless to use String.format(), could be:\nlog.error(\"failed to send request to url: {} error {}\", requestUrl, e.getMessage());",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 111
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a85d9c6_9781780a",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/http/HttpAsdcClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:07:22Z",
+      "side": 1,
+      "message": "very low coverage (11% methods, 2% lines)",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
