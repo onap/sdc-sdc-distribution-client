@@ -48,11 +48,13 @@ import org.onap.sdc.api.consumer.IStatusCallback;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.api.results.IDistributionClientResult;
+import org.onap.sdc.http.HttpAsdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
 import org.onap.sdc.http.TopicRegistrationResponse;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionClientConstants;
 import org.onap.sdc.utils.GeneralUtils;
+import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.Wrapper;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
 import org.slf4j.Logger;
@@ -83,7 +85,7 @@ public class DistributionClientImpl implements IDistributionClient {
     public static final int TERMINATION_TIMEOUT = 60;
     private static Logger log = LoggerFactory.getLogger(DistributionClientImpl.class.getName());
 
-    protected SdcConnectorClient asdcConnector = new SdcConnectorClient();
+    private SdcConnectorClient asdcConnector;
     private ScheduledExecutorService executorPool = null;
     protected CambriaIdentityManager cambriaIdentityManager = null;
     private List<String> brokerServers;
@@ -135,7 +137,9 @@ public class DistributionClientImpl implements IDistributionClient {
             isConsumerGroupGenerated = false;
             needToUpdateCambriaConsumer = true;
         } else if (!isConsumerGroupGenerated) {
-            generateConsumerGroup();
+            String generatedConsumerGroup = UUID.randomUUID().toString();
+            configuration.setConsumerGroup(generatedConsumerGroup);
+            isConsumerGroupGenerated = true;
         }
 
         if (needToUpdateCambriaConsumer) {
@@ -249,7 +253,7 @@ public class DistributionClientImpl implements IDistributionClient {
             IDistributionClientDownloadResult downloadResult = new DistributionClientDownloadResultImpl(result.getDistributionActionResult(), result.getDistributionMessageResult());
             return downloadResult;
         }
-        return asdcConnector.dowloadArtifact(artifactInfo);
+        return asdcConnector.downloadArtifact(artifactInfo);
     }
 
     @Override
@@ -282,7 +286,8 @@ public class DistributionClientImpl implements IDistributionClient {
             validateNotTerminated(errorWrapper);
         }
         if (errorWrapper.isEmpty()) {
-            validateAndInitConfiguration(errorWrapper, conf);
+            this.configuration = validateAndInitConfiguration(errorWrapper, conf).getSecond();
+            this.asdcConnector = createAsdcConnector(this.configuration);
         }
         // 1. get ueb server list from configuration
         if (errorWrapper.isEmpty()) {
@@ -311,6 +316,10 @@ public class DistributionClientImpl implements IDistributionClient {
         }
 
         return result;
+    }
+
+    SdcConnectorClient createAsdcConnector(Configuration configuration) {
+        return new SdcConnectorClient(configuration, new HttpAsdcClient(configuration));
     }
 
     private void registerForTopics(Wrapper<IDistributionClientResult> errorWrapper) {
@@ -343,7 +352,6 @@ public class DistributionClientImpl implements IDistributionClient {
     }
 
     private void validateArtifactTypesWithAsdcServer(IConfiguration conf, Wrapper<IDistributionClientResult> errorWrapper) {
-        asdcConnector.init(configuration);
         Either<List<String>, IDistributionClientResult> eitherValidArtifactTypesList = asdcConnector.getValidArtifactTypesList();
         if (eitherValidArtifactTypesList.isRight()) {
             DistributionActionResultEnum errorType = eitherValidArtifactTypesList.right().value().getDistributionActionResult();
@@ -494,9 +502,9 @@ public class DistributionClientImpl implements IDistributionClient {
         return start();
     }
 
-    protected DistributionActionResultEnum validateAndInitConfiguration(Wrapper<IDistributionClientResult> errorWrapper, IConfiguration conf) {
+    protected Pair<DistributionActionResultEnum, Configuration> validateAndInitConfiguration(Wrapper<IDistributionClientResult> errorWrapper, IConfiguration conf) {
         DistributionActionResultEnum result = DistributionActionResultEnum.SUCCESS;
-
+        Configuration configuration = null;
         if (conf == null) {
             result = DistributionActionResultEnum.CONFIGURATION_IS_MISSING;
         } else if (conf.getConsumerID() == null || conf.getConsumerID().isEmpty()) {
@@ -520,7 +528,7 @@ public class DistributionClientImpl implements IDistributionClient {
         } else if (conf.isConsumeProduceStatusTopic() && Objects.isNull(statusCallback)) {
             result = DistributionActionResultEnum.CONF_INVALID_CONSUME_PRODUCE_STATUS_TOPIC_FALG;
         } else { // DistributionActionResultEnum.SUCCESS
-            handleValidConf(conf);
+            configuration = createConfiguration(conf);
         }
 
         if (result != DistributionActionResultEnum.SUCCESS) {
@@ -530,11 +538,11 @@ public class DistributionClientImpl implements IDistributionClient {
             log.error(initResult.toString());
             errorWrapper.setInnerElement(initResult);
         }
-        return result;
+        return new Pair<>(result, configuration);
     }
 
-    private void handleValidConf(IConfiguration conf) {
-        this.configuration = new Configuration(conf);
+    private Configuration createConfiguration(IConfiguration conf) {
+        Configuration configuration = new Configuration(conf);
         if (!isPollingIntervalValid(conf.getPollingInterval())) {
             configuration.setPollingInterval(DistributionClientConstants.MIN_POLLING_INTERVAL_SEC);
         }
@@ -542,7 +550,9 @@ public class DistributionClientImpl implements IDistributionClient {
             configuration.setPollingTimeout(DistributionClientConstants.POLLING_TIMEOUT_SEC);
         }
         if (conf.getConsumerGroup() == null) {
-            generateConsumerGroup();
+            String generatedConsumerGroup = UUID.randomUUID().toString();
+            configuration.setConsumerGroup(generatedConsumerGroup);
+            isConsumerGroupGenerated = true;
         }
 
         //Default use HTTPS with SDC
@@ -554,12 +564,8 @@ public class DistributionClientImpl implements IDistributionClient {
         if (conf.isUseHttpsWithDmaap() == null) {
             configuration.setUseHttpsWithDmaap(true);
         }
-    }
 
-    private void generateConsumerGroup() {
-        String generatedConsumerGroup = UUID.randomUUID().toString();
-        configuration.setConsumerGroup(generatedConsumerGroup);
-        isConsumerGroupGenerated = true;
+        return configuration;
     }
 
     protected boolean isValidFqdn(String fqdn) {

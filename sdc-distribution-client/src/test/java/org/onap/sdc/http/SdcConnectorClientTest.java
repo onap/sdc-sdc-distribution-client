@@ -85,7 +85,7 @@ public class SdcConnectorClientTest {
     Pair<HttpAsdcResponse, CloseableHttpResponse> mockPair = new Pair<>(httpAsdcResponse, null);
     private HttpEntity lastHttpEntity = null;
 
-    private static SdcConnectorClient asdcClient = Mockito.spy(new SdcConnectorClient());
+    private static SdcConnectorClient asdcClient;
 
     private static final String ARTIFACT_URL = "http://127.0.0.1/artifact/url";
     private static final String IT_JUST_DIDN_T_WORK = "It just didn't work";
@@ -97,8 +97,7 @@ public class SdcConnectorClientTest {
 
     @BeforeClass
     public static void beforeClass() {
-        asdcClient.setConfiguration(configuration);
-        asdcClient.setHttpClient(httpClient);
+        asdcClient = Mockito.spy(new SdcConnectorClient(configuration, httpClient));
         when(apiCredential.getApiKey()).thenReturn(MOCK_API_KEY);
         when(httpAsdcResponse.getStatus()).thenReturn(HttpStatus.SC_OK);
 
@@ -131,26 +130,12 @@ public class SdcConnectorClientTest {
         when(conf.isUseHttpsWithSDC()).thenReturn(true);
 
         when(conf.activateServerTLSAuth()).thenReturn(false);
-        SdcConnectorClient client = new SdcConnectorClient();
-        client.init(conf);
-        assertNotNull(client.getHttpClient());
+        final HttpAsdcClient httpClient = new HttpAsdcClient(conf);
+        SdcConnectorClient client = new SdcConnectorClient(conf, httpClient);
         client.close();
 
         //check if client is really closed
-        client.getHttpClient().getRequest(AsdcUrls.POST_FOR_TOPIC_REGISTRATION, new HashMap<>());
-    }
-
-
-    @Test
-    public void getConfigurationTest() {
-        IConfiguration conf = asdcClient.getConfiguration();
-        assertEquals(configuration, conf);
-    }
-
-    @Test
-    public void getHttpClientTest() {
-        HttpAsdcClient httpAsdcClient = asdcClient.getHttpClient();
-        assertEquals(httpClient, httpAsdcClient);
+        httpClient.getRequest(AsdcUrls.POST_FOR_TOPIC_REGISTRATION, new HashMap<>());
     }
 
     @Test
@@ -277,8 +262,6 @@ public class SdcConnectorClientTest {
         when(configuration.getMsgBusAddress())
                 .thenReturn(Arrays.asList("http://127.0.0.1:45321/dmaap", "http://127.0.0.1:45321/dmaap"));
 
-        doReturn(httpClient).when(asdcClient).createNewHttpClient();
-
         String failMessage = "It just didn't work";
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
@@ -299,8 +282,6 @@ public class SdcConnectorClientTest {
         when(configuration.getAsdcAddress()).thenReturn("127.0.0.1" + PORT);
         when(configuration.isConsumeProduceStatusTopic()).thenReturn(false);
 
-        doReturn(httpClient).when(asdcClient).createNewHttpClient();
-
         String failMessage = "";
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
@@ -319,7 +300,7 @@ public class SdcConnectorClientTest {
     @Test
     public void downloadArtifactHappyScenarioTest() throws IOException {
         Map<String, String> headers = new HashMap<>();
-        headers.put(asdcClient.contentDispositionHeader, "SomeHeader");
+        headers.put(asdcClient.CONTENT_DISPOSITION_HEADER, "SomeHeader");
 
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
@@ -335,7 +316,7 @@ public class SdcConnectorClientTest {
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(BYTES));
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 
-        IDistributionClientResult result = asdcClient.dowloadArtifact(artifactInfo);
+        IDistributionClientResult result = asdcClient.downloadArtifact(artifactInfo);
         assertEquals(DistributionActionResultEnum.SUCCESS, result.getDistributionActionResult());
     }
 
@@ -353,7 +334,7 @@ public class SdcConnectorClientTest {
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(BYTES));
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 
-        IDistributionClientResult result = asdcClient.dowloadArtifact(artifactInfo);
+        IDistributionClientResult result = asdcClient.downloadArtifact(artifactInfo);
         assertEquals(DistributionActionResultEnum.DATA_INTEGRITY_PROBLEM, result.getDistributionActionResult());
     }
 
@@ -371,7 +352,7 @@ public class SdcConnectorClientTest {
         when(messageMock.getContent()).thenReturn(new ThrowingInputStreamForTesting());
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 
-        IDistributionClientResult result = asdcClient.dowloadArtifact(artifactInfo);
+        IDistributionClientResult result = asdcClient.downloadArtifact(artifactInfo);
         assertEquals(DistributionActionResultEnum.GENERAL_ERROR, result.getDistributionActionResult());
     }
 
@@ -389,7 +370,7 @@ public class SdcConnectorClientTest {
         when(messageMock.getContent()).thenReturn(new ThrowingInputStreamForTesting());
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 
-        IDistributionClientResult result = asdcClient.dowloadArtifact(artifactInfo);
+        IDistributionClientResult result = asdcClient.downloadArtifact(artifactInfo);
         assertEquals(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, result.getDistributionActionResult());
     }
 

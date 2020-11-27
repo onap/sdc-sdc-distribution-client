@@ -22,6 +22,7 @@ package org.onap.sdc.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.sdc.http.HttpAsdcClient;
+import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.TestConfiguration;
 import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.consumer.IConfiguration;
@@ -68,10 +71,12 @@ public class DistributionClientTest {
 
 	@Test
 	public void validateConfigurationTest() {
-		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), testConfiguration);
+		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), testConfiguration);
+		DistributionActionResultEnum validationResult = distributionActionResultEnumConfigurationPair.getFirst();
+		Configuration configuration = distributionActionResultEnumConfigurationPair.getSecond();
 		Assert.assertEquals(DistributionActionResultEnum.SUCCESS, validationResult);
-		Assert.assertEquals(testConfiguration.getPollingInterval(), client.configuration.getPollingInterval());
-		Assert.assertEquals(testConfiguration.getPollingTimeout(), client.configuration.getPollingTimeout());
+		Assert.assertEquals(testConfiguration.getPollingInterval(), configuration.getPollingInterval());
+		Assert.assertEquals(testConfiguration.getPollingTimeout(), configuration.getPollingTimeout());
 	}
 
 	@Test
@@ -79,10 +84,12 @@ public class DistributionClientTest {
 		TestConfiguration userConfig = new TestConfiguration();
 		userConfig.setPollingInterval(1);
 		userConfig.setPollingTimeout(2);
-		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), userConfig);
+		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), userConfig);
+		DistributionActionResultEnum validationResult = distributionActionResultEnumConfigurationPair.getFirst();
+		Configuration configuration = distributionActionResultEnumConfigurationPair.getSecond();
 		Assert.assertEquals(DistributionActionResultEnum.SUCCESS, validationResult);
-		assertEquals(15, client.configuration.getPollingInterval());
-		assertEquals(15, client.configuration.getPollingTimeout());
+		assertEquals(15, configuration.getPollingInterval());
+		assertEquals(15, configuration.getPollingTimeout());
 	}
 
 	@Test
@@ -111,11 +118,11 @@ public class DistributionClientTest {
 		Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();
 		TestConfiguration testPassword = new TestConfiguration();
 		testPassword.setPassword(null);
-		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(errorWrapper, testPassword);
+		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(errorWrapper, testPassword).getFirst();
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_PASSWORD, validationResult);
 
 		testPassword.setPassword("");
-		validationResult = client.validateAndInitConfiguration(errorWrapper, testPassword);
+		validationResult = client.validateAndInitConfiguration(errorWrapper, testPassword).getFirst();
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_PASSWORD, validationResult);
 
 	}
@@ -125,11 +132,11 @@ public class DistributionClientTest {
 		Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();
 		TestConfiguration testUser = new TestConfiguration();
 		testUser.setUser(null);
-		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(errorWrapper, testUser);
+		DistributionActionResultEnum validationResult = client.validateAndInitConfiguration(errorWrapper, testUser).getFirst();
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_USERNAME, validationResult);
 
 		testUser.setUser("");
-		validationResult = client.validateAndInitConfiguration(errorWrapper, testUser);
+		validationResult = client.validateAndInitConfiguration(errorWrapper, testUser).getFirst();
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_USERNAME, validationResult);
 
 	}
@@ -144,7 +151,7 @@ public class DistributionClientTest {
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
 		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -211,6 +218,10 @@ public class DistributionClientTest {
 		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 	}
 
+	private void reconfigureAsdcConnector(SdcConnectorClient connector, DistributionClientImpl client) {
+		doReturn(connector).when(client).createAsdcConnector(any());
+	}
+
 	@Test
 	public void initFailedConnectAsdcTest() throws HttpException, CambriaApiException, IOException {
 		// cambriaMock
@@ -274,7 +285,7 @@ public class DistributionClientTest {
 		IDistributionClientResult success = initSuccesResult();
 		Mockito.when(connector.unregisterTopics(Mockito.any(ApiCredential.class))).thenReturn(success);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -321,7 +332,7 @@ public class DistributionClientTest {
 		IDistributionClientResult success = initSuccesResult();
 		Mockito.when(connector.unregisterTopics(Mockito.any(ApiCredential.class))).thenReturn(success);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -368,7 +379,7 @@ public class DistributionClientTest {
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
 		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -398,7 +409,7 @@ public class DistributionClientTest {
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
 		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -424,7 +435,7 @@ public class DistributionClientTest {
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.right(failureResult);
 		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
 
-		client.asdcConnector = connector;
+		reconfigureAsdcConnector(connector, client);
 
 		// cambriaMock
 
@@ -513,8 +524,7 @@ public class DistributionClientTest {
 
 
 	public void connectorRegisterCI() {
-		SdcConnectorClient connector = new SdcConnectorClient();
-		connector.init(testConfiguration);
+		SdcConnectorClient connector = new SdcConnectorClient(testConfiguration, new HttpAsdcClient(testConfiguration));
 
 		ApiCredential creds = new ApiCredential("publicKey", "secretKey");
 		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsFromAsdc = connector.registerAsdcTopics(creds);
@@ -523,10 +533,9 @@ public class DistributionClientTest {
 	}
 
 	public void downloadArtifactTestCI() {
-		SdcConnectorClient connector = new SdcConnectorClient();
-		connector.init(testConfiguration);
+		SdcConnectorClient connector = new SdcConnectorClient(testConfiguration, new HttpAsdcClient(testConfiguration));
 		IArtifactInfo artifactInfo = initArtifactInfo();
-		connector.dowloadArtifact(artifactInfo);
+		connector.downloadArtifact(artifactInfo);
 
 	}
 	// ########### TESTS TO ADD TO CI END ###########
