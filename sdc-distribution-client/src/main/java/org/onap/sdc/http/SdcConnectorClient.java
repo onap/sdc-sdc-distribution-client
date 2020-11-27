@@ -3,7 +3,7 @@
  * sdc-distribution-client
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modifications copyright (C) 2019 Nokia. All rights reserved.
+ * Modifications copyright (C) 2020 Nokia. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -41,9 +42,7 @@ import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientResultImpl;
 import org.onap.sdc.utils.DistributionActionResultEnum;
-import org.onap.sdc.utils.GeneralUtils;
 import org.onap.sdc.api.asdc.RegistrationRequest;
-import org.onap.sdc.api.asdc.ServerListResponse;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.utils.DistributionClientConstants;
@@ -59,38 +58,22 @@ import com.google.gson.reflect.TypeToken;
 import fj.data.Either;
 
 public class SdcConnectorClient {
-    String contentDispositionHeader = "Content-Disposition";
-    private static Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
-    private IConfiguration configuration;
-    private HttpAsdcClient httpClient = null;
+    private final static Logger log = LoggerFactory.getLogger(SdcConnectorClient.class.getName());
+    static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
 
-    public void init(IConfiguration configuraion) {
-        this.configuration = configuraion;
-        httpClient = new HttpAsdcClient(configuration);
-    }
+    private final IConfiguration configuration;
+    private final HttpAsdcClient httpClient;
 
-    public void close() {
-        if (httpClient != null) {
-            httpClient.closeHttpClient();
-        }
-    }
-
-    public IConfiguration getConfiguration() {
-        return configuration;
-    }
-
-    public void setConfiguration(IConfiguration configuration) {
+    public SdcConnectorClient(IConfiguration configuration, HttpAsdcClient httpClient) {
+        Objects.requireNonNull(configuration);
+        Objects.requireNonNull(httpClient);
         this.configuration = configuration;
-    }
-
-    public HttpAsdcClient getHttpClient() {
-        return httpClient;
-    }
-
-    public void setHttpClient(HttpAsdcClient httpClient) {
         this.httpClient = httpClient;
     }
 
+    public void close() {
+        httpClient.closeHttpClient();
+    }
 
     public Either<List<String>, IDistributionClientResult> getValidArtifactTypesList() {
         Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_VALID_ARTIFACT_TYPES);
@@ -122,18 +105,17 @@ public class SdcConnectorClient {
     }
 
     private Pair<HttpAsdcResponse, CloseableHttpResponse> performAsdcServerRequest(final String url) {
-        String requestId = UUID.randomUUID().toString();
+        String requestId = generateRequestId();
         Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
         log.debug("about to perform getServerList. requestId= {} url= {}", requestId, url);
-        Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = httpClient.getRequest(url, requestHeaders, false);
-        return getServersResponsePair;
+        return httpClient.getRequest(url, requestHeaders, false);
     }
 
     public Either<TopicRegistrationResponse, DistributionClientResultImpl> registerAsdcTopics(ApiCredential credential) {
 
-        Either<TopicRegistrationResponse, DistributionClientResultImpl> response = null;
+        Either<TopicRegistrationResponse, DistributionClientResultImpl> response;
 
-        String requestId = UUID.randomUUID().toString();
+        String requestId = generateRequestId();
         Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
         RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
@@ -160,12 +142,15 @@ public class SdcConnectorClient {
 
     }
 
+    private String generateRequestId() {
+        return UUID.randomUUID().toString();
+    }
+
     public IDistributionClientResult unregisterTopics(ApiCredential credential) {
 
-        DistributionClientResultImpl response = null;
+        DistributionClientResultImpl response;
 
-        String requestId = UUID.randomUUID().toString();
-        HttpAsdcClient httpClient = createNewHttpClient();
+        String requestId = generateRequestId();
         Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
 
         RegistrationRequest registrationRequest = new RegistrationRequest(credential.getApiKey(), configuration.getEnvironmentName(), configuration.isConsumeProduceStatusTopic(), configuration.getMsgBusAddress());
@@ -192,15 +177,11 @@ public class SdcConnectorClient {
 
     }
 
-    HttpAsdcClient createNewHttpClient() {
-        return new HttpAsdcClient(configuration);
-    }
+    public DistributionClientDownloadResultImpl downloadArtifact(IArtifactInfo artifactInfo) {
+        DistributionClientDownloadResultImpl response;
 
-    public DistributionClientDownloadResultImpl dowloadArtifact(IArtifactInfo artifactInfo) {
-        DistributionClientDownloadResultImpl response = new DistributionClientDownloadResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "failed to download artifact from ASDC");
-
-        String requestId = UUID.randomUUID().toString();
-        Map<String, String> requestHeaders = new HashMap<String, String>();
+        String requestId = generateRequestId();
+        Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put(DistributionClientConstants.HEADER_REQUEST_ID, requestId);
         requestHeaders.put(DistributionClientConstants.HEADER_INSTANCE_ID, configuration.getConsumerID());
         requestHeaders.put(HttpHeaders.ACCEPT, ContentType.APPLICATION_OCTET_STREAM.toString());
@@ -221,23 +202,6 @@ public class SdcConnectorClient {
     }
 
     /* **************************** private methods ********************************************/
-
-    private Either<List<String>, IDistributionClientResult> parseGetServersResponse(HttpAsdcResponse getServersResponse) {
-        Either<List<String>, IDistributionClientResult> result;
-        try {
-            String jsonMessage = IOUtils.toString(getServersResponse.getMessage().getContent());
-
-            Gson gson = new GsonBuilder().create();
-            ServerListResponse serverListResponse = gson.fromJson(jsonMessage, ServerListResponse.class);
-            List<String> serverList = serverListResponse.getUebServerList();
-            result = Either.left(serverList);
-
-        } catch (UnsupportedOperationException | IOException e) {
-            result = handleParsingError(e);
-        }
-
-        return result;
-    }
 
     private Either<List<String>, IDistributionClientResult> parseGetValidArtifactTypesResponse(HttpAsdcResponse getArtifactTypesResponse) {
         Either<List<String>, IDistributionClientResult> result;
@@ -362,8 +326,8 @@ public class SdcConnectorClient {
         try {
             is = entity.getContent();
             String artifactName = "";
-            if (getServersResponse.getHeadersMap().containsKey(contentDispositionHeader)) {
-                artifactName = getServersResponse.getHeadersMap().get(contentDispositionHeader);
+            if (getServersResponse.getHeadersMap().containsKey(CONTENT_DISPOSITION_HEADER)) {
+                artifactName = getServersResponse.getHeadersMap().get(CONTENT_DISPOSITION_HEADER);
             }
 
             byte[] payload = IOUtils.toByteArray(is);
@@ -371,25 +335,11 @@ public class SdcConnectorClient {
                 return new DistributionClientDownloadResultImpl(DistributionActionResultEnum.DATA_INTEGRITY_PROBLEM, "failed to get artifact from ASDC. Empty checksum");
             }
 
-            DistributionClientDownloadResultImpl resResponse = new DistributionClientDownloadResultImpl(DistributionActionResultEnum.SUCCESS, "success", artifactName, payload);
-            return resResponse;
-
-
+            return new DistributionClientDownloadResultImpl(DistributionActionResultEnum.SUCCESS, "success", artifactName, payload);
         } catch (UnsupportedOperationException | IOException e) {
             log.error("failed to get artifact from response ");
             return new DistributionClientDownloadResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "UnsupportedOperationException ");
         }
 
     }
-
-    private boolean validateChecksum(IArtifactInfo artifactInfo, byte[] payload) {
-        boolean bRes = false;
-        String calculatedMD5 = GeneralUtils.calculateMD5(payload);
-        if (artifactInfo.getArtifactChecksum().equals(calculatedMD5)) {
-            bRes = true;
-        }
-
-        return bRes;
-    }
-
 }
