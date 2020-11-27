@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "228a1559_29990d78",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/YamlToObjectConverter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:14:05Z",
+      "side": 1,
+      "message": "see my comment on your other commmit:\nhttps://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/115299/1/sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java#267",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 101
+      },
+      "revId": "96ee91f78bfd15491a1ac44606685d787f6a8e35",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13afc533_4e9e0ca3",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/YamlToObjectConverter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:14:05Z",
+      "side": 1,
+      "message": "see my comment on your other commmit:\nhttps://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/115299/1/sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java#267",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 116
+      },
+      "revId": "96ee91f78bfd15491a1ac44606685d787f6a8e35",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87f6df9c_71c2b06f",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/YamlToObjectConverter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-11-27T16:14:05Z",
+      "side": 1,
+      "message": "see my comment on your other commmit:\nhttps://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/115299/1/sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java#267",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 99
+      },
+      "revId": "96ee91f78bfd15491a1ac44606685d787f6a8e35",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
