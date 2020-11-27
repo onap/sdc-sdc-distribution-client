@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "225d2dcc_33c091f6",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-27T09:51:08Z",
+      "side": 0,
+      "message": "Here was created httpAsdcClient and it was never closed.\nMethod was used in unregisterTopics.",
+      "revId": "8c262c47f3c090c702ef124345241bd084dfc958",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
