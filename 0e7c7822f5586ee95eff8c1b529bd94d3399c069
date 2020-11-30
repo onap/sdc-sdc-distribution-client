@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Verified+1: Xue Gao <xue.gao@intl.att.com>
+Code-Review+1: Pawel Kasperkiewicz <pawel.kasperkiewicz@nokia.com>
+Code-Review+2: Xue Gao <xue.gao@intl.att.com>
+Submitted-by: Xue Gao <xue.gao@intl.att.com>
+Submitted-at: Mon, 30 Nov 2020 08:41:29 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/115479
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
