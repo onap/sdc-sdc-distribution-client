@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "034c254c_745bb1ba",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86ee2c8a_52e599e9",
+      "range": {
+        "startLine": 72,
+        "startChar": 49,
+        "endLine": 74,
+        "endChar": 64
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "444e79e4_50c0a3c4",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c715a409_1f10626f",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "444e79e4_50c0a3c4",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 39
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9bd087e9_9de52cdc",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "127516b9_e8f5e288",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 47
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b7b8cea_7f04a73e",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a6887a6_6a3d6cf7",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b7b8cea_7f04a73e",
+      "range": {
+        "startLine": 193,
+        "startChar": 71,
+        "endLine": 193,
+        "endChar": 75
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "1c8a3290_fb3c43f9",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dac0c97e_6e5f6455",
+      "range": {
+        "startLine": 225,
+        "startChar": 0,
+        "endLine": 225,
+        "endChar": 86
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bfdd991_13e2a73e",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
         "patchSetId": 1
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "89c08727_2290a565",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bfdd991_13e2a73e",
+      "range": {
+        "startLine": 267,
+        "startChar": 0,
+        "endLine": 267,
+        "endChar": 111
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0a85d9c6_9781780a",
         "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/http/HttpAsdcClientTest.java",
         "patchSetId": 1
@@ -151,6 +295,30 @@
       "writtenOn": "2020-11-27T16:07:22Z",
       "side": 1,
       "message": "very low coverage (11% methods, 2% lines)",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 33
+      },
+      "revId": "886c3331316cd5b4ab4bd98f2732277f774e891d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7aee89e_42f7785d",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/http/HttpAsdcClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-11-30T07:25:28Z",
+      "side": 1,
+      "message": "I\u0027ve created this tests during code refactor to verify does my correction works.\nFor this class there wasn\u0027t any separate test class.\n\nIf you want I can write separate scenarios to cover this class.",
+      "parentUuid": "0a85d9c6_9781780a",
       "range": {
         "startLine": 36,
         "startChar": 0,
