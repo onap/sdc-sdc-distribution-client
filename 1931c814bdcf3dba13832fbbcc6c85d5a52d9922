@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e64bd11_641e9f0e",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2020-11-30T07:37:00Z",
+      "side": 1,
+      "message": "pls add the correct copyright",
+      "revId": "1931c814bdcf3dba13832fbbcc6c85d5a52d9922",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0864498_eda00f05",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2020-11-30T07:37:00Z",
+      "side": 1,
+      "message": "pls add the correct copyright",
+      "revId": "1931c814bdcf3dba13832fbbcc6c85d5a52d9922",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb48ea76_ede3b49b",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/http/SdcConnectorClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2020-11-30T07:37:00Z",
+      "side": 1,
+      "message": "pls add the correct copyright",
+      "revId": "1931c814bdcf3dba13832fbbcc6c85d5a52d9922",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf697713_9b5f1cb1",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/impl/DistributionClientTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 3435
+      },
+      "writtenOn": "2020-11-30T07:37:00Z",
+      "side": 1,
+      "message": "pls add the correct copyright",
+      "revId": "1931c814bdcf3dba13832fbbcc6c85d5a52d9922",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
