@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efbd6946_7c24ea1e",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "can be removed as redundant",
+      "range": {
+        "startLine": 85,
+        "startChar": 84,
+        "endLine": 85,
+        "endChar": 94
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "367845b4_eb3e3e90",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "can be final",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 29
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57e624dc_5d4839d9",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "replace with sendErrorStatus(...)",
+      "range": {
+        "startLine": 455,
+        "startChar": 8,
+        "endLine": 458,
+        "endChar": 25
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95d28b6a_fe3c7972",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionStatusMessageJsonBuilderFactory.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "return immediately without creating local variable",
+      "range": {
+        "startLine": 119,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 27
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64690699_606905e8",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionStatusMessageJsonBuilderFactory.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "replace with lambda",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 131,
+        "endChar": 23
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37164f17_7b75c156",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/NotificationSender.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T17:34:43Z",
+      "side": 1,
+      "message": "merge those catches as they are same, or log differently\nalso, log exception.",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 9
+      },
+      "revId": "32e5221566857785414066ca80ca160d105671e6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
