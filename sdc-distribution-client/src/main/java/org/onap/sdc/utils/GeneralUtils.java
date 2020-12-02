@@ -25,6 +25,7 @@ import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -45,7 +46,7 @@ public class GeneralUtils {
     }
 
     public static String calculateMD5(String data) {
-        String calculatedMd5 = Hashing.md5().hashString(data, Charsets.UTF_8).toString();
+        String calculatedMd5 = Hashing.md5().hashString(data, StandardCharsets.UTF_8).toString();
         // encode base-64 result
         byte[] encodeBase64 = Base64.getEncoder().encode(calculatedMd5.getBytes());
         return new String(encodeBase64);
@@ -61,7 +62,7 @@ public class GeneralUtils {
         boolean isEncoded = false;
         try {
             // If no exception is caught, then it is possibly a base64 encoded string
-            byte[] data = Base64.getDecoder().decode(str);
+            Base64.getDecoder().decode(str);
             // checks if the string was properly padded to the
             isEncoded = ((str.length() % STRING_LENGTH_DIVIDER == 0) && (Pattern.matches("\\A[a-zA-Z0-9/+]+={1,2}\\z", str)));
 

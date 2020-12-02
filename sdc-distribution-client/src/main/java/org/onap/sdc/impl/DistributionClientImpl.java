@@ -98,7 +98,9 @@ public class DistributionClientImpl implements IDistributionClient {
     private String statusTopic;
     private boolean isConsumerGroupGenerated = false;
 
-    private boolean isInitialized, isStarted, isTerminated;
+    private boolean isInitialized;
+    private boolean isStarted;
+    private boolean isTerminated;
 
     @Override
     public IConfiguration getConfiguration() {
@@ -240,8 +242,7 @@ public class DistributionClientImpl implements IDistributionClient {
         isInitialized = false;
         isTerminated = true;
 
-        DistributionClientResultImpl stopResult = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "distribution client stopped successfuly");
-        return stopResult;
+        return new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "distribution client stopped successfuly");
     }
 
     @Override
@@ -251,8 +252,7 @@ public class DistributionClientImpl implements IDistributionClient {
         validateRunReady(errorWrapper);
         if (!errorWrapper.isEmpty()) {
             IDistributionClientResult result = errorWrapper.getInnerElement();
-            IDistributionClientDownloadResult downloadResult = new DistributionClientDownloadResultImpl(result.getDistributionActionResult(), result.getDistributionMessageResult());
-            return downloadResult;
+            return new DistributionClientDownloadResultImpl(result.getDistributionActionResult(), result.getDistributionMessageResult());
         }
         return asdcConnector.downloadArtifact(artifactInfo);
     }
@@ -418,10 +418,10 @@ public class DistributionClientImpl implements IDistributionClient {
         }
         CambriaBatchingPublisher pub = eitherPublisher.left().value();
 
-        log.debug("after create publisher server list " + brokerServers.toString());
+        log.debug("after create publisher server list {}", brokerServers.toString());
         String jsonRequest = builder.build();
 
-        log.debug("try to send status " + jsonRequest);
+        log.debug("try to send status {}", jsonRequest);
 
         try {
             pub.send("MyPartitionKey", jsonRequest);
@@ -436,7 +436,7 @@ public class DistributionClientImpl implements IDistributionClient {
                 List<message> stuck = pub.close(PUBLISHER_TIMEOUT, TimeUnit.SECONDS);
 
                 if (!stuck.isEmpty()) {
-                    log.debug("DistributionClient - sendDownloadStatus. " + stuck.size() + " messages unsent");
+                    log.debug("DistributionClient - sendDownloadStatus. {} messages unsent", stuck.size());
                 } else {
                     statusResult = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "messages successfully sent");
                 }
@@ -505,7 +505,7 @@ public class DistributionClientImpl implements IDistributionClient {
 
     protected Pair<DistributionActionResultEnum, Configuration> validateAndInitConfiguration(Wrapper<IDistributionClientResult> errorWrapper, IConfiguration conf) {
         DistributionActionResultEnum result = DistributionActionResultEnum.SUCCESS;
-        Configuration configuration = null;
+        Configuration config = null;
         if (conf == null) {
             result = DistributionActionResultEnum.CONFIGURATION_IS_MISSING;
         } else if (conf.getConsumerID() == null || conf.getConsumerID().isEmpty()) {
@@ -529,7 +529,7 @@ public class DistributionClientImpl implements IDistributionClient {
         } else if (conf.isConsumeProduceStatusTopic() && Objects.isNull(statusCallback)) {
             result = DistributionActionResultEnum.CONF_INVALID_CONSUME_PRODUCE_STATUS_TOPIC_FALG;
         } else { // DistributionActionResultEnum.SUCCESS
-            configuration = createConfiguration(conf);
+            config = createConfiguration(conf);
         }
 
         if (result != DistributionActionResultEnum.SUCCESS) {
@@ -539,34 +539,34 @@ public class DistributionClientImpl implements IDistributionClient {
             log.error(initResult.toString());
             errorWrapper.setInnerElement(initResult);
         }
-        return new Pair<>(result, configuration);
+        return new Pair<>(result, config);
     }
 
     private Configuration createConfiguration(IConfiguration conf) {
-        Configuration configuration = new Configuration(conf);
+        Configuration config = new Configuration(conf);
         if (!isPollingIntervalValid(conf.getPollingInterval())) {
-            configuration.setPollingInterval(DistributionClientConstants.MIN_POLLING_INTERVAL_SEC);
+            config.setPollingInterval(DistributionClientConstants.MIN_POLLING_INTERVAL_SEC);
         }
         if (!isPollingTimeoutValid(conf.getPollingTimeout())) {
-            configuration.setPollingTimeout(DistributionClientConstants.POLLING_TIMEOUT_SEC);
+            config.setPollingTimeout(DistributionClientConstants.POLLING_TIMEOUT_SEC);
         }
         if (conf.getConsumerGroup() == null) {
             String generatedConsumerGroup = UUID.randomUUID().toString();
-            configuration.setConsumerGroup(generatedConsumerGroup);
+            config.setConsumerGroup(generatedConsumerGroup);
             isConsumerGroupGenerated = true;
         }
 
         //Default use HTTPS with SDC
         if (conf.isUseHttpsWithSDC() == null) {
-            configuration.setUseHttpsWithSDC(true);
+            config.setUseHttpsWithSDC(true);
         }
 
         //Default use HTTPS with DMAAP
         if (conf.isUseHttpsWithDmaap() == null) {
-            configuration.setUseHttpsWithDmaap(true);
+            config.setUseHttpsWithDmaap(true);
         }
 
-        return configuration;
+        return config;
     }
 
     protected boolean isValidFqdn(String fqdn) {
@@ -581,9 +581,7 @@ public class DistributionClientImpl implements IDistributionClient {
     protected boolean isValidFqdns(List<String> fqdns) {
         if (fqdns != null && !fqdns.isEmpty()) {
             for (String fqdn : fqdns) {
-                if (isValidFqdn(fqdn)) {
-                    continue;
-                } else {
+                if (!isValidFqdn(fqdn)) {
                     return false;
                 }
             }
@@ -673,7 +671,7 @@ public class DistributionClientImpl implements IDistributionClient {
         if (cambriaIdentityManager == null) {
             try {
                 AbstractAuthenticatedManagerBuilder<CambriaIdentityManager> managerBuilder = new IdentityManagerBuilder().usingHosts(brokerServers);
-                if (configuration.isUseHttpsWithDmaap()) {
+                if (Boolean.TRUE.equals(configuration.isUseHttpsWithDmaap())) {
                     managerBuilder = managerBuilder.usingHttps();
                 }
                 cambriaIdentityManager = managerBuilder.build();
@@ -747,8 +745,7 @@ public class DistributionClientImpl implements IDistributionClient {
         String vfModuleJsonString = new String(artifactPayload, StandardCharsets.UTF_8);
         final Type type = new TypeToken<List<VfModuleMetadata>>() {
         }.getType();
-        List<IVfModuleMetadata> vfModules = gson.fromJson(vfModuleJsonString, type);
-        return vfModules;
+        return gson.fromJson(vfModuleJsonString, type);
     }
 
 

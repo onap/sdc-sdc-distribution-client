@@ -82,13 +82,7 @@ public class DistributionStatusMessageJsonBuilderFactory {
 
         DistributionStatusNotificationEnum notificationStatus = isNotified ? DistributionStatusNotificationEnum.NOTIFIED : DistributionStatusNotificationEnum.NOT_NOTIFIED;
         final String changedRequest = jsonRequest.replace(fakeStatusToReplace.name(), notificationStatus.name());
-        IDistributionStatusMessageJsonBuilder builder = new IDistributionStatusMessageJsonBuilder() {
-            @Override
-            public String build() {
-                return changedRequest;
-            }
-        };
-        return builder;
+        return () -> changedRequest;
 
     }
 
@@ -125,19 +119,12 @@ public class DistributionStatusMessageJsonBuilderFactory {
         };
 
         DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
-        final String jsonRequest = gson.toJson(message);
-        return jsonRequest;
+        return gson.toJson(message);
     }
 
     private static IDistributionStatusMessageJsonBuilder prepareBuilderFromImpl(DistributionStatusMessageImpl message) {
         final String jsonRequest = gson.toJson(message);
-        IDistributionStatusMessageJsonBuilder builder = new IDistributionStatusMessageJsonBuilder() {
-            @Override
-            public String build() {
-                return jsonRequest;
-            }
-        };
-        return builder;
+        return () -> jsonRequest;
     }
 
     private enum DistributionStatusNotificationEnum {

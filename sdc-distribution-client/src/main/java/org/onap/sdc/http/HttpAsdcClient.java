@@ -77,15 +77,15 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     private CloseableHttpClient httpClient = null;
     private String serverFqdn = null;
     private String authHeaderValue = "";
-    private Boolean use_ssl = true;
+    private boolean useSsl = true;
 
     public HttpAsdcClient(IConfiguration configuration) {
         this.serverFqdn = configuration.getAsdcAddress();
 
         String username = configuration.getUser();
         String password = configuration.getPassword();
-        this.use_ssl = configuration.isUseHttpsWithSDC();
-        if (this.use_ssl) {
+        this.useSsl = configuration.isUseHttpsWithSDC();
+        if (this.useSsl) {
             initSSL(username, password, configuration.getKeyStorePath(), configuration.getKeyStorePassword(), configuration.activateServerTLSAuth());
         } else {
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
@@ -101,13 +101,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     private void initSSL(String username, String password, String keyStorePath, String keyStoePass, boolean isSupportSSLVerification) {
 
         try {
-            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier hostnameVerifier = (hostname, session) -> true;
 
             // SSLContextBuilder is not thread safe
             // @SuppressWarnings("deprecation")
@@ -205,7 +199,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
                 sslContext = builder.build();
             }
 
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1.2"}, null, hostnameVerifier);
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{TLS}, null, hostnameVerifier);
             httpClient = HttpClientBuilder.create().
                     setDefaultCredentialsProvider(credsProvider).
                     setSSLSocketFactory(sslsf).
@@ -216,7 +210,6 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
         }
 
-        return;
     }
 
     public HttpAsdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap) {
@@ -241,7 +234,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
             response = new HttpAsdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity());
 
         } catch (IOException e) {
-            log.error("failed to send request to url: " + requestUrl);
+            log.error("failed to send request to url: {}", requestUrl);
             StringEntity errorEntity = null;
             try {
                 errorEntity = new StringEntity("failed to send request");
@@ -251,19 +244,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
             response = new HttpAsdcResponse(HttpStatus.SC_INTERNAL_SERVER_ERROR, errorEntity);
 
         } finally {
-            if (closeTheRequest) {
-                if (httpResponse != null) {
-                    try {
-                        httpResponse.close();
-
-                    } catch (IOException e) {
-                        log.error("failed to close http response");
-                    }
-                }
-                ret = new Pair<>(response, null);
-            } else {
-                ret = new Pair<>(response, httpResponse);
-            }
+            ret = closeHttpResponse(closeTheRequest, httpResponse, response);
         }
 
         return ret;
@@ -311,7 +292,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
             response = new HttpAsdcResponse(HttpStatus.SC_BAD_GATEWAY, errorEntity);
 
         } catch (IOException e) {
-            log.error("failed to send request to url: " + requestUrl + " error " + e.getMessage());
+            log.error("failed to send request to url: {} error {}", requestUrl, e.getMessage());
             StringEntity errorEntity = null;
             try {
                 errorEntity = new StringEntity("failed to send request " + e.getMessage());
@@ -322,23 +303,28 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
         } finally {
 
-            if (closeTheRequest) {
-                if (httpResponse != null) {
-                    try {
-                        httpResponse.close();
-
-                    } catch (IOException e) {
-                        log.error("failed to close http response");
-                    }
-                }
-                ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, null);
-            } else {
-                ret = new Pair<HttpAsdcResponse, CloseableHttpResponse>(response, httpResponse);
-            }
+            ret = closeHttpResponse(closeTheRequest, httpResponse, response);
         }
 
         return ret;
 
+    }
+
+    private Pair<HttpAsdcResponse, CloseableHttpResponse> closeHttpResponse(boolean closeTheRequest, CloseableHttpResponse httpResponse, HttpAsdcResponse response) {
+        Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+        if (closeTheRequest) {
+            if (httpResponse != null) {
+                try {
+                    httpResponse.close();
+
+                } catch (IOException e) {
+                    log.error("failed to close http response");
+                }
+            }
+            return new Pair<>(response, null);
+        } else {
+            return new Pair<>(response, httpResponse);
+        }
     }
 
     public void closeHttpClient() {
@@ -353,7 +339,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
 
     private List<Header> addHeadersToHttpRequest(Map<String, String> headersMap) {
 
-        List<Header> requestHeaders = new ArrayList<Header>();
+        List<Header> requestHeaders = new ArrayList<>();
 
         Set<String> headersKyes = headersMap.keySet();
         for (String key : headersKyes) {
@@ -365,7 +351,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
     }
 
     private String getScheme() {
-        if (this.use_ssl) {
+        if (this.useSsl) {
             return HTTPS;
         }
         return HTTP;

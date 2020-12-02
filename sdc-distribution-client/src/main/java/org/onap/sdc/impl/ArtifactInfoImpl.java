@@ -71,7 +71,7 @@ class ArtifactInfoImpl implements IArtifactInfo {
     }
 
     public static List<ArtifactInfoImpl> convertToArtifactInfoImpl(List<IArtifactInfo> list) {
-        List<ArtifactInfoImpl> ret = new ArrayList<ArtifactInfoImpl>();
+        List<ArtifactInfoImpl> ret = new ArrayList<>();
         if (list != null) {
             for (IArtifactInfo artifactInfo : list) {
                 ret.add(new ArtifactInfoImpl(artifactInfo));
@@ -172,7 +172,7 @@ class ArtifactInfoImpl implements IArtifactInfo {
     }
 
     public List<IArtifactInfo> getRelatedArtifacts() {
-        List<IArtifactInfo> temp = new ArrayList<IArtifactInfo>();
+        List<IArtifactInfo> temp = new ArrayList<>();
         if (relatedArtifactsInfo != null) {
             temp.addAll(relatedArtifactsInfo);
         }
