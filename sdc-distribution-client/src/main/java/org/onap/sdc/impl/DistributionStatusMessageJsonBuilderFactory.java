@@ -77,19 +77,10 @@ public class DistributionStatusMessageJsonBuilderFactory {
     static IDistributionStatusMessageJsonBuilder prepareBuilderForNotificationStatus(final String consumerId, final long currentTimeMillis, final String distributionId,
                                                                                      final ArtifactInfoImpl artifactInfo, boolean isNotified) {
 
-        final DistributionStatusEnum fakeStatusToReplace = DistributionStatusEnum.DOWNLOAD_OK;
-        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactInfo, fakeStatusToReplace);
+        final DistributionStatusEnum distributionStatus = isNotified ? DistributionStatusEnum.NOTIFIED : DistributionStatusEnum.NOT_NOTIFIED;
+        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactInfo, distributionStatus);
 
-        DistributionStatusNotificationEnum notificationStatus = isNotified ? DistributionStatusNotificationEnum.NOTIFIED : DistributionStatusNotificationEnum.NOT_NOTIFIED;
-        final String changedRequest = jsonRequest.replace(fakeStatusToReplace.name(), notificationStatus.name());
-        IDistributionStatusMessageJsonBuilder builder = new IDistributionStatusMessageJsonBuilder() {
-            @Override
-            public String build() {
-                return changedRequest;
-            }
-        };
-        return builder;
-
+        return () -> jsonRequest;
     }
 
     private static String buildDistributionStatusJson(final String consumerId,
@@ -125,24 +116,10 @@ public class DistributionStatusMessageJsonBuilderFactory {
         };
 
         DistributionStatusMessageImpl message = new DistributionStatusMessageImpl(statusMessage);
-        final String jsonRequest = gson.toJson(message);
-        return jsonRequest;
+        return gson.toJson(message);
     }
 
     private static IDistributionStatusMessageJsonBuilder prepareBuilderFromImpl(DistributionStatusMessageImpl message) {
-        final String jsonRequest = gson.toJson(message);
-        IDistributionStatusMessageJsonBuilder builder = new IDistributionStatusMessageJsonBuilder() {
-            @Override
-            public String build() {
-                return jsonRequest;
-            }
-        };
-        return builder;
+        return () -> gson.toJson(message);
     }
-
-    private enum DistributionStatusNotificationEnum {
-        NOTIFIED, NOT_NOTIFIED
-    }
-
-
 }
