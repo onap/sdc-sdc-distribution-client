@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db7542e2_93815695",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpAsdcClient.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-02T11:04:36Z",
+      "side": 1,
+      "message": "Deprecated elements should have both the annotation and the Javadoc tag",
+      "range": {
+        "startLine": 53,
+        "startChar": 5,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "af89e4ba0241cd31b16ae6c921e9624b2387419f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
