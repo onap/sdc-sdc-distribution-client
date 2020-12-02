@@ -55,7 +55,7 @@ class JsonContainerResourceInstance implements IResourceInstance {
     }
 
     public static List<JsonContainerResourceInstance> convertToJsonContainer(List<IResourceInstance> resources) {
-        List<JsonContainerResourceInstance> buildResources = new ArrayList<JsonContainerResourceInstance>();
+        List<JsonContainerResourceInstance> buildResources = new ArrayList<>();
         if (resources != null) {
             for (IResourceInstance resourceInstance : resources) {
                 buildResources.add(new JsonContainerResourceInstance(resourceInstance));
@@ -111,7 +111,7 @@ class JsonContainerResourceInstance implements IResourceInstance {
 
     @Override
     public List<IArtifactInfo> getArtifacts() {
-        List<IArtifactInfo> temp = new ArrayList<IArtifactInfo>();
+        List<IArtifactInfo> temp = new ArrayList<>();
         if (artifacts != null) {
             temp.addAll(artifacts);
         }

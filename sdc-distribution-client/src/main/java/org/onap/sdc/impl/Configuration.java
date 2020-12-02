@@ -130,10 +130,6 @@ public class Configuration implements IConfiguration {
         return keyStorePassword;
     }
 
-    public String getComsumerID() {
-        return comsumerID;
-    }
-
     public void setComsumerID(String comsumerID) {
         this.comsumerID = comsumerID;
     }
