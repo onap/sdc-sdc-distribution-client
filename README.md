@@ -23,18 +23,18 @@ Every client that wants to use the JAR, need to implement IConfiguration interfa
 
 Configuration parameters:
 --------------------------
-AsdcAddress 			: ASDC Distribution Engine address. Value can be either hostname (with or without port), IP:port or FQDN (Fully Qualified Domain Name).
-User					: User Name for ASDC distribution consumer authentication.
-Password				: User Password for ASDC distribution consumer authentication.
-PollingInterval			: Distribution Client Polling Interval towards UEB in seconds. Can Be reconfigured in runtime.
-PollingTimeout			: Distribution Client Timeout in seconds waiting to UEB server response in each fetch interval. Can Be reconfigured in runtime.
-RelevantArtifactTypes	: List of artifact types. If the service contains any of the artifacts in the list, the callback will be activated. Can Be reconfigured in runtime.
-ConsumerGroup			: Returns the consumer group defined for this ONAP component, if no consumer group is defined return null. 
-EnvironmentName			: Returns the environment name (testing, production etc... Can Be reconfigured in runtime.
-ConsumerID				: Unique ID of ONAP component instance (e.x INSTAR name).
-KeyStorePath			: Return full path to Client's Key Store that contains either CA certificate or the ASDC's public key (e.g /etc/keystore/asdc-client.jks). file will be deployed with asdc-distribution jar
-KeyStorePassword		: Return client's Key Store password.
-activateServerTLSAuth	: Sets whether ASDC server TLS authentication is activated. If set to false, Key Store path and password are not needed to be set.
+- AsdcAddress 			: ASDC Distribution Engine address. Value can be either hostname (with or without port), IP:port or FQDN (Fully Qualified Domain Name).
+- User					: User Name for ASDC distribution consumer authentication.
+- Password				: User Password for ASDC distribution consumer authentication.
+- PollingInterval			: Distribution Client Polling Interval towards UEB in seconds. Can Be reconfigured in runtime.
+- PollingTimeout			: Distribution Client Timeout in seconds waiting to UEB server response in each fetch interval. Can Be reconfigured in runtime.
+- RelevantArtifactTypes	: List of artifact types. If the service contains any of the artifacts in the list, the callback will be activated. Can Be reconfigured in runtime.
+- ConsumerGroup			: Returns the consumer group defined for this ONAP component, if no consumer group is defined return null. 
+- EnvironmentName			: Returns the environment name (testing, production etc... Can Be reconfigured in runtime.
+- ConsumerID				: Unique ID of ONAP component instance (e.x INSTAR name).
+- KeyStorePath			: Return full path to Client's Key Store that contains either CA certificate or the ASDC's public key (e.g /etc/keystore/asdc-client.jks). file will be deployed with asdc-distribution jar
+- KeyStorePassword		: Return client's Key Store password.
+- activateServerTLSAuth	: Sets whether ASDC server TLS authentication is activated. If set to false, Key Store path and password are not needed to be set.
 
 Example of configuration file implementing IConfiguration interface:
 --------------------------------------------------------------------
