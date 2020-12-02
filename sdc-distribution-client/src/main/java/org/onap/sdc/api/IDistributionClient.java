@@ -198,7 +198,7 @@ public interface IDistributionClient {
     /**
      * This method parses artifact of type VF_MODULES_METADATA payload data
      * .<br>
-     * Method is deprecated due to VF Module changes. Only backward
+     * @deprecated Method is deprecated due to VF Module changes. Only backward
      * compatibility is supported.<br>
      *
      * @param artifactPayload

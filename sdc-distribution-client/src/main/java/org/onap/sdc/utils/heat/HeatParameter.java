@@ -30,7 +30,7 @@ public class HeatParameter {
     private String description;
     //This is in order to workaround "default" field in HeatParameterEntry, since default is Java keyword
     //YAML constructor will lowercase it during parsing
-    private String Default;
+    private String defaultValue;
     private String hidden = "false"; //defaultParameters value according to OpenStack spec
     private List<HeatParameterConstraint> constraints;
 
@@ -76,11 +76,11 @@ public class HeatParameter {
     }
 
     public String getDefault() {
-        return Default;
+        return defaultValue;
     }
 
     public void setDefault(String default1) {
-        Default = default1;
+        defaultValue = default1;
     }
 
 
@@ -198,8 +198,8 @@ public class HeatParameter {
         if (label != null) {
             sb.append("label:" + label + ", ");
         }
-        if (Default != null) {
-            sb.append("default:" + Default + ", ");
+        if (defaultValue != null) {
+            sb.append("default:" + defaultValue + ", ");
         }
         if (hidden != null) {
             sb.append("hidden:" + hidden + ", ");
