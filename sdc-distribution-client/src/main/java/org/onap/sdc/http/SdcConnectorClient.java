@@ -76,7 +76,7 @@ public class SdcConnectorClient {
     }
 
     public Either<List<String>, IDistributionClientResult> getValidArtifactTypesList() {
-        Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest(AsdcUrls.GET_VALID_ARTIFACT_TYPES);
+        Pair<HttpAsdcResponse, CloseableHttpResponse> getServersResponsePair = performAsdcServerRequest();
         HttpAsdcResponse getArtifactTypeResponse = getServersResponsePair.getFirst();
 
         Either<List<String>, IDistributionClientResult> response;
@@ -104,11 +104,11 @@ public class SdcConnectorClient {
         }
     }
 
-    private Pair<HttpAsdcResponse, CloseableHttpResponse> performAsdcServerRequest(final String url) {
+    private Pair<HttpAsdcResponse, CloseableHttpResponse> performAsdcServerRequest() {
         String requestId = generateRequestId();
         Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
-        log.debug("about to perform getServerList. requestId= {} url= {}", requestId, url);
-        return httpClient.getRequest(url, requestHeaders, false);
+        log.debug("about to perform getServerList. requestId= {} url= {}", requestId, AsdcUrls.GET_VALID_ARTIFACT_TYPES);
+        return httpClient.getRequest(AsdcUrls.GET_VALID_ARTIFACT_TYPES, requestHeaders, false);
     }
 
     public Either<TopicRegistrationResponse, DistributionClientResultImpl> registerAsdcTopics(ApiCredential credential) {
@@ -123,7 +123,7 @@ public class SdcConnectorClient {
         String jsonRequest = gson.toJson(registrationRequest);
         StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
 
-        log.debug("about to perform registerAsdcTopics. requestId= " + requestId + " url= " + AsdcUrls.POST_FOR_TOPIC_REGISTRATION);
+        log.debug("about to perform registerAsdcTopics. requestId= {} url= {}", requestId, AsdcUrls.POST_FOR_TOPIC_REGISTRATION);
         Pair<HttpAsdcResponse, CloseableHttpResponse> registerResponsePair = httpClient.postRequest(AsdcUrls.POST_FOR_TOPIC_REGISTRATION, body, requestHeaders, false);
         HttpAsdcResponse registerResponse = registerResponsePair.getFirst();
         int status = registerResponse.getStatus();
@@ -137,7 +137,7 @@ public class SdcConnectorClient {
         }
         handeAsdcConnectionClose(registerResponsePair);
 
-        log.debug("registerAsdcTopics response= " + status + ". requestId= " + requestId + " url= " + AsdcUrls.POST_FOR_TOPIC_REGISTRATION);
+        log.debug("registerAsdcTopics response= {}. requestId= {} url= {}", status, requestId, AsdcUrls.POST_FOR_TOPIC_REGISTRATION);
         return response;
 
     }
@@ -158,7 +158,7 @@ public class SdcConnectorClient {
         String jsonRequest = gson.toJson(registrationRequest);
         StringEntity body = new StringEntity(jsonRequest, ContentType.APPLICATION_JSON);
 
-        log.debug("about to perform unregisterTopics. requestId= " + requestId + " url= " + AsdcUrls.POST_FOR_UNREGISTER);
+        log.debug("about to perform unregisterTopics. requestId= {} url= {}", requestId, AsdcUrls.POST_FOR_UNREGISTER);
         Pair<HttpAsdcResponse, CloseableHttpResponse> unRegisterResponsePair = httpClient.postRequest(AsdcUrls.POST_FOR_UNREGISTER, body, requestHeaders, false);
         HttpAsdcResponse unRegisterResponse = unRegisterResponsePair.getFirst();
         int status = unRegisterResponse.getStatus();
@@ -171,7 +171,7 @@ public class SdcConnectorClient {
 
         handeAsdcConnectionClose(unRegisterResponsePair);
 
-        log.debug("unregisterTopics response = " + status + ". requestId= " + requestId + " url= " + AsdcUrls.POST_FOR_UNREGISTER);
+        log.debug("unregisterTopics response = {}. requestId= {} url= {}", status, requestId, AsdcUrls.POST_FOR_UNREGISTER);
 
         return response;
 
@@ -221,7 +221,7 @@ public class SdcConnectorClient {
 
     private Either<List<String>, IDistributionClientResult> handleParsingError(Exception e) {
         Either<List<String>, IDistributionClientResult> result;
-        log.error("failed to parse response from ASDC. error: " + e.getMessage());
+        log.error("failed to parse response from ASDC. error: ", e);
         IDistributionClientResult response = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "failed to parse response from ASDC");
         result = Either.right(response);
         return result;
@@ -248,7 +248,7 @@ public class SdcConnectorClient {
             return Either.left(registrationResponse);
 
         } catch (UnsupportedOperationException | IOException e) {
-            log.error("failed to pars response from ASDC. error: " + e.getMessage());
+            log.error("failed to pars response from ASDC. error: ", e);
             DistributionClientResultImpl response = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "failed to parse response from ASDC");
             return Either.right(response);
         }
@@ -281,12 +281,13 @@ public class SdcConnectorClient {
         } else if (status == HttpStatus.SC_GATEWAY_TIMEOUT) {
             errorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.ASDC_SERVER_TIMEOUT, "ASDC server problem");
         }
-        log.error("status from ASDC is " + registerResponse);
+        log.error("status from ASDC is {}", registerResponse);
         log.error(errorResponse.toString());
         try {
             String errorString = IOUtils.toString(registerResponse.getMessage().getContent());
-            log.debug("error from ASDC is: " + errorString);
+            log.debug("error from ASDC is: {}", errorString);
         } catch (UnsupportedOperationException | IOException e) {
+            log.error("failed to pars response from ASDC. error: ", e);
         }
         return errorResponse;
 
@@ -308,12 +309,13 @@ public class SdcConnectorClient {
         } else if (status == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
             errorResponse = new DistributionClientDownloadResultImpl(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, "ASDC server problem");
         }
-        log.error("status from ASDC is " + registerResponse);
+        log.error("status from ASDC is {}", registerResponse);
         log.error(errorResponse.toString());
         try {
             String errorString = IOUtils.toString(registerResponse.getMessage().getContent());
-            log.debug("error from ASDC is: " + errorString);
+            log.debug("error from ASDC is: {}", errorString);
         } catch (UnsupportedOperationException | IOException e) {
+            log.error("failed to pars response from ASDC. error: ", e);
         }
         return errorResponse;
 
