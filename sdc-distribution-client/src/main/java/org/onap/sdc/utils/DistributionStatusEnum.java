@@ -54,7 +54,6 @@ public enum DistributionStatusEnum {
      * ONAP component is requested to publish this status once component successfully complete downloading and storing all the data it needs from the service.
      */
     COMPONENT_DONE_OK,
-
     /**
      * ONAP component is requested to publish this status when component failed to download or failed to store one or more of the mandatory information it requires from the service model.
      * <p>
@@ -66,5 +65,10 @@ public enum DistributionStatusEnum {
      */
     DISTRIBUTION_COMPLETE_OK,
 
-    DISTRIBUTION_COMPLETE_ERROR
+    DISTRIBUTION_COMPLETE_ERROR,
+
+    NOTIFIED,
+
+    NOT_NOTIFIED
+
 }

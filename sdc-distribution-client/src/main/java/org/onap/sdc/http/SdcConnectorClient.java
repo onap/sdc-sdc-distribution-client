@@ -190,12 +190,11 @@ public class SdcConnectorClient {
         HttpAsdcResponse downloadResponse = downloadPair.getFirst();
 
         int status = downloadResponse.getStatus();
-        if (status == HttpStatus.SC_OK) {
 
+        if (status == HttpStatus.SC_OK) {
             response = parseDownloadArtifactResponse(artifactInfo, downloadResponse);
         } else {
             response = handleAsdcDownloadArtifactError(downloadResponse);
-
         }
         handeAsdcConnectionClose(downloadPair);
         return response;
