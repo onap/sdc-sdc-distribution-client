@@ -64,7 +64,7 @@ public class DistributionClientDownloadResultImpl extends DistributionClientResu
     @Override
     public String getArtifactFilename() {
         //Fix of bug 292443 in TDP
-        if (artifactName == null || !artifactName.matches("attachment;\\s*filename=\".*?\"")) {
+        if (artifactName == null || !artifactName.matches("attachment;\\s*filename=\"[^\"]*+\"")) {
             return artifactName;
         }
         String fileName = "filename=\"";
