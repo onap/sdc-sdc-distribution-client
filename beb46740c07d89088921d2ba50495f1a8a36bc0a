@@ -22,6 +22,30 @@
       "revId": "beb46740c07d89088921d2ba50495f1a8a36bc0a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eebf448_39908d0e",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/http/HttpClientFactoryTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:13:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cc0e70f_6634c61d",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 36
+      },
+      "revId": "beb46740c07d89088921d2ba50495f1a8a36bc0a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
