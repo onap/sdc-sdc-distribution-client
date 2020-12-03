@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "515a5aea_a509bdce",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:54:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "767e615e_bc44bd06",
+      "range": {
+        "startLine": 224,
+        "startChar": 55,
+        "endLine": 224,
+        "endChar": 83
+      },
+      "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2e44dcc_12bcdf2a",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e1a346c_c94bd2d5",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:54:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2e44dcc_12bcdf2a",
+      "range": {
+        "startLine": 251,
+        "startChar": 58,
+        "endLine": 251,
+        "endChar": 86
+      },
+      "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2345f86f_123edbe0",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:54:03Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "65fcd148_b8a13bc2",
+      "range": {
+        "startLine": 289,
+        "startChar": 10,
+        "endLine": 290,
+        "endChar": 9
+      },
+      "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71667c55_be27e6f5",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
         "patchSetId": 3
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "234824aa_f232a957",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:54:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71667c55_be27e6f5",
+      "range": {
+        "startLine": 316,
+        "startChar": 10,
+        "endLine": 317,
+        "endChar": 9
+      },
+      "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "81dc1059_45965214",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/GeneralUtils.java",
         "patchSetId": 3
@@ -114,6 +210,30 @@
       "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2b8054d_27542026",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/GeneralUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T13:54:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81dc1059_45965214",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 39
+      },
+      "revId": "ec72f68303427a01d623030b0fb5a00f19aa3ddd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
