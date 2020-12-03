@@ -31,12 +31,10 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
 
 import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.IDistributionStatusMessageJsonBuilder;
@@ -96,6 +94,7 @@ public class DistributionClientImpl implements IDistributionClient {
     private String statusTopic;
     private boolean isConsumerGroupGenerated = false;
     private NotificationSender notificationSender;
+    private final ConfigurationValidator configurationValidator = new ConfigurationValidator();
 
     private boolean isInitialized;
     private boolean isStarted;
@@ -491,41 +490,17 @@ public class DistributionClientImpl implements IDistributionClient {
     }
 
     protected Pair<DistributionActionResultEnum, Configuration> validateAndInitConfiguration(Wrapper<IDistributionClientResult> errorWrapper, IConfiguration conf) {
-        DistributionActionResultEnum result = DistributionActionResultEnum.SUCCESS;
+        DistributionActionResultEnum result = configurationValidator.validateConfiguration(conf, statusCallback);
+
         Configuration configuration = null;
-        if (conf == null) {
-            result = DistributionActionResultEnum.CONFIGURATION_IS_MISSING;
-        } else if (conf.getConsumerID() == null || conf.getConsumerID().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_CONSUMER_ID;
-        } else if (conf.getUser() == null || conf.getUser().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_USERNAME;
-        } else if (conf.getPassword() == null || conf.getPassword().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_PASSWORD;
-        } else if (conf.getMsgBusAddress() == null || conf.getMsgBusAddress().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_MSG_BUS_ADDRESS;
-        } else if (conf.getAsdcAddress() == null || conf.getAsdcAddress().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_ASDC_FQDN;
-        } else if (!isValidFqdn(conf.getAsdcAddress())) {
-            result = DistributionActionResultEnum.CONF_INVALID_ASDC_FQDN;
-        } else if (!isValidFqdns(conf.getMsgBusAddress())) {
-            result = DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS;
-        } else if (conf.getEnvironmentName() == null || conf.getEnvironmentName().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_ENVIRONMENT_NAME;
-        } else if (conf.getRelevantArtifactTypes() == null || conf.getRelevantArtifactTypes().isEmpty()) {
-            result = DistributionActionResultEnum.CONF_MISSING_ARTIFACT_TYPES;
-        } else if (conf.isConsumeProduceStatusTopic() && Objects.isNull(statusCallback)) {
-            result = DistributionActionResultEnum.CONF_INVALID_CONSUME_PRODUCE_STATUS_TOPIC_FALG;
-        } else { // DistributionActionResultEnum.SUCCESS
+        if(result == DistributionActionResultEnum.SUCCESS) {
             configuration = createConfiguration(conf);
-        }
-
-        if (result != DistributionActionResultEnum.SUCCESS) {
-
+        } else {
             DistributionClientResultImpl initResult = new DistributionClientResultImpl(result, "configuration is invalid: " + result.name());
-
             log.error(initResult.toString());
             errorWrapper.setInnerElement(initResult);
         }
+
         return new Pair<>(result, configuration);
     }
 
@@ -554,29 +529,6 @@ public class DistributionClientImpl implements IDistributionClient {
         }
 
         return configuration;
-    }
-
-    protected boolean isValidFqdn(String fqdn) {
-        try {
-            Matcher matcher = DistributionClientConstants.FQDN_PATTERN.matcher(fqdn);
-            return matcher.matches();
-        } catch (Exception e) {
-        }
-        return false;
-    }
-
-    protected boolean isValidFqdns(List<String> fqdns) {
-        if (fqdns != null && !fqdns.isEmpty()) {
-            for (String fqdn : fqdns) {
-                if (isValidFqdn(fqdn)) {
-                    continue;
-                } else {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     private void shutdownExecutor() {
