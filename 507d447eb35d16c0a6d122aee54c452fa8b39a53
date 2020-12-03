@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "078aa9fa_af23b2e1",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T14:30:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8295f497_43598fda",
+      "range": {
+        "startLine": 251,
+        "startChar": 33,
+        "endLine": 251,
+        "endChar": 37
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a2407c5_60d73d7a",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "df004928_90e57c57",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T14:30:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a2407c5_60d73d7a",
+      "range": {
+        "startLine": 290,
+        "startChar": 12,
+        "endLine": 290,
+        "endChar": 71
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1cbbb915_ae1a9b57",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
         "patchSetId": 4
@@ -68,6 +116,30 @@
       "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f95bacd5_3ba481ff",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-03T14:30:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1cbbb915_ae1a9b57",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 318,
+        "endChar": 71
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
