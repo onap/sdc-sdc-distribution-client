@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8295f497_43598fda",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-03T14:06:33Z",
+      "side": 1,
+      "message": "sorry, did not spot this earlier\n\ntypo \u0027parse\u0027",
+      "range": {
+        "startLine": 251,
+        "startChar": 33,
+        "endLine": 251,
+        "endChar": 37
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a2407c5_60d73d7a",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-03T14:06:33Z",
+      "side": 1,
+      "message": "would be better if message corresponds to error, is it \u0027error of parsing\u0027 ?",
+      "range": {
+        "startLine": 290,
+        "startChar": 12,
+        "endLine": 290,
+        "endChar": 71
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cbbb915_ae1a9b57",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/SdcConnectorClient.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-03T14:06:33Z",
+      "side": 1,
+      "message": "would be better if message corresponds to error, is it \u0027error of parsing\u0027 ?",
+      "range": {
+        "startLine": 318,
+        "startChar": 0,
+        "endLine": 318,
+        "endChar": 71
+      },
+      "revId": "507d447eb35d16c0a6d122aee54c452fa8b39a53",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
