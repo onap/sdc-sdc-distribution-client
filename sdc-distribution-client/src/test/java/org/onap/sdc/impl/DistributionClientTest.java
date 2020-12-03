@@ -94,27 +94,6 @@ public class DistributionClientTest {
 	}
 
 	@Test
-	public void validateConfigurationFqdnTest() {
-
-		String[] validFqdns = { "myHostname", "myHostname:80", "myHostname:8080", "1.1.1.1", "1.1.1.1:8080", "ueb01hydc.it.open.com", "ueb01hydc.it.open.com:8080", "ueb01hydc.it", "my-good.and-simple.fqdn" };
-
-		String[] invalidFqdns = { "myHostname:808080", /* 70 letters */"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij", "not**good", "very#not#good#" };
-
-		boolean validationResult = true;
-
-		for (int i = 0; i < validFqdns.length; i++) {
-			validationResult = client.isValidFqdn(validFqdns[i]);
-			assertEquals("assertion failed for FQDN " + validFqdns[i] + " expected to be valid, actual invalid", true, validationResult);
-		}
-
-		for (int i = 0; i < invalidFqdns.length; i++) {
-			validationResult = client.isValidFqdn(invalidFqdns[i]);
-			assertEquals("assertion failed for FQDN " + invalidFqdns[i] + " expected to be invalid, actual valid", false, validationResult);
-		}
-
-	}
-
-	@Test
 	public void validateConfigurationPasswordTest() {
 		Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();
 		TestConfiguration testPassword = new TestConfiguration();
