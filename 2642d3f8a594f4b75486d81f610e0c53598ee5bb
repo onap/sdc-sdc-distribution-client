@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "129e997b_9bc3a36d",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "extract to property",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bc7fdad_6370cbdd",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a6eb2c3_b0166c54",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27270888_4831b619",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cb05af4_cb154d03",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8a633e5_2e64e9da",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above and do not use milestone version",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e57bbd10_8be5e7d9",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bee5e74_1b1cb058",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90b3ad0a_924cc359",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8acfcffd_18e010f7",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-08T12:45:30Z",
+      "side": 1,
+      "message": "as above",
+      "revId": "2642d3f8a594f4b75486d81f610e0c53598ee5bb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
