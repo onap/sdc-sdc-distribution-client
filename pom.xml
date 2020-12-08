@@ -33,15 +33,15 @@
 
 		<!-- Dependencies projects version -->
 		<org.glassfish.jersey.version>2.24</org.glassfish.jersey.version>
-		<functionaljava.version>4.2</functionaljava.version>
-		<httpclient.version>4.5.4</httpclient.version>
-		<httpcore.version>4.4.1</httpcore.version>
-		<logback.version>1.1.2</logback.version>
+		<functionaljava.version>4.8</functionaljava.version>
+		<httpclient.version>4.5.13</httpclient.version>
+		<httpcore.version>4.4.14</httpcore.version>
+		<logback.version>1.2.3</logback.version>
 		<junit.version>4.12</junit.version>
-		<snakeyaml.version>1.14</snakeyaml.version>
-		<guava.version>21.0</guava.version>
-		<jetty.version>9.4.18.v20190429</jetty.version>
-		<bean-matchers.version>0.11</bean-matchers.version>
+		<snakeyaml.version>1.27</snakeyaml.version>
+		<guava.version>30.0-jre</guava.version>
+		<jetty.version>9.4.35.v20201120</jetty.version>
+		<bean-matchers.version>0.12</bean-matchers.version>
 
 		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<sitePath>/content/sites/site/org/onap/sdc/sdc-distribution-client/${project.version}</sitePath>
@@ -66,14 +66,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
+				<version>3.2.0</version>
 				<configuration>
 					<failOnError>false</failOnError>
 					<doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
 					<docletArtifact>
 						<groupId>org.umlgraph</groupId>
 						<artifactId>umlgraph</artifactId>
-						<version>5.6</version>
+						<version>5.6.6</version>
 					</docletArtifact>
 					<additionalparam>-views</additionalparam>
 					<useStandardDocletOptions>true</useStandardDocletOptions>
@@ -95,12 +95,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.4</version>
+				<version>3.9.1</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.apache.maven.wagon</groupId>
 						<artifactId>wagon-webdav-jackrabbit</artifactId>
-						<version>2.10</version>
+						<version>3.4.2</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -108,7 +108,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.8</version>
+				<version>0.8.6</version>
 				<executions>
 					<!-- Unit-Tests -->
 					<execution>
@@ -126,7 +126,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.19.1</version>
+				<version>3.0.0-M5</version>
 				<configuration>
 					<argLine>${argLine} -Xmx2048m</argLine>
 				</configuration>
@@ -135,23 +135,23 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.8.1</version>
 				<inherited>true</inherited>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.3</version>
+				<version>3.2.0</version>
 				<configuration/>
 			</plugin>
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>3.7.0.1746</version>
 			</plugin>
 		</plugins>
 	</build>

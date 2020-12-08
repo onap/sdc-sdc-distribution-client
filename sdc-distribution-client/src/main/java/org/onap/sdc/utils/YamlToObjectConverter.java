@@ -57,8 +57,7 @@ public class YamlToObjectConverter {
         PropertyUtils propertyUtils = new PropertyUtils() {
             @Override
             //This is in order to workaround "default" field in HeatParameterEntry, since default is Java keyword
-            public Property getProperty(Class<? extends Object> type, String name, BeanAccess bAccess)
-                    throws IntrospectionException {
+            public Property getProperty(Class<?> type, String name, BeanAccess bAccess) {
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
                 return super.getProperty(type, name, bAccess);
             }
