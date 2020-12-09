@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class HttpRequestFactory {
+public class HttpRequestFactory {
 
     public static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_AUTH_FORMAT = "%s:%s";
