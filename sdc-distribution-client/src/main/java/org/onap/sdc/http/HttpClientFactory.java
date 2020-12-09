@@ -44,7 +44,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-class HttpClientFactory {
+public class HttpClientFactory {
     private static final int AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
     private static final int AUTHORIZATION_SCOPE_PORT = 443;
     private static final KeyStore DEFAULT_INIT_KEY_STORE_VALUE = null;
@@ -53,11 +53,11 @@ class HttpClientFactory {
     static final String HTTPS = "https://";
     private final IConfiguration configuration;
 
-    HttpClientFactory(IConfiguration configuration) {
+    public HttpClientFactory(IConfiguration configuration) {
         this.configuration = configuration;
     }
 
-    Pair<String, CloseableHttpClient> createInstance() {
+    public Pair<String, CloseableHttpClient> createInstance() {
         boolean isHttpsRequired = configuration.isUseHttpsWithSDC();
         Pair<String, CloseableHttpClient> httpClientPair;
         if (isHttpsRequired) {
