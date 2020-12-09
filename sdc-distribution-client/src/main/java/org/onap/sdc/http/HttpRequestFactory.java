@@ -30,13 +30,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class HttpRequestFactory {
+public class HttpRequestFactory {
 
     public static final String AUTHORIZATION = "Authorization";
     private static final String BASIC_AUTH_FORMAT = "%s:%s";
     private final String authHeaderValue;
 
-    HttpRequestFactory(String user, String password) {
+    public HttpRequestFactory(String user, String password) {
         this.authHeaderValue = "Basic " + Base64.getEncoder().encodeToString(createAuthHeaderData(user, password));
     }
 
