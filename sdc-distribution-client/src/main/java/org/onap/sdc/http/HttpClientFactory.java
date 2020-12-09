@@ -44,7 +44,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-class HttpClientFactory {
+public class HttpClientFactory {
     private static final int AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
     private static final int AUTHORIZATION_SCOPE_PORT = 443;
     private static final KeyStore DEFAULT_INIT_KEY_STORE_VALUE = null;
