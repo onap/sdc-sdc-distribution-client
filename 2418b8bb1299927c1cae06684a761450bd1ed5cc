@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b382ecf_f947d467",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-09T15:35:59Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "5c9b812f_d6e929b8",
+      "revId": "2418b8bb1299927c1cae06684a761450bd1ed5cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e1a84c44_ec5d5a7b",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "11bae578_492ac33a",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-09T15:35:59Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "e1a84c44_ec5d5a7b",
+      "revId": "2418b8bb1299927c1cae06684a761450bd1ed5cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33bbccf3_4f476e1b",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpRequestFactory.java",
         "patchSetId": 1
@@ -50,6 +86,24 @@
       "revId": "2418b8bb1299927c1cae06684a761450bd1ed5cc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fbbd2be_22c719f2",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpRequestFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-09T15:35:59Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "33bbccf3_4f476e1b",
+      "revId": "2418b8bb1299927c1cae06684a761450bd1ed5cc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
