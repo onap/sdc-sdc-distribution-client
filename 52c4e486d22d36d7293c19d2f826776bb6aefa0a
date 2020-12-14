@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Bogumil Zebek <bogumil.zebek@nokia.com>
+Code-Review+2: Christophe Closset <christophe.closset@intl.att.com>
+Submitted-by: Christophe Closset <christophe.closset@intl.att.com>
+Submitted-at: Mon, 14 Dec 2020 09:21:54 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/116255
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
