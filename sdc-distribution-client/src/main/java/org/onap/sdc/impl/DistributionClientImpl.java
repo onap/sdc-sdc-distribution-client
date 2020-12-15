@@ -80,7 +80,7 @@ public class DistributionClientImpl implements IDistributionClient {
 
     private static final int POLLING_TIMEOUT_MULTIPLIER = 1000;
     private static final int TERMINATION_TIMEOUT = 60;
-    private static final Logger log = LoggerFactory.getLogger(DistributionClientImpl.class);
+    private final Logger log = LoggerFactory.getLogger(DistributionClientImpl.class);
 
     private SdcConnectorClient asdcConnector;
     private ScheduledExecutorService executorPool = null;
