@@ -17,8 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
-package org.onap.test;
+package org.onap.test.core.config;
 
 import java.util.ArrayList;
 import java.util.List;
