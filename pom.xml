@@ -15,9 +15,10 @@
 		<relativePath/>
 	</parent>
 
-	<modules>
-		<module>sdc-distribution-client</module>
-	</modules>
+    <modules>
+        <module>sdc-distribution-client</module>
+        <module>sdc-distribution-ci</module>
+    </modules>
 
 	<properties>
 
