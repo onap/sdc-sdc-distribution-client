@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9bf711be_87bd8c70",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e27d3181_7fc78585",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69ef4621_8bbf9dea",
         "filename": "sdc-distribution-ci/pom.xml",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6e2cf32_b5d844e3",
+        "filename": "sdc-distribution-ci/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69ef4621_8bbf9dea",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "bbe0310f_45d8854f",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/config/DistributionClientConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed06fee5_ccacddb4",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02644c6e_f64bdd8e",
         "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ArtifactsDownloader.java",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df2208cc_eba8681c",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ArtifactsDownloader.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "yes",
+      "parentUuid": "02644c6e_f64bdd8e",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "cbd58454_db30c589",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/it/RegisterToAsdcTopicIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34ff1019_24afeefe",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ebfe34b1_b7f8acb5",
         "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
         "patchSetId": 2
@@ -101,6 +191,24 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed8a2923_8c5d91bd",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebfe34b1_b7f8acb5",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "03886b36_fdcdcb91",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "382a5e4e_27262776",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a816020c_45d10b47",
         "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
         "patchSetId": 2
@@ -135,6 +261,24 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49f74d11_92848761",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a816020c_45d10b47",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -158,6 +302,30 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9a1e35f_ddc29530",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2020-12-16T10:55:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2b7b03f_bdffec5c",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 23
+      },
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
