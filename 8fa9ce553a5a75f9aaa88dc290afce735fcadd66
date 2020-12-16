@@ -135,6 +135,29 @@
       "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2b7b03f_bdffec5c",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2020-12-16T09:53:22Z",
+      "side": 1,
+      "message": "used anywhere else? if not should be private static final",
+      "range": {
+        "startLine": 83,
+        "startChar": 4,
+        "endLine": 83,
+        "endChar": 23
+      },
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
