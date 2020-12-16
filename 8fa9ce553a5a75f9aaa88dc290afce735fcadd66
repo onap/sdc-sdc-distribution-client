@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e27d3181_7fc78585",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "do not commit commented code",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69ef4621_8bbf9dea",
+        "filename": "sdc-distribution-ci/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "pls do not commit commented code",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed06fee5_ccacddb4",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/config/DistributionClientConfig.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "extract all default values to const",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02644c6e_f64bdd8e",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ArtifactsDownloader.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "Do you use this class somewhere in this project?",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34ff1019_24afeefe",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/it/RegisterToAsdcTopicIT.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "remove it",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebfe34b1_b7f8acb5",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "shouldRegisterToDmaapAfterClientInitialization",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "382a5e4e_27262776",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "pls create sections given, when and then",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a816020c_45d10b47",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-16T08:53:02Z",
+      "side": 1,
+      "message": "remove magic numbers, pls create descriptive static fields",
+      "revId": "8fa9ce553a5a75f9aaa88dc290afce735fcadd66",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
