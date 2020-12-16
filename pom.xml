@@ -37,7 +37,7 @@
 		<httpclient.version>4.5.13</httpclient.version>
 		<httpcore.version>4.4.14</httpcore.version>
 		<logback.version>1.2.3</logback.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>5.7.0</junit.version>
 		<snakeyaml.version>1.27</snakeyaml.version>
 		<guava.version>30.0-jre</guava.version>
 		<jetty.version>9.4.35.v20201120</jetty.version>
