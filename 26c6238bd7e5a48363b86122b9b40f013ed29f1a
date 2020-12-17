@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b43a6ab0_a0470fbd",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/config/DistributionClientConfig.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5234
+      },
+      "writtenOn": "2020-12-17T11:34:05Z",
+      "side": 1,
+      "message": "Change to something describing this project",
+      "revId": "26c6238bd7e5a48363b86122b9b40f013ed29f1a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0baf033_154ac71a",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ClientInitializer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 5234
+      },
+      "writtenOn": "2020-12-17T11:34:05Z",
+      "side": 1,
+      "message": "private",
+      "revId": "26c6238bd7e5a48363b86122b9b40f013ed29f1a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
