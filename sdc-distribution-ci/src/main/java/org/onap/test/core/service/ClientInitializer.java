@@ -50,4 +50,11 @@ public class ClientInitializer {
         log.info(SEPARATOR);
     }
 
+    public void stop() {
+        IDistributionClientResult stopResult = client.stop();
+        log.info(SEPARATOR);
+        log.info(stopResult.getDistributionMessageResult());
+        log.info(SEPARATOR);
+    }
+
 }
