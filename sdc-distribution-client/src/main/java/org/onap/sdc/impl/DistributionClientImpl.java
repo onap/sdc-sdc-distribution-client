@@ -80,7 +80,7 @@ public class DistributionClientImpl implements IDistributionClient {
 
     private static final int POLLING_TIMEOUT_MULTIPLIER = 1000;
     private static final int TERMINATION_TIMEOUT = 60;
-    private static final Logger log = LoggerFactory.getLogger(DistributionClientImpl.class);
+    private final Logger log;
 
     private SdcConnectorClient asdcConnector;
     private ScheduledExecutorService executorPool = null;
@@ -99,6 +99,14 @@ public class DistributionClientImpl implements IDistributionClient {
     private boolean isInitialized;
     private boolean isStarted;
     private boolean isTerminated;
+
+    public DistributionClientImpl() {
+        this(LoggerFactory.getLogger(DistributionClientImpl.class));
+    }
+
+    public DistributionClientImpl(Logger log) {
+        this.log = log;
+    }
 
     @Override
     public IConfiguration getConfiguration() {
@@ -493,7 +501,7 @@ public class DistributionClientImpl implements IDistributionClient {
         DistributionActionResultEnum result = configurationValidator.validateConfiguration(conf, statusCallback);
 
         Configuration configuration = null;
-        if(result == DistributionActionResultEnum.SUCCESS) {
+        if (result == DistributionActionResultEnum.SUCCESS) {
             configuration = createConfiguration(conf);
         } else {
             DistributionClientResultImpl initResult = new DistributionClientResultImpl(result, "configuration is invalid: " + result.name());
