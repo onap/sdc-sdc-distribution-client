@@ -19,6 +19,7 @@
  */
 package org.onap.test.core.service;
 
+import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientImpl;
 import org.onap.test.core.config.DistributionClientConfig;
@@ -48,6 +49,14 @@ public class ClientInitializer {
         IDistributionClientResult startResult = client.start();
         log.info(startResult.getDistributionMessageResult());
         log.info(SEPARATOR);
+    }
+
+    public void stop(){
+        IDistributionClientResult stopResult = client.stop();
+        log.info(SEPARATOR);
+        log.info(stopResult.getDistributionMessageResult());
+        log.info(SEPARATOR);
+
     }
 
 }

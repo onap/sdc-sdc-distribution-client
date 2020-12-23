@@ -19,6 +19,9 @@
  */
 package org.onap.test.core.service;
 
+import org.junit.After;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -42,28 +45,37 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class ClientInitializerTest {
 
+    private static final int SUCCESSFUL_STOP_MSG_INDEX = 2;
+    private static final int SUCCESSFUL_UNREGISTER_MSG_INDEX = 3;
+    private static final int SUCCESSFUL_INIT_MSG_INDEX = 0;
+    private static final int SUCCESSFUL_DIST_MSG_INDEX = 3;
+    private ClientInitializer clientInitializer;
 
-    public static final int SUCCESSFUL_INIT_MSG_INDEX = 0;
-    public static final int SUCCESSFUL_DIST_MSG_INDEX = 3;
     @Container
     public GenericContainer mockDmaap = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-dmaap:latest")
             .withNetworkMode("host");
 
     @Container
     public GenericContainer mockSdc = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-sdc:latest")
-            .dependsOn(mockDmaap)
             .withNetworkMode("host");
     @Mock
     Logger log;
 
+    @Mock
+    Logger distClientLog;
+
+    @BeforeEach
+    public void initializeClient() {
+        DistributionClientConfig clientConfig = new DistributionClientConfig();
+        List<ArtifactsValidator> validators = new ArrayList<>();
+        DistributionClientImpl client = new DistributionClientImpl(distClientLog);
+        ClientNotifyCallback callback = new ClientNotifyCallback(validators, client);
+        clientInitializer = new ClientInitializer(clientConfig, callback, client);
+    }
+
     @Test
     public void shouldRegisterToDmaapAfterClientInitialization() {
         //given
-        DistributionClientConfig clientConfig = new DistributionClientConfig();
-        List<ArtifactsValidator> validators = new ArrayList<>();
-        DistributionClientImpl client = new DistributionClientImpl();
-        ClientNotifyCallback callback = new ClientNotifyCallback(validators, client);
-        ClientInitializer clientInitializer = new ClientInitializer(clientConfig, callback, client);
         final ArgumentCaptor<String> exceptionCaptor = ArgumentCaptor.forClass(String.class);
         //when
         clientInitializer.log = log;
@@ -75,4 +87,17 @@ class ClientInitializerTest {
         assertThat(allValues.get(SUCCESSFUL_DIST_MSG_INDEX)).isEqualTo("distribution client started successfuly");
     }
 
+    @Test
+    public void shouldUnregisterAndStopClient() {
+        //given
+        final ArgumentCaptor<String> exceptionCaptor = ArgumentCaptor.forClass(String.class);
+        //when
+        clientInitializer.initialize();
+        clientInitializer.stop();
+        verify(distClientLog, Mockito.atLeastOnce()).info(exceptionCaptor.capture());
+        List<String> allValues = exceptionCaptor.getAllValues();
+        //then
+        assertThat(allValues.get(SUCCESSFUL_STOP_MSG_INDEX)).isEqualTo("stop DistributionClient");
+        assertThat(allValues.get(SUCCESSFUL_UNREGISTER_MSG_INDEX)).isEqualTo("client unregistered from topics successfully");
+    }
 }
