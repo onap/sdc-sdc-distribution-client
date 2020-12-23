@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d273d55_0b08006b",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ClientInitializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-23T11:38:10Z",
+      "side": 1,
+      "message": "fix code formatting",
+      "revId": "bc6bf59fcdbb52b093fa5bb57fb7fcc10c80f210",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14130e1e_8c79c693",
+        "filename": "sdc-distribution-ci/src/main/java/org/onap/test/core/service/ClientInitializer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 3433
+      },
+      "writtenOn": "2020-12-23T11:38:10Z",
+      "side": 1,
+      "message": "remove empty line",
+      "revId": "bc6bf59fcdbb52b093fa5bb57fb7fcc10c80f210",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
