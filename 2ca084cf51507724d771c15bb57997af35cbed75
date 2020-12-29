@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Micha? Ba?ka <michal.banka@nokia.com>
+Code-Review+1: Bartosz Gardziejewski <bartosz.gardziejewski@nokia.com>
+Code-Review+2: Vasyl Razinkov <vasyl.razinkov@est.tech>
+Submitted-by: Vasyl Razinkov <vasyl.razinkov@est.tech>
+Submitted-at: Tue, 29 Dec 2020 09:52:53 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/116509
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
