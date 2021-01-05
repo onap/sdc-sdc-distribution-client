@@ -25,6 +25,7 @@ import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 import org.onap.sdc.http.HttpAsdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
+import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
 import org.onap.sdc.utils.DistributionStatusEnum;
 import org.onap.test.core.config.DistributionClientConfig;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,10 +44,15 @@ public class ClientNotifyCallback implements INotificationCallback {
 
     private final List<ArtifactsValidator> validators;
     private final DistributionClientImpl distributionClient;
+    private final List<DistributionClientDownloadResultImpl> pulledArtifacts = new ArrayList<>();
     DistributionClientConfig config = new DistributionClientConfig();
     HttpAsdcClient asdcClient = new HttpAsdcClient(config);
-    SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config,asdcClient);
+    SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config, asdcClient);
     ArtifactsDownloader artifactsDownloader = new ArtifactsDownloader("/app/path", sdcConnectorClient);
+
+    public List<DistributionClientDownloadResultImpl> getPulledArtifacts() {
+        return List.copyOf(pulledArtifacts);
+    }
 
     public ClientNotifyCallback(List<ArtifactsValidator> validators, DistributionClientImpl distributionClient) {
         this.validators = validators;
@@ -55,7 +62,7 @@ public class ClientNotifyCallback implements INotificationCallback {
     @Override
     public void activateCallback(INotificationData inotificationData) {
         logServiceInfo(inotificationData);
-        artifactsDownloader.pullArtifacts(inotificationData);
+        pulledArtifacts.addAll(artifactsDownloader.pullArtifacts(inotificationData));
     }
 
     private void logServiceInfo(INotificationData service) {
