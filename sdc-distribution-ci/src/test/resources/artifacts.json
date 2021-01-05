@@ -1,0 +1,170 @@
+{
+  "distributionID": "bf3df55e-cdc6-4bf7-b3b3-0fdccab91106",
+  "serviceName": "demoVLB_CDS",
+  "serviceVersion": "1.0",
+  "serviceUUID": "d2192fd5-6ba4-40d2-9078-e3642d9175ee",
+  "serviceDescription": "catalog service description",
+  "serviceInvariantUUID": "6f355230-c44b-4aca-873a-41c250b8137c",
+  "resources": [
+    {
+      "resourceInstanceName": "vLB_CDS 68b6da59-68e4 0",
+      "resourceName": "vLB_CDS 68b6da59-68e4",
+      "resourceVersion": "1.0",
+      "resoucreType": "VF",
+      "resourceUUID": "acdcb4be-7ec8-4d1f-a6ab-c225e35ee7ed",
+      "resourceInvariantUUID": "d9309314-be70-46d6-9ac3-fefb5d74fd3a",
+      "resourceCustomizationUUID": "f163654b-f172-4828-af92-04fc60eabc28",
+      "category": "Generic",
+      "subcategory": "Abstract",
+      "artifacts": [
+        {
+          "artifactName": "k8s-tca-clamp-policy-05082019.yaml",
+          "artifactType": "DCAE_INVENTORY_BLUEPRINT",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/k8s-tca-clamp-policy-05082019.yaml",
+          "artifactChecksum": "ZTIyYzkyYzgyYzBkMjc0YWJhNTIzOGI4YWE1Njg3YzA=",
+          "artifactDescription": "k8s-tca-clamp-policy-05082019.yaml",
+          "artifactTimeout": 0,
+          "artifactUUID": "560f355f-00e7-413c-bf56-025c999ae983",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "vf-license-model.yaml",
+          "artifactType": "VF_LICENSE",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vf-license-model.xml",
+          "artifactChecksum": "YTc3NjEwZThhMjFjMjlmNDQ0M2FmYzExZDQ0MjQ0Yzc=",
+          "artifactDescription": "VF license file",
+          "artifactTimeout": 0,
+          "artifactUUID": "f1b25b41-334f-40db-afdb-dea1da827316",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "base_template.env",
+          "artifactType": "HEAT_ENV",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/base_template.env",
+          "artifactChecksum": "NTYzNDIzN2I5MTg1M2Y1MjgyNDdlMzc2NjNiNDVmZWM=",
+          "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+          "artifactTimeout": 0,
+          "artifactUUID": "2cf083a6-aae1-46b4-89c8-312c6d6abc29",
+          "artifactVersion": "3",
+          "generatedFromUUID": "fdfced54-8425-4c51-a913-ab9ac126cc20"
+        },
+        {
+          "artifactName": "vlb_cds68b6da5968e40_modules.json",
+          "artifactType": "VF_MODULES_METADATA",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vlb_cds68b6da5968e40_modules.json",
+          "artifactChecksum": "YWUzODIzMjczMDAzMGNjZDlhYWIzM2FmNjE3MjY0NTk=",
+          "artifactDescription": "Auto-generated VF Modules information artifact",
+          "artifactTimeout": 30,
+          "artifactUUID": "15f20c8e-c644-4e8f-8a4b-099761e9f05d",
+          "artifactVersion": "2"
+        },
+        {
+          "artifactName": "vpkg.yaml",
+          "artifactType": "HEAT",
+          "artifactURL": "/",
+          "artifactChecksum": "MTFkMDYzMGMyZjUyM2Y2ZjA0ZGRlOWFjZmI4ODMyZmQ=",
+          "artifactDescription": "created from csar",
+          "artifactTimeout": 30,
+          "artifactUUID": "eb0c1b54-a71a-43f2-9c8c-95040365d657",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "vdns.env",
+          "artifactType": "HEAT_ENV",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vdns.env",
+          "artifactChecksum": "YjA2OGFiN2RiYjJkZGI2YzgwNDdhNmZiNzc0MmIwODQ=",
+          "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+          "artifactTimeout": 0,
+          "artifactUUID": "1c81a0e7-06f6-49af-ae95-b6ad24e3cad9",
+          "artifactVersion": "3",
+          "generatedFromUUID": "95e8b9d6-3456-469b-be14-0904cf0de619"
+        },
+        {
+          "artifactName": "vendor-license-model.xml",
+          "artifactType": "VENDOR_LICENSE",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vendor-license-model.xml",
+          "artifactChecksum": "ZTQ1N2MxNmZjMmIzMjlhMWRjNGM5MDNjMzkyYzdjMGM=",
+          "artifactDescription": " Vendor license file",
+          "artifactTimeout": 0,
+          "artifactUUID": "dee67b01-bf96-44d6-8565-e6a0cbe98528",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "vlb.yaml",
+          "artifactType": "HEAT",
+          "artifactURL": "/",
+          "artifactChecksum": "MDk5ZGUwN2M1NjAzMjY2Yjc1OGM5MGQzYjJkNGQzNTM=",
+          "artifactDescription": "created from csar",
+          "artifactTimeout": 30,
+          "artifactUUID": "6d6bf6d7-e76c-4488-85ad-a7dcc5867d8f",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "vlb.env",
+          "artifactType": "HEAT_ENV",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vlb.env",
+          "artifactChecksum": "MzY2MGE3NGNlMjU2ZDk4OTNkNjI0MTAwZjY0ZGE0Y2U=",
+          "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+          "artifactTimeout": 0,
+          "artifactUUID": "0fe5eb8f-180c-4b50-b73d-ae404141fad1",
+          "artifactVersion": "3",
+          "generatedFromUUID": "6d6bf6d7-e76c-4488-85ad-a7dcc5867d8f"
+        },
+        {
+          "artifactName": "vpkg.env",
+          "artifactType": "HEAT_ENV",
+          "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/resourceInstances/vlb_cds68b6da5968e40/artifacts/vpkg.env",
+          "artifactChecksum": "NGRkZTVjMWRiYTkyYjM3MmY1MmIzNjAzYTRlMjdmN2I=",
+          "artifactDescription": "Auto-generated HEAT Environment deployment artifact",
+          "artifactTimeout": 0,
+          "artifactUUID": "25d6197f-b465-4ca5-a22c-5ae261c79313",
+          "artifactVersion": "3",
+          "generatedFromUUID": "eb0c1b54-a71a-43f2-9c8c-95040365d657"
+        },
+        {
+          "artifactName": "vdns.yaml",
+          "artifactType": "HEAT",
+          "artifactURL": "/",
+          "artifactChecksum": "YzM5M2M1NjY2ZWYyOGU2MTgyNmIwYmFhZjUzMzdiYzM=",
+          "artifactDescription": "created from csar",
+          "artifactTimeout": 30,
+          "artifactUUID": "95e8b9d6-3456-469b-be14-0904cf0de619",
+          "artifactVersion": "1"
+        },
+        {
+          "artifactName": "base_template.yaml",
+          "artifactType": "HEAT",
+          "artifactURL": "/",
+          "artifactChecksum": "MjllZGZkNTU3MTljOTVhNGMwY2FiZDk3MmFmZjAwNmE=",
+          "artifactDescription": "created from csar",
+          "artifactTimeout": 30,
+          "artifactUUID": "fdfced54-8425-4c51-a913-ab9ac126cc20",
+          "artifactVersion": "1"
+        }
+      ]
+    }
+  ],
+  "serviceArtifacts": [
+    {
+      "artifactName": "service-DemovlbCds-template.yml",
+      "artifactType": "TOSCA_TEMPLATE",
+      "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/artifacts/service-DemovlbCds-template.yml",
+      "artifactChecksum": "YWJiYWQ0MjUxMjk5ZjNmYjk2ODVhZjk3ZDI1ZmViNjk=",
+      "artifactDescription": "TOSCA representation of the asset",
+      "artifactTimeout": 0,
+      "artifactUUID": "ceeb88f4-cd35-437d-8a15-7342a18803bd",
+      "artifactVersion": "1"
+    },
+    {
+      "artifactName": "service-DemovlbCds-csar.csar",
+      "artifactType": "TOSCA_CSAR",
+      "artifactURL": "/sdc/v1/catalog/services/DemovlbCds/1.0/artifacts/service-DemovlbCds-csar.csar",
+      "artifactChecksum": "ZmI5NzQ1MWViZGFkMjRjZWEwNTQzY2U0OWQwYjlmYjQ=",
+      "artifactDescription": "TOSCA definition package of the asset",
+      "artifactTimeout": 0,
+      "artifactUUID": "f6f907f1-3f45-4fb4-8cbe-15a4c6ee16db",
+      "artifactVersion": "1"
+    }
+  ],
+  "workloadContext": "Production"
+}

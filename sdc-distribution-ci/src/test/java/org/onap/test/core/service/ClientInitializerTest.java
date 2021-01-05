@@ -26,13 +26,21 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
 import org.onap.test.core.config.DistributionClientConfig;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,11 +55,17 @@ class ClientInitializerTest {
     private static final int SUCCESSFUL_UNREGISTER_MSG_INDEX = 3;
     private static final int SUCCESSFUL_INIT_MSG_INDEX = 0;
     private static final int SUCCESSFUL_DIST_MSG_INDEX = 3;
+    public static final int MAX_RETRY = 6;
+    public static final int TIMEOUT = 2500;
+    public static final int EXPECTED_HEAT_ARTIFACTS = 4;
     private ClientInitializer clientInitializer;
+    private ClientNotifyCallback clientNotifyCallback;
+    private static final Logger testLog = LoggerFactory.getLogger(ClientInitializerTest.class);
 
     @Container
     public GenericContainer mockDmaap = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-dmaap:latest")
             .withNetworkMode("host");
+
 
     @Container
     public GenericContainer mockSdc = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-sdc:latest")
@@ -62,13 +76,14 @@ class ClientInitializerTest {
     @Mock
     Logger distClientLog;
 
+
     @BeforeEach
     public void initializeClient() {
         DistributionClientConfig clientConfig = new DistributionClientConfig();
         List<ArtifactsValidator> validators = new ArrayList<>();
         DistributionClientImpl client = new DistributionClientImpl(distClientLog);
-        ClientNotifyCallback callback = new ClientNotifyCallback(validators, client);
-        clientInitializer = new ClientInitializer(clientConfig, callback, client);
+        clientNotifyCallback = new ClientNotifyCallback(validators, client);
+        clientInitializer = new ClientInitializer(clientConfig, clientNotifyCallback, client);
     }
 
     @Test
@@ -97,5 +112,31 @@ class ClientInitializerTest {
         //then
         assertThat(allValues.get(SUCCESSFUL_STOP_MSG_INDEX)).isEqualTo("stop DistributionClient");
         assertThat(allValues.get(SUCCESSFUL_UNREGISTER_MSG_INDEX)).isEqualTo("client unregistered from topics successfully");
+    }
+
+    @Test
+    public void shouldDownloadArtifactsWithArtifactTypeHeat() throws IOException, InterruptedException {
+
+        //given
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3904/events/testName/add"))
+                .POST(HttpRequest.BodyPublishers.ofFile(Paths.get("src/test/resources/artifacts.json")))
+                .build();
+        HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        //when
+        clientInitializer.initialize();
+        waitForArtifacts();
+        List<DistributionClientDownloadResultImpl> calls = clientNotifyCallback.getPulledArtifacts();
+        //then
+        assertThat(calls.size() == EXPECTED_HEAT_ARTIFACTS);
+    }
+
+    private void waitForArtifacts() throws InterruptedException {
+        int retry = 1;
+        while (clientNotifyCallback.getPulledArtifacts().isEmpty() && retry < MAX_RETRY) {
+            Thread.sleep(TIMEOUT);
+            testLog.warn("Waiting for download, retry: " + retry);
+            retry++;
+        }
     }
 }

@@ -38,7 +38,7 @@ public class DistributionClientConfig implements IConfiguration {
     public static final String DEFAULT_KEY_STORE_PATH = "etc/asdc-client.jks";
     public static final String DEFAULT_KEY_STORE_PASSWORD = "Aa123456";
     public static final boolean DEFAULT_ACTIVATE_SERVER_TLS_AUTH = false;
-    public static final boolean DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES = false;
+    public static final boolean DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES = true;
     public static final boolean DEFAULT_USE_HTTPS_WITH_SDC = false;
     public static final String DEFAULT_MSG_BUS_ADDRESS = "localhost";
     private String asdcAddress;
