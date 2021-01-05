@@ -186,7 +186,6 @@ public class DistributionClientImpl implements IDistributionClient {
             List<String> relevantArtifactTypes = configuration.getRelevantArtifactTypes();
             // Remove nulls from list - workaround for how configuration is built
             relevantArtifactTypes.removeAll(Collections.singleton(null));
-
             NotificationConsumer consumer = new NotificationConsumer(cambriaNotificationConsumer, callback, relevantArtifactTypes, this);
             executorPool = Executors.newScheduledThreadPool(DistributionClientConstants.POOL_SIZE);
             executorPool.scheduleAtFixedRate(consumer, 0, configuration.getPollingInterval(), TimeUnit.SECONDS);
