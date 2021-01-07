@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7202a4ad_6f3bc0bc",
+        "filename": "sdc-distribution-ci/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2021-01-07T07:26:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6eba1dac_c8bd1e6a",
+      "revId": "593f9fcc095c6d0f43fd72ecfa9a1fcd65024f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "acbb0842_0999e535",
         "filename": "sdc-distribution-ci/pom.xml",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7e8bb1ff_f8d6f4e7",
+        "filename": "sdc-distribution-ci/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2021-01-07T07:26:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acbb0842_0999e535",
+      "revId": "593f9fcc095c6d0f43fd72ecfa9a1fcd65024f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6ef3dbf_192820a0",
         "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
         "patchSetId": 3
@@ -50,6 +86,24 @@
       "revId": "593f9fcc095c6d0f43fd72ecfa9a1fcd65024f28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d230381_757a6906",
+        "filename": "sdc-distribution-ci/src/test/java/org/onap/test/core/service/ClientInitializerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6482
+      },
+      "writtenOn": "2021-01-07T07:26:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6ef3dbf_192820a0",
+      "revId": "593f9fcc095c6d0f43fd72ecfa9a1fcd65024f28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
