@@ -15,11 +15,11 @@
     <parent>
         <groupId>org.onap.sdc.sdc-distribution-client</groupId>
         <artifactId>sdc-main-distribution-client</artifactId>
-        <version>1.4.2-SNAPSHOT</version>
+        <version>1.4.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>sdc-distribution-client</artifactId>
-    <name>sdc-sdc-distribution-client</name>
+    <name>sdc-distribution-client</name>
     <description>Distribution client JAR file to use by consumers</description>
     <packaging>jar</packaging>
 
@@ -35,6 +35,18 @@
                 <exclusion>  <!-- declare the exclusion here -->
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>commons-io</artifactId>
+                    <groupId>commons-io</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -81,6 +93,10 @@
                     <groupId>commons-codec</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
             </exclusions>
             <scope>compile</scope>
         </dependency>
@@ -90,6 +106,12 @@
             <artifactId>httpmime</artifactId>
             <version>${httpclient.version}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpclient</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- YAML parser -->
@@ -119,6 +141,12 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jetty-util</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+            </exclusions>
             <version>${jetty.version}</version>
         </dependency>
 
@@ -127,6 +155,12 @@
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jetty-servlet</artifactId>
+                    <groupId>org.eclipse.jetty</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -154,6 +188,12 @@
             <artifactId>bean-matchers</artifactId>
             <version>${bean-matchers.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>mockito-core</artifactId>
+                    <groupId>org.mockito</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
