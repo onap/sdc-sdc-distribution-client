@@ -1,0 +1,7 @@
+Code-Review+2: Christophe Closset <christophe.closset@intl.att.com>
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Submitted-by: Christophe Closset <christophe.closset@intl.att.com>
+Submitted-at: Wed, 12 May 2021 06:08:04 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/121274
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
