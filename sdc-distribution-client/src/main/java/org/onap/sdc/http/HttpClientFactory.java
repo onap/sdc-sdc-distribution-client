@@ -20,6 +20,21 @@
  */
 package org.onap.sdc.http;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -31,27 +46,14 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.utils.Pair;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
 public class HttpClientFactory {
-    private static final int AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
-    private static final int AUTHORIZATION_SCOPE_PORT = 443;
-    private static final KeyStore DEFAULT_INIT_KEY_STORE_VALUE = null;
-    private static final String TLS = "TLSv1.2";
-    static final String HTTP = "http://";
-    static final String HTTPS = "https://";
-    private final IConfiguration configuration;
+    private static final int      AUTHORIZATION_SCOPE_PLAIN_PORT = 80;
+    private static final int      AUTHORIZATION_SCOPE_PORT       = 443;
+    private static final KeyStore DEFAULT_INIT_KEY_STORE_VALUE   = null;
+    private static final String   TLS                            = "TLSv1.2";
+    static final String           HTTP                           = "http://";
+    static final String           HTTPS                          = "https://";
+    private final IConfiguration  configuration;
 
     public HttpClientFactory(IConfiguration configuration) {
         this.configuration = configuration;
@@ -69,30 +71,28 @@ public class HttpClientFactory {
     }
 
     private Pair<String, CloseableHttpClient> createHttpsClient(IConfiguration configuration) {
-        return new Pair<>(
-                HTTPS,
-                initSSL(configuration.getUser(),
-                        configuration.getPassword(),
-                        configuration.getKeyStorePath(),
-                        configuration.getKeyStorePassword(),
-                        configuration.activateServerTLSAuth()
-                )
-        );
+        return new Pair<>(HTTPS,
+                initSSL(configuration.getUser(), configuration.getPassword(), configuration.getKeyStorePath(),
+                        configuration.getKeyStorePassword(), configuration.activateServerTLSAuth()));
     }
 
     private Pair<String, CloseableHttpClient> createHttpClient(IConfiguration configuration) {
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PLAIN_PORT), new UsernamePasswordCredentials(configuration.getUser(), configuration.getPassword()));
-        return new Pair<>(HTTP, HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).build());
+        credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PLAIN_PORT),
+                new UsernamePasswordCredentials(configuration.getUser(), configuration.getPassword()));
+        return new Pair<>(HTTP, HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider)
+                .setProxy(getHttpProxyHost()).build());
     }
 
-    private CloseableHttpClient initSSL(String username, String password, String keyStorePath, String keyStorePass, boolean isSupportSSLVerification) {
+    private CloseableHttpClient initSSL(String username, String password, String keyStorePath, String keyStorePass,
+            boolean isSupportSSLVerification) {
 
         try {
 
             // SSLContextBuilder is not thread safe
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PORT), new UsernamePasswordCredentials(username, password));
+            credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PORT),
+                    new UsernamePasswordCredentials(username, password));
             SSLContext sslContext;
             sslContext = SSLContext.getInstance(TLS);
             TrustManagerFactory tmf = createTrustManagerFactory();
@@ -100,7 +100,8 @@ public class HttpClientFactory {
             if (isSupportSSLVerification) {
 
                 if (keyStorePath != null && !keyStorePath.isEmpty()) {
-                    // Using null here initialises the TMF with the default trust store.
+                    // Using null here initialises the TMF with the default
+                    // trust store.
 
                     // Get hold of the default trust manager
                     X509TrustManager defaultTm = null;
@@ -134,8 +135,9 @@ public class HttpClientFactory {
                         @Override
                         public X509Certificate[] getAcceptedIssuers() {
                             // If you're planning to use client-cert auth,
-                            // merge results from "defaultTm" and "myTm".
-                            return finalDefaultTm.getAcceptedIssuers();
+                            // merge results from "defaultTm" and "myTm".return
+                            // finalDefaultTm.getAcceptedIssuers();
+                            return null;
                         }
 
                         @Override
@@ -144,7 +146,8 @@ public class HttpClientFactory {
                             try {
                                 finalMyTm.checkServerTrusted(chain, authType);
                             } catch (CertificateException e) {
-                                // This will throw another CertificateException if this fails too.
+                                // This will throw another CertificateException
+                                // if this fails too.
                                 finalDefaultTm.checkServerTrusted(chain, authType);
                             }
                         }
@@ -158,13 +161,12 @@ public class HttpClientFactory {
                         }
                     };
 
-                    tms = new TrustManager[]{customTm};
+                    tms = new TrustManager[] { customTm };
 
                 }
 
                 sslContext.init(null, tms, null);
                 SSLContext.setDefault(sslContext);
-
 
             } else {
 
@@ -176,11 +178,10 @@ public class HttpClientFactory {
             }
 
             HostnameVerifier hostnameVerifier = (hostname, session) -> hostname.equalsIgnoreCase(session.getPeerHost());
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{TLS}, null, hostnameVerifier);
-            return HttpClientBuilder.create().
-                    setDefaultCredentialsProvider(credsProvider).
-                    setSSLSocketFactory(sslsf).
-                    build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { TLS }, null,
+                    hostnameVerifier);
+            return HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setProxy(getHttpsProxyHost())
+                    .setSSLSocketFactory(sslsf).build();
         } catch (Exception e) {
             throw new HttpAsdcClientException("Failed to create https client", e);
         }
@@ -192,11 +193,37 @@ public class HttpClientFactory {
         return tmf;
     }
 
-    private KeyStore loadKeyStore(String keyStorePath, String keyStorePass) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+    private KeyStore loadKeyStore(String keyStorePath, String keyStorePass)
+            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
         try (FileInputStream keyStoreData = new FileInputStream(keyStorePath)) {
             trustStore.load(keyStoreData, keyStorePass.toCharArray());
         }
         return trustStore;
     }
+
+    private HttpHost getHttpProxyHost() {
+        HttpHost proxyHost = null;
+        if (configuration.isUseSystemProxy() && System.getProperty("http.proxyHost") != null
+                && System.getProperty("http.proxyPort") != null) {
+            proxyHost = new HttpHost(System.getProperty("http.proxyHost"),
+                    Integer.valueOf(System.getProperty("http.proxyPort")));
+        } else if (configuration.getHttpProxyHost() != null && configuration.getHttpProxyPort() != 0) {
+            proxyHost = new HttpHost(configuration.getHttpProxyHost(), configuration.getHttpProxyPort());
+        }
+        return proxyHost;
+    }
+
+    private HttpHost getHttpsProxyHost() {
+        HttpHost proxyHost = null;
+        if (configuration.isUseSystemProxy() && System.getProperty("https.proxyHost") != null
+                && System.getProperty("https.proxyPort") != null) {
+            proxyHost = new HttpHost(System.getProperty("https.proxyHost"),
+                    Integer.valueOf(System.getProperty("https.proxyPort")));
+        } else if (configuration.getHttpsProxyHost() != null && configuration.getHttpsProxyPort() != 0) {
+            proxyHost = new HttpHost(configuration.getHttpsProxyHost(), configuration.getHttpsProxyPort());
+        }
+        return proxyHost;
+    }
+
 }

@@ -24,7 +24,6 @@ import org.onap.sdc.api.consumer.IConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DistributionClientConfig implements IConfiguration {
 
     public static final String DEFAULT_ASDC_ADDRESS = "localhost:30206";
@@ -57,6 +56,11 @@ public class DistributionClientConfig implements IConfiguration {
     private boolean useHttpsWithDmaap;
     private boolean useHttpsWithSDC;
     private List<String> msgBusAddress;
+    private String httpProxyHost;
+    private int httpProxyPort;
+    private String httpsProxyHost;
+    private int httpsProxyPort;
+    private boolean useSystemProxy;
 
     public DistributionClientConfig(IConfiguration other) {
         this.asdcAddress = other.getAsdcAddress();
@@ -72,6 +76,11 @@ public class DistributionClientConfig implements IConfiguration {
         this.keyStorePassword = other.getKeyStorePassword();
         this.activateServerTLSAuth = other.activateServerTLSAuth();
         this.isFilterInEmptyResources = other.isFilterInEmptyResources();
+        this.httpProxyHost = other.getHttpProxyHost();
+        this.httpProxyPort = other.getHttpProxyPort();
+        this.httpsProxyHost = other.getHttpsProxyHost();
+        this.httpsProxyPort = other.getHttpsProxyPort();
+        this.useSystemProxy = other.isUseSystemProxy();
     }
 
     public DistributionClientConfig() {
@@ -313,15 +322,16 @@ public class DistributionClientConfig implements IConfiguration {
 
     @Override
     public String toString() {
-        return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password + ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout + ", relevantArtifactTypes=" + relevantArtifactTypes
-                + ", consumerGroup=" + consumerGroup + ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
+        return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
+                + ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
+                + ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
+                + ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
     }
 
     @Override
     public boolean isFilterInEmptyResources() {
         return isFilterInEmptyResources;
     }
-
 
     public void setFilterInEmptyResources(boolean isFilterInEmptyResources) {
         this.isFilterInEmptyResources = isFilterInEmptyResources;
@@ -332,12 +342,56 @@ public class DistributionClientConfig implements IConfiguration {
         return this.useHttpsWithDmaap;
     }
 
-
     public Boolean isUseHttpsWithSDC() {
         return this.useHttpsWithSDC;
     }
 
     public void setUseHttpsWithSDC(Boolean useHttpsWithSDC) {
         this.useHttpsWithSDC = useHttpsWithSDC;
+    }
+
+    public void setHttpProxyHost(String httpProxyHost) {
+        this.httpProxyHost = httpProxyHost;
+    }
+
+    public void setHttpProxyPort(int httpProxyPort) {
+        this.httpProxyPort = httpProxyPort;
+    }
+
+    public void setHttpsProxyHost(String httpsProxyHost) {
+        this.httpsProxyHost = httpsProxyHost;
+    }
+
+    public void setHttpsProxyPort(int httpsProxyPort) {
+        this.httpsProxyPort = httpsProxyPort;
+    }
+
+    public void setUseSystemProxy(boolean useSystemProxy) {
+        this.useSystemProxy = useSystemProxy;
+    }
+
+    @Override
+    public String getHttpProxyHost() {
+        return httpProxyHost;
+    }
+
+    @Override
+    public int getHttpProxyPort() {
+        return httpProxyPort;
+    }
+
+    @Override
+    public String getHttpsProxyHost() {
+        return httpsProxyHost;
+    }
+
+    @Override
+    public int getHttpsProxyPort() {
+        return httpsProxyPort;
+    }
+
+    @Override
+    public Boolean isUseSystemProxy() {
+        return useSystemProxy;
     }
 }

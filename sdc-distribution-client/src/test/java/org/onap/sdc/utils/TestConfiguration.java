@@ -43,6 +43,11 @@ public class TestConfiguration implements IConfiguration {
 	private boolean useHttpsWithDmaap;
 	private boolean useHttpsWithSDC;
 	private List<String> msgBusAddress;
+	private String httpProxyHost;
+	private int httpProxyPort;
+	private String httpsProxyHost;
+	private int httpsProxyPort;
+	private boolean useSystemProxy;
 
 	public TestConfiguration(IConfiguration other) {
 		this.asdcAddress = other.getAsdcAddress();
@@ -58,6 +63,11 @@ public class TestConfiguration implements IConfiguration {
 		this.keyStorePassword = other.getKeyStorePassword();
 		this.activateServerTLSAuth = other.activateServerTLSAuth();
 		this.isFilterInEmptyResources = other.isFilterInEmptyResources();
+		this.httpProxyHost = other.getHttpProxyHost();
+		this.httpProxyPort = other.getHttpProxyPort();
+		this.httpsProxyHost = other.getHttpsProxyHost();
+		this.httpsProxyPort = other.getHttpsProxyPort();
+		this.useSystemProxy = other.isUseSystemProxy();
 	}
 
 	public TestConfiguration() {
@@ -146,6 +156,31 @@ public class TestConfiguration implements IConfiguration {
 		return comsumerID;
 	}
 
+	@Override
+	public String getHttpProxyHost() {
+		return httpProxyHost;
+	}
+
+	@Override
+	public int getHttpProxyPort() {
+		return httpProxyPort;
+	}
+
+	@Override
+	public String getHttpsProxyHost() {
+		return httpsProxyHost;
+	}
+
+	@Override
+	public int getHttpsProxyPort() {
+		return httpsProxyPort;
+	}
+
+	@Override
+	public Boolean isUseSystemProxy() {
+		return useSystemProxy;
+	}
+
 	public void setComsumerID(String comsumerID) {
 		this.comsumerID = comsumerID;
 	}
@@ -188,6 +223,26 @@ public class TestConfiguration implements IConfiguration {
 
 	public void setKeyStorePassword(String keyStorePassword) {
 		this.keyStorePassword = keyStorePassword;
+	}
+
+	public void setHttpProxyHost(String httpProxyHost) {
+		this.httpProxyHost = httpProxyHost;
+	}
+
+	public void setHttpProxyPort(int httpProxyPort) {
+		this.httpProxyPort = httpProxyPort;
+	}
+
+	public void setHttpsProxyHost(String httpsProxyHost) {
+		this.httpsProxyHost = httpsProxyHost;
+	}
+
+	public void setHttpsProxyPort(int httpsProxyPort) {
+		this.httpsProxyPort = httpsProxyPort;
+	}
+
+	public void setUseSystemProxy(boolean useSystemProxy) {
+		this.useSystemProxy = useSystemProxy;
 	}
 
 	@Override
@@ -280,15 +335,16 @@ public class TestConfiguration implements IConfiguration {
 
 	@Override
 	public String toString() {
-		return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password + ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout + ", relevantArtifactTypes=" + relevantArtifactTypes
-				+ ", consumerGroup=" + consumerGroup + ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
+		return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
+				+ ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
+				+ ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
+				+ ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
 	}
 
 	@Override
 	public boolean isFilterInEmptyResources() {
 		return isFilterInEmptyResources;
 	}
-
 
 	public void setFilterInEmptyResources(boolean isFilterInEmptyResources) {
 		this.isFilterInEmptyResources = isFilterInEmptyResources;
