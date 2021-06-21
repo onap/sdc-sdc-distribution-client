@@ -35,6 +35,11 @@ Configuration parameters:
 - KeyStorePath			: Return full path to Client's Key Store that contains either CA certificate or the ASDC's public key (e.g /etc/keystore/asdc-client.jks). file will be deployed with asdc-distribution jar
 - KeyStorePassword		: Return client's Key Store password.
 - activateServerTLSAuth	: Sets whether ASDC server TLS authentication is activated. If set to false, Key Store path and password are not needed to be set.
+- UseSystemProxy		: If set to true, SDC Distribution Client will use system wide proxy configuration passed through JVM arguments.
+- HttpProxyHost			: Optional config. If configured, SDC Distribution client will use this http proxy host with HTTP client.
+- HttpProxyPort			: Mandatory if HttpProxyHost is configured. If configured, SDC Distribution client will use this https proxy port with HTTP client.
+- HttpsProxyHost		: Optional config. If configured, SDC Distribution client will use this https proxy host with HTTPS client.
+- HttpsProxyPort		: Mandatory if HttpsProxyHost is configured. If configured, SDC Distribution client will use this https proxy port with HTTPS client.
 
 Example of configuration file implementing IConfiguration interface:
 --------------------------------------------------------------------

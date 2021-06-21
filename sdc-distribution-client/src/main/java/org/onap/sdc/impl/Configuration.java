@@ -22,8 +22,8 @@ package org.onap.sdc.impl;
 
 import java.util.List;
 
-import org.onap.sdc.utils.DistributionClientConstants;
 import org.onap.sdc.api.consumer.IConfiguration;
+import org.onap.sdc.utils.DistributionClientConstants;
 
 public class Configuration implements IConfiguration {
 
@@ -44,6 +44,11 @@ public class Configuration implements IConfiguration {
     private Boolean useHttpsWithDmaap;
     private Boolean useHttpsWithSDC;
     private boolean consumeProduceStatusTopic;
+    private String httpProxyHost;
+    private int httpProxyPort;
+    private String httpsProxyHost;
+    private int httpsProxyPort;
+    private boolean useSystemProxy;
 
     public Configuration(IConfiguration other) {
         this.asdcAddress = other.getAsdcAddress();
@@ -63,6 +68,11 @@ public class Configuration implements IConfiguration {
         this.filterInEmptyResources = other.isFilterInEmptyResources();
         this.useHttpsWithDmaap = other.isUseHttpsWithDmaap();
         this.consumeProduceStatusTopic = other.isConsumeProduceStatusTopic();
+        this.httpProxyHost = other.getHttpProxyHost();
+        this.httpProxyPort = other.getHttpProxyPort();
+        this.httpsProxyHost = other.getHttpsProxyHost();
+        this.httpsProxyPort = other.getHttpsProxyPort();
+        this.useSystemProxy = other.isUseSystemProxy();
     }
 
     @Override
@@ -130,6 +140,31 @@ public class Configuration implements IConfiguration {
         return keyStorePassword;
     }
 
+    @Override
+    public String getHttpProxyHost() {
+        return httpProxyHost;
+    }
+
+    @Override
+    public int getHttpProxyPort() {
+        return httpProxyPort;
+    }
+
+    @Override
+    public String getHttpsProxyHost() {
+        return httpsProxyHost;
+    }
+
+    @Override
+    public int getHttpsProxyPort() {
+        return httpsProxyPort;
+    }
+
+    @Override
+    public Boolean isUseSystemProxy() {
+        return useSystemProxy;
+    }
+
     public void setComsumerID(String comsumerID) {
         this.comsumerID = comsumerID;
     }
@@ -176,6 +211,26 @@ public class Configuration implements IConfiguration {
 
     public void setactivateServerTLSAuth(boolean activateServerTLSAuth) {
         this.activateServerTLSAuth = activateServerTLSAuth;
+    }
+
+    public void setHttpProxyHost(String httpProxyHost) {
+        this.httpProxyHost = httpProxyHost;
+    }
+
+    public void setHttpProxyPort(int httpProxyPort) {
+        this.httpProxyPort = httpProxyPort;
+    }
+
+    public void setHttpsProxyHost(String httpsProxyHost) {
+        this.httpsProxyHost = httpsProxyHost;
+    }
+
+    public void setHttpsProxyPort(int httpsProxyPort) {
+        this.httpsProxyPort = httpsProxyPort;
+    }
+
+    public void setUseSystemProxy(boolean useSystemProxy) {
+        this.useSystemProxy = useSystemProxy;
     }
 
     @Override
@@ -226,6 +281,11 @@ public class Configuration implements IConfiguration {
                 + ", filterInEmptyResources=" + filterInEmptyResources
                 + ", useHttpsWithDmaap=" + useHttpsWithDmaap
                 + ", consumeProduceStatusTopic=" + consumeProduceStatusTopic
+                + ", useSystemProxy=" + useSystemProxy
+                + ", httpProxyHost=" + httpProxyHost
+                + ", httpProxyPort=" + httpProxyPort
+                + ", httpsProxyHost=" + httpsProxyHost
+                + ", httpsProxyPort=" + httpsProxyPort
                 + "]";
         //@formtter:on
     }
