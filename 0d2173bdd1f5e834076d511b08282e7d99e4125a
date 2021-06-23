@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "5d6bb07c_19bbae21",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-23T14:50:21Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e134a99c_02f74773",
+      "revId": "0d2173bdd1f5e834076d511b08282e7d99e4125a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d24960c1_4ee38cae",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
         "patchSetId": 2
@@ -69,6 +87,24 @@
       "revId": "0d2173bdd1f5e834076d511b08282e7d99e4125a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f274ccd_6a233603",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-23T14:50:21Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e732dad5_d1104fc2",
+      "revId": "0d2173bdd1f5e834076d511b08282e7d99e4125a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
