@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpHost;
 import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.IDistributionStatusMessageJsonBuilder;
 import org.onap.sdc.api.consumer.IComponentDoneStatusMessage;
@@ -706,9 +707,38 @@ public class DistributionClientImpl implements IDistributionClient {
         List<String> msgBusAddresses = configuration.getMsgBusAddress();
         if (msgBusAddresses.isEmpty()) {
             return Either.right(new DistributionClientResultImpl(DistributionActionResultEnum.CONF_MISSING_MSG_BUS_ADDRESS, "Message bus address was not found in the config file"));
-        } else {
+        } else if (getHttpProxyHost() == null && getHttpsProxyHost() == null) {
+            // If there is no proxy configured, convert to valid host name
             return GeneralUtils.convertToValidHostName(msgBusAddresses);
+        } else {
+            // skip the IP address lookup when proxy is configured and treat all
+            // hosts as valid
+            return Either.left(msgBusAddresses);
         }
+    }
+    
+    private HttpHost getHttpProxyHost() {
+        HttpHost proxyHost = null;
+        if (configuration.isUseSystemProxy() && System.getProperty("http.proxyHost") != null
+                && System.getProperty("http.proxyPort") != null) {
+            proxyHost = new HttpHost(System.getProperty("http.proxyHost"),
+                    Integer.valueOf(System.getProperty("http.proxyPort")));
+        } else if (configuration.getHttpProxyHost() != null && configuration.getHttpProxyPort() != 0) {
+            proxyHost = new HttpHost(configuration.getHttpProxyHost(), configuration.getHttpProxyPort());
+        }
+        return proxyHost;
+    }
+
+    private HttpHost getHttpsProxyHost() {
+        HttpHost proxyHost = null;
+        if (configuration.isUseSystemProxy() && System.getProperty("https.proxyHost") != null
+                && System.getProperty("https.proxyPort") != null) {
+            proxyHost = new HttpHost(System.getProperty("https.proxyHost"),
+                    Integer.valueOf(System.getProperty("https.proxyPort")));
+        } else if (configuration.getHttpsProxyHost() != null && configuration.getHttpsProxyPort() != 0) {
+            proxyHost = new HttpHost(configuration.getHttpsProxyHost(), configuration.getHttpsProxyPort());
+        }
+        return proxyHost;
     }
 
 
