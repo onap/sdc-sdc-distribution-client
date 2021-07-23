@@ -4,7 +4,7 @@
 
 	<groupId>org.onap.sdc.sdc-distribution-client</groupId>
 	<artifactId>sdc-main-distribution-client</artifactId>
-	<version>1.4.4-SNAPSHOT</version>
+	<version>1.4.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>sdc-sdc-distribution-client</name>
 
