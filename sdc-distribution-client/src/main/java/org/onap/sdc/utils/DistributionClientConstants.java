@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @author mshitrit
  */
 public final class DistributionClientConstants {
-    public static final String CLIENT_DESCRIPTION = "ASDC Distribution Client Key for %s";
+    public static final String CLIENT_DESCRIPTION = "SDC Distribution Client Key for %s";
     public static final Pattern FQDN_PATTERN = Pattern.compile(
             "^"
             + "([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])(\\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9]))*(:[0-9]{2,5})*$", Pattern.CASE_INSENSITIVE);

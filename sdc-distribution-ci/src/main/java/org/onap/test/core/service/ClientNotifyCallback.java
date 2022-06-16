@@ -23,7 +23,7 @@ import org.onap.sdc.api.consumer.IDistributionStatusMessage;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
-import org.onap.sdc.http.HttpAsdcClient;
+import org.onap.sdc.http.HttpSdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
 import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
@@ -46,8 +46,8 @@ public class ClientNotifyCallback implements INotificationCallback {
     private final DistributionClientImpl distributionClient;
     private final List<DistributionClientDownloadResultImpl> pulledArtifacts = new ArrayList<>();
     DistributionClientConfig config = new DistributionClientConfig();
-    HttpAsdcClient asdcClient = new HttpAsdcClient(config);
-    SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config, asdcClient);
+    HttpSdcClient sdcClient = new HttpSdcClient(config);
+    SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config, sdcClient);
     ArtifactsDownloader artifactsDownloader = new ArtifactsDownloader("/app/path", sdcConnectorClient);
 
     public List<DistributionClientDownloadResultImpl> getPulledArtifacts() {
