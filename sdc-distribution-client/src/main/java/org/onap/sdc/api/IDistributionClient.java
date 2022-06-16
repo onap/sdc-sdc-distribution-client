@@ -33,6 +33,11 @@ import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
 
+/**
+ Client for sending/receiving notifications/status related to distributions from SDC.
+ This client uses Kafka for communication with the topics.
+ For communication using DMAAP MR use latest version with major version = 1 (e.g. 1.4.5)
+ **/
 public interface IDistributionClient {
 
     /**
@@ -63,15 +68,13 @@ public interface IDistributionClient {
     /**
      * Stop distribution client <br>
      * - stop polling notification topic <br>
-     * - unregister topics (via ASDC) <br>
-     * - delete keys from UEB
      *
      * @return IDistributionClientResult
      */
     IDistributionClientResult stop();
 
     /**
-     * Downloads an artifact from ASDC Catalog <br>
+     * Downloads an artifact from SDC Catalog <br>
      *
      * @param artifactInfo
      * @return IDistributionClientDownloadResult
@@ -80,10 +83,10 @@ public interface IDistributionClient {
 
     /**
      * Initialize the distribution client <br>
-     * - fetch the UEB server list from ASDC <br>
-     * - create keys in UEB <br>
-     * - register for topics (via ASDC) <br>
+     * - get MessageBus server list from configuration <br>
+     * - validate artifact types against sdc server <br>
      * - set the notification callback <br>
+     * - set up notification sender <br>
      * <p>
      * Note: all configuration fields are mandatory. <br>
      * Password must be in clear text and not encrypted <br>
@@ -98,10 +101,10 @@ public interface IDistributionClient {
 
     /**
      * Initialize the distribution client <br>
-     * - fetch the UEB server list from ASDC <br>
-     * - create keys in UEB <br>
-     * - register for topics (via ASDC) <br>
+     * - get MessageBus server list from configuration <br>
+     * - validate artifact types against sdc server <br>
      * - set the notification callback <br>
+     * - set up notification sender <br>
      * <p>
      * Note: all configuration fields are mandatory. <br>
      * Password must be in clear text and not encrypted <br>

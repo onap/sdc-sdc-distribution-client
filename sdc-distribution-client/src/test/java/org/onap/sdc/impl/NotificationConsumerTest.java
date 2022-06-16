@@ -21,73 +21,62 @@
 
 package org.onap.sdc.impl;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.onap.sdc.utils.TestConfiguration;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.ArtifactTypeEnum;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionClientConstants;
-
-import com.att.nsa.cambria.client.CambriaConsumer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import org.onap.sdc.utils.TestConfiguration;
+import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 
 public class NotificationConsumerTest {
-	private CambriaConsumer cambriaConsumer = mock(CambriaConsumer.class);
-	private INotificationCallback clientCallback = spy(INotificationCallback.class);
-	private Queue<Iterable<String>> notificationsQueue = new LinkedList<>();
-	private DistributionClientImpl distributionClient = Mockito.spy(DistributionClientImpl.class);
-	private List<String> artifactsTypes = Arrays.asList(ArtifactTypeEnum.HEAT.name());
-	private List<Boolean> notificationStatusResults = new ArrayList<>();
+	private final SdcKafkaConsumer consumer = mock(SdcKafkaConsumer.class);
+	private final INotificationCallback clientCallback = spy(INotificationCallback.class);
+	private final Queue<Iterable<String>> notificationsQueue = new LinkedList<>();
+	private final DistributionClientImpl distributionClient = Mockito.spy(DistributionClientImpl.class);
+	private List<String> artifactsTypes = List.of(ArtifactTypeEnum.HEAT.name());
+	private final List<Boolean> notificationStatusResults = new ArrayList<>();
 	final static IDistributionClientResult DISTRIBUTION_SUCCESS_RESULT = buildSuccessResult();
 
 	private NotificationConsumer createNotificationConsumer() {
-		return new NotificationConsumer(cambriaConsumer, clientCallback, artifactsTypes, distributionClient);
+		return new NotificationConsumer(consumer, clientCallback, artifactsTypes, distributionClient);
 	}
 
 	@Before
-	public void beforeTest() throws IOException {
+	public void beforeTest() {
 		Mockito.reset(clientCallback, distributionClient);
-		when(cambriaConsumer.fetch()).then(new Answer<Iterable<String>>() {
-			@Override
-			public Iterable<String> answer(InvocationOnMock invocation) throws Throwable {
-				if (!notificationsQueue.isEmpty()) {
-					return notificationsQueue.remove();
-				} else {
-					return new ArrayList<>();
-				}
+		when(consumer.poll()).then((Answer<Iterable<String>>) invocation -> {
+			if (!notificationsQueue.isEmpty()) {
+				return notificationsQueue.remove();
+			} else {
+				return new ArrayList<>();
 			}
 		});
-		when(distributionClient.sendNotificationStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.any(ArtifactInfoImpl.class), Mockito.anyBoolean())).then(new Answer<IDistributionClientResult>() {
-			@Override
-			public IDistributionClientResult answer(InvocationOnMock invocation) throws Throwable {
+		when(distributionClient.sendNotificationStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.any(ArtifactInfoImpl.class), Mockito.anyBoolean())).then(
+			(Answer<IDistributionClientResult>) invocation -> {
 				boolean isNotified = (boolean) invocation.getArguments()[3];
-				notificationStatusResults.add(Boolean.valueOf(isNotified));
+				notificationStatusResults.add(isNotified);
 				return DISTRIBUTION_SUCCESS_RESULT;
-			}
-		});
+			});
 
 	}
 
@@ -122,32 +111,32 @@ public class NotificationConsumerTest {
 	@Test
 	public void testNonRelevantNotificationSent() throws InterruptedException {
 
-		simulateNotificationFromUEB(getAsdcServiceNotificationWithoutHeatArtifact());
+		simulateNotificationFromMessageBus(getSdcServiceNotificationWithoutHeatArtifact());
 		Mockito.verify(clientCallback, Mockito.times(0)).activateCallback(Mockito.any(INotificationData.class));
 
 	}
 
 	@Test
 	public void testRelevantNotificationSent() throws InterruptedException {
-		simulateNotificationFromUEB(getAsdcServiceNotificationWithHeatArtifact());
+		simulateNotificationFromMessageBus(getSdcServiceNotificationWithHeatArtifact());
 		Mockito.verify(clientCallback, Mockito.times(1)).activateCallback(Mockito.any(INotificationData.class));
 
 	}
 
 	@Test
 	public void testNonExistingArtifactsNotificationSent() throws InterruptedException {
-		simulateNotificationFromUEB(getAsdcNotificationWithNonExistentArtifact());
+		simulateNotificationFromMessageBus(getSdcNotificationWithNonExistentArtifact());
 		Mockito.verify(clientCallback, Mockito.times(1)).activateCallback(Mockito.any(INotificationData.class));
 
 	}
 
 	@Test
 	public void testNotificationStatusSent() throws InterruptedException {
-		simulateNotificationFromUEB(getAsdcServiceNotificationWithHeatArtifact());
+		simulateNotificationFromMessageBus(getSdcServiceNotificationWithHeatArtifact());
 
 		Mockito.verify(distributionClient, Mockito.times(3)).sendNotificationStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.any(ArtifactInfoImpl.class), Mockito.anyBoolean());
-		assertTrue(countInstances(notificationStatusResults, Boolean.TRUE) == 1);
-		assertTrue(countInstances(notificationStatusResults, Boolean.FALSE) == 2);
+		assertEquals(1, countInstances(notificationStatusResults, Boolean.TRUE));
+		assertEquals(2, countInstances(notificationStatusResults, Boolean.FALSE));
 	}
 
 	@Test
@@ -157,19 +146,19 @@ public class NotificationConsumerTest {
 			artifactTypesTmp.add(artifactTypeEnum.name());
 		}
 		artifactsTypes = artifactTypesTmp;
-		simulateNotificationFromUEB(getAsdcServiceNotificationWithRelatedArtifacts());
+		simulateNotificationFromMessageBus(getSdcServiceNotificationWithRelatedArtifacts());
 
 		Mockito.verify(distributionClient, Mockito.times(3)).sendNotificationStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.any(ArtifactInfoImpl.class), Mockito.anyBoolean());
-		assertTrue(countInstances(notificationStatusResults, Boolean.TRUE) == 3);
-		assertTrue(countInstances(notificationStatusResults, Boolean.FALSE) == 0);
+		assertEquals(3, countInstances(notificationStatusResults, Boolean.TRUE));
+		assertEquals(0, countInstances(notificationStatusResults, Boolean.FALSE));
 	}
 
 	@Test
 	public void testNotificationStatusWithServiceArtifatcs() throws InterruptedException {
-		simulateNotificationFromUEB(getNotificationWithServiceArtifatcs());
+		simulateNotificationFromMessageBus(getNotificationWithServiceArtifatcs());
 		Mockito.verify(distributionClient, Mockito.times(6)).sendNotificationStatus(Mockito.anyLong(), Mockito.anyString(), Mockito.any(ArtifactInfoImpl.class), Mockito.anyBoolean());
-		assertTrue(countInstances(notificationStatusResults, Boolean.TRUE) == 2);
-		assertTrue(countInstances(notificationStatusResults, Boolean.FALSE) == 4);
+		assertEquals(2, countInstances(notificationStatusResults, Boolean.TRUE));
+		assertEquals(4, countInstances(notificationStatusResults, Boolean.FALSE));
 
 	}
 	
@@ -182,7 +171,7 @@ public class NotificationConsumerTest {
 		when(distributionClient.getConfiguration()).thenReturn(testConfiguration);
 		NotificationDataImpl notification = gson.fromJson(getNotificationWithMultipleResources(), NotificationDataImpl.class);
 		NotificationDataImpl notificationBuiltInClient = consumer.buildCallbackNotificationLogic(0, notification);
-		assertTrue(notificationBuiltInClient.getResources().size() == 1);
+		assertEquals(1, notificationBuiltInClient.getResources().size());
 	}
 	
 	@Test
@@ -194,22 +183,22 @@ public class NotificationConsumerTest {
 		when(distributionClient.getConfiguration()).thenReturn(testConfiguration);
 		NotificationDataImpl notification = gson.fromJson(getNotificationWithMultipleResources(), NotificationDataImpl.class);
 		NotificationDataImpl notificationBuiltInClient = consumer.buildCallbackNotificationLogic(0, notification);
-		assertTrue(notificationBuiltInClient.getResources().size() == 2);
+		assertEquals(2, notificationBuiltInClient.getResources().size());
 	}
 
-	private void simulateNotificationFromUEB(final String notificationFromUEB) throws InterruptedException {
+	private void simulateNotificationFromMessageBus(final String notificationFromMessageBus) throws InterruptedException {
 		ScheduledExecutorService executorPool = Executors.newScheduledThreadPool(DistributionClientConstants.POOL_SIZE);
 		executorPool.scheduleAtFixedRate(createNotificationConsumer(), 0, 100, TimeUnit.MILLISECONDS);
 
 		Thread.sleep(200);
 
-		List<String> nonHeatNotification = Arrays.asList(notificationFromUEB);
+		List<String> nonHeatNotification = List.of(notificationFromMessageBus);
 		notificationsQueue.add(nonHeatNotification);
 		Thread.sleep(800);
 		executorPool.shutdown();
 	}
 
-	private String getAsdcServiceNotificationWithHeatArtifact() {
+	private String getSdcServiceNotificationWithHeatArtifact() {
 		return "{\"distributionID\" : \"bcc7a72e-90b1-4c5f-9a37-28dc3cd86416\",\r\n" + "	\"serviceName\" : \"Testnotificationser1\",\r\n" + "	\"serviceVersion\" : \"1.0\",\r\n"
 				+ "	\"serviceUUID\" : \"7f7f94f4-373a-4b71-a0e3-80ae2ba4eb5d\",\r\n" + "	\"serviceDescription\" : \"TestNotificationVF1\",\r\n" + "	\"resources\" : [{\r\n" + "			\"resourceInstanceName\" : \"testnotificationvf11\",\r\n"
 				+ "			\"resourceName\" : \"TestNotificationVF1\",\r\n" + "			\"resourceVersion\" : \"1.0\",\r\n" + "			\"resoucreType\" : \"VF\",\r\n" + "			\"resourceUUID\" : \"907e1746-9f69-40f5-9f2a-313654092a2d\",\r\n"
@@ -272,7 +261,7 @@ public class NotificationConsumerTest {
 	}
 	
 
-	private String getAsdcNotificationWithNonExistentArtifact() {
+	private String getSdcNotificationWithNonExistentArtifact() {
 		return "{\"distributionID\" : \"bcc7a72e-90b1-4c5f-9a37-28dc3cd86416\",\r\n" + "	\"serviceName\" : \"Testnotificationser1\",\r\n" + "	\"serviceVersion\" : \"1.0\",\r\n"
 				+ "	\"serviceUUID\" : \"7f7f94f4-373a-4b71-a0e3-80ae2ba4eb5d\",\r\n" + "	\"serviceDescription\" : \"TestNotificationVF1\",\r\n" + "	\"bugabuga\" : \"xyz\",\r\n" + "	\"resources\" : [{\r\n"
 				+ "			\"resourceInstanceName\" : \"testnotificationvf11\",\r\n" + "			\"resourceName\" : \"TestNotificationVF1\",\r\n" + "			\"resourceVersion\" : \"1.0\",\r\n" + "			\"resoucreType\" : \"VF\",\r\n"
@@ -287,7 +276,7 @@ public class NotificationConsumerTest {
 				+ "					\"generatedFromUUID\" : \"8df6123c-f368-47d3-93be-1972cefbcc35\"\r\n" + "				}\r\n" + "			]\r\n" + "		}\r\n" + "	]}";
 	}
 
-	private String getAsdcServiceNotificationWithRelatedArtifacts() {
+	private String getSdcServiceNotificationWithRelatedArtifacts() {
 		return "{\"distributionID\" : \"bcc7a72e-90b1-4c5f-9a37-28dc3cd86416\",\r\n" + "	\"serviceName\" : \"Testnotificationser1\",\r\n" + "	\"serviceVersion\" : \"1.0\",\r\n"
 				+ "	\"serviceUUID\" : \"7f7f94f4-373a-4b71-a0e3-80ae2ba4eb5d\",\r\n" + "	\"serviceDescription\" : \"TestNotificationVF1\",\r\n" + "	\"resources\" : [{\r\n" + "			\"resourceInstanceName\" : \"testnotificationvf11\",\r\n"
 				+ "			\"resourceName\" : \"TestNotificationVF1\",\r\n" + "			\"resourceVersion\" : \"1.0\",\r\n" + "			\"resoucreType\" : \"VF\",\r\n" + "			\"resourceUUID\" : \"907e1746-9f69-40f5-9f2a-313654092a2d\",\r\n"
@@ -307,7 +296,7 @@ public class NotificationConsumerTest {
 				+ "					\"generatedFromUUID\" : \"8df6123c-f368-47d3-93be-1972cefbcc35\"\r\n" + "				}\r\n" + "			]\r\n" + "		}\r\n" + "	]}";
 	}
 
-	private String getAsdcServiceNotificationWithoutHeatArtifact() {
+	private String getSdcServiceNotificationWithoutHeatArtifact() {
 		return "{" + "   \"distributionID\" : \"5v1234d8-5b6d-42c4-7t54-47v95n58qb7\"," + "   \"serviceName\" : \"srv1\"," + "   \"serviceVersion\": \"2.0\"," + "   \"serviceUUID\" : \"4e0697d8-5b6d-42c4-8c74-46c33d46624c\","
 				+ "   \"serviceArtifacts\":[" + "                    {" + "                       \"artifactName\" : \"ddd.yml\"," + "                       \"artifactType\" : \"DG_XML\"," + "                       \"artifactTimeout\" : \"65\","
 				+ "                       \"artifactDescription\" : \"description\"," + "                       \"artifactURL\" :" + "                      \"/sdc/v1/catalog/services/srv1/2.0/resources/ddd/3.0/artifacts/ddd.xml\" ,"

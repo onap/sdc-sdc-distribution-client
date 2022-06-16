@@ -25,44 +25,40 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
+import fj.data.Either;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.mockito.Mockito;
-import org.onap.sdc.http.HttpAsdcClient;
-import org.onap.sdc.utils.Pair;
-import org.onap.sdc.utils.TestConfiguration;
 import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
 import org.onap.sdc.api.results.IDistributionClientResult;
+import org.onap.sdc.http.HttpSdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
-import org.onap.sdc.http.TopicRegistrationResponse;
 import org.onap.sdc.utils.ArtifactTypeEnum;
 import org.onap.sdc.utils.ArtifactsUtils;
 import org.onap.sdc.utils.DistributionActionResultEnum;
+import org.onap.sdc.utils.Pair;
+import org.onap.sdc.utils.TestConfiguration;
 import org.onap.sdc.utils.TestNotificationCallback;
 import org.onap.sdc.utils.Wrapper;
-
-import com.att.nsa.apiClient.credentials.ApiCredential;
-import com.att.nsa.apiClient.http.HttpException;
-import com.att.nsa.cambria.client.CambriaClient.CambriaApiException;
-import com.att.nsa.cambria.client.CambriaIdentityManager;
-
-import fj.data.Either;
+import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 
 public class DistributionClientTest {
 
-	static CambriaIdentityManager cc;
 	DistributionClientImpl client = Mockito.spy(new DistributionClientImpl());
 	IConfiguration testConfiguration = new TestConfiguration();
 	SdcConnectorClient connector = Mockito.mock(SdcConnectorClient.class);
+	SdcKafkaConsumer consumer = mock(SdcKafkaConsumer.class);
 
 
 	@After
@@ -72,7 +68,8 @@ public class DistributionClientTest {
 
 	@Test
 	public void validateConfigurationTest() {
-		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), testConfiguration);
+		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(
+            new Wrapper<>(), testConfiguration);
 		DistributionActionResultEnum validationResult = distributionActionResultEnumConfigurationPair.getFirst();
 		Configuration configuration = distributionActionResultEnumConfigurationPair.getSecond();
 		Assert.assertEquals(DistributionActionResultEnum.SUCCESS, validationResult);
@@ -85,7 +82,8 @@ public class DistributionClientTest {
 		TestConfiguration userConfig = new TestConfiguration();
 		userConfig.setPollingInterval(1);
 		userConfig.setPollingTimeout(2);
-		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(new Wrapper<IDistributionClientResult>(), userConfig);
+		final Pair<DistributionActionResultEnum, Configuration> distributionActionResultEnumConfigurationPair = client.validateAndInitConfiguration(
+            new Wrapper<>(), userConfig);
 		DistributionActionResultEnum validationResult = distributionActionResultEnumConfigurationPair.getFirst();
 		Configuration configuration = distributionActionResultEnumConfigurationPair.getSecond();
 		Assert.assertEquals(DistributionActionResultEnum.SUCCESS, validationResult);
@@ -122,23 +120,9 @@ public class DistributionClientTest {
 	}
 
 	@Test
-	public void initWithMocksBadConfigurationTest() throws HttpException, CambriaApiException, IOException {
+	public void initWithMocksBadConfigurationTest() {
 
-
-		TopicRegistrationResponse topics = new TopicRegistrationResponse();
-		topics.setDistrNotificationTopicName("notificationTopic");
-		topics.setDistrStatusTopicName("statusTopic");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
+		reconfigureSdcConnector(connector, client);
 		// no password
 		TestConfiguration testPassword = new TestConfiguration();
 		testPassword.setPassword(null);
@@ -159,19 +143,19 @@ public class DistributionClientTest {
 		validationResult = client.init(testUser, new TestNotificationCallback());
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_USERNAME, validationResult.getDistributionActionResult());
 
-		// no ASDC server fqdn
+		// no SDC server fqdn
 		TestConfiguration testServerFqdn = new TestConfiguration();
-		testServerFqdn.setAsdcAddress(null);
+		testServerFqdn.setSdcAddress(null);
 		validationResult = client.init(testServerFqdn, new TestNotificationCallback());
-		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_ASDC_FQDN, validationResult.getDistributionActionResult());
+		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_SDC_FQDN, validationResult.getDistributionActionResult());
 
-		testServerFqdn.setAsdcAddress("");
+		testServerFqdn.setSdcAddress("");
 		validationResult = client.init(testServerFqdn, new TestNotificationCallback());
-		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_ASDC_FQDN, validationResult.getDistributionActionResult());
+		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_SDC_FQDN, validationResult.getDistributionActionResult());
 
-		testServerFqdn.setAsdcAddress("this##is##bad##fqdn");
+		testServerFqdn.setSdcAddress("this##is##bad##fqdn");
 		validationResult = client.init(testServerFqdn, new TestNotificationCallback());
-		Assert.assertEquals(DistributionActionResultEnum.CONF_INVALID_ASDC_FQDN, validationResult.getDistributionActionResult());
+		Assert.assertEquals(DistributionActionResultEnum.CONF_INVALID_SDC_FQDN, validationResult.getDistributionActionResult());
 
 		// no consumerId
 		TestConfiguration testConsumerId = new TestConfiguration();
@@ -193,90 +177,63 @@ public class DistributionClientTest {
 		validationResult = client.init(testEnv, new TestNotificationCallback());
 		Assert.assertEquals(DistributionActionResultEnum.CONF_MISSING_ENVIRONMENT_NAME, validationResult.getDistributionActionResult());
 
-		Mockito.verify(client, Mockito.times(0)).getUEBServerList();
-		Mockito.verify(cambriaMock, Mockito.times(0)).createApiKey(Mockito.anyString(), Mockito.anyString());
-		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
+		Mockito.verify(client, Mockito.times(0)).getMessageBusServerList();
 	}
 
-	private void reconfigureAsdcConnector(SdcConnectorClient connector, DistributionClientImpl client) {
-		doReturn(connector).when(client).createAsdcConnector(any());
+	private void reconfigureSdcConnector(SdcConnectorClient connector, DistributionClientImpl client) {
+		doReturn(connector).when(client).createSdcConnector(any());
 	}
 
 	@Test
-	public void initFailedConnectAsdcTest() throws HttpException, CambriaApiException, IOException {
-		// cambriaMock
+	public void initFailedConnectSdcTest() {
 
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
-		TestConfiguration badAsdcConfig = new TestConfiguration();
-		if (badAsdcConfig.isUseHttpsWithSDC() == null) {
+		TestConfiguration badSdcConfig = new TestConfiguration();
+		if (badSdcConfig.isUseHttpsWithSDC() == null) {
 			System.out.println("null for HTTPS then TRUE");
 		} else {
-			System.out.println("isUseHttpsWithSDC set to " + badAsdcConfig.isUseHttpsWithSDC());
+			System.out.println("isUseHttpsWithSDC set to " + badSdcConfig.isUseHttpsWithSDC());
 		}
-		badAsdcConfig.setAsdcAddress("badhost:8080");
+		badSdcConfig.setSdcAddress("badhost:8080");
 
-		IDistributionClientResult init = client.init(badAsdcConfig, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.ASDC_CONNECTION_FAILED, init.getDistributionActionResult());
+		IDistributionClientResult init = client.init(badSdcConfig, new TestNotificationCallback());
+		assertEquals(DistributionActionResultEnum.SDC_CONNECTION_FAILED, init.getDistributionActionResult());
 
-		badAsdcConfig = new TestConfiguration();
-		badAsdcConfig.setAsdcAddress("localhost:8181");
+		badSdcConfig = new TestConfiguration();
+		badSdcConfig.setSdcAddress("localhost:8181");
 
-		init = client.init(badAsdcConfig, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.ASDC_CONNECTION_FAILED, init.getDistributionActionResult());
-
-	}
-
-	@Test
-	public void initFailedConnectAsdcInHttpTest() throws HttpException, CambriaApiException, IOException {
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
-		TestConfiguration badAsdcConfig = new TestConfiguration();
-		badAsdcConfig.setAsdcAddress("badhost:8080");
-		badAsdcConfig.setUseHttpsWithSDC(false);
-
-		IDistributionClientResult init = client.init(badAsdcConfig, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.ASDC_CONNECTION_FAILED, init.getDistributionActionResult());
-
-		badAsdcConfig = new TestConfiguration();
-		badAsdcConfig.setAsdcAddress("localhost:8181");
-		badAsdcConfig.setUseHttpsWithSDC(false);
-
-		init = client.init(badAsdcConfig, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.ASDC_CONNECTION_FAILED, init.getDistributionActionResult());
+		init = client.init(badSdcConfig, new TestNotificationCallback());
+		assertEquals(DistributionActionResultEnum.SDC_CONNECTION_FAILED, init.getDistributionActionResult());
 
 	}
 
 	@Test
-	public void getConfigurationTest() throws HttpException, CambriaApiException, IOException {
+	public void initFailedConnectSdcInHttpTest() {
+
+		TestConfiguration badSdcConfig = new TestConfiguration();
+		badSdcConfig.setSdcAddress("badhost:8080");
+		badSdcConfig.setUseHttpsWithSDC(false);
+
+		IDistributionClientResult init = client.init(badSdcConfig, new TestNotificationCallback());
+		assertEquals(DistributionActionResultEnum.SDC_CONNECTION_FAILED, init.getDistributionActionResult());
+
+		badSdcConfig = new TestConfiguration();
+		badSdcConfig.setSdcAddress("localhost:8181");
+		badSdcConfig.setUseHttpsWithSDC(false);
+
+		init = client.init(badSdcConfig, new TestNotificationCallback());
+		assertEquals(DistributionActionResultEnum.SDC_CONNECTION_FAILED, init.getDistributionActionResult());
+
+	}
+
+	@Test
+	public void getConfigurationTest() {
 		// connectorMock
 		mockArtifactTypeList();
-		TopicRegistrationResponse topics = new TopicRegistrationResponse();
-		topics.setDistrNotificationTopicName("notificationTopic");
-		topics.setDistrStatusTopicName("statusTopic");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-		IDistributionClientResult success = initSuccesResult();
-		Mockito.when(connector.unregisterTopics(Mockito.any(ApiCredential.class))).thenReturn(success);
+		reconfigureSdcConnector(connector, client);
+		TestConfiguration badSdcConfig = new TestConfiguration();
+		badSdcConfig.setPollingInterval(-5);
 
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
-		TestConfiguration badAsdcConfig = new TestConfiguration();
-		badAsdcConfig.setPollingInterval(-5);
-
-		IDistributionClientResult init = client.init(badAsdcConfig, new TestNotificationCallback());
+		IDistributionClientResult init = client.init(badSdcConfig, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.SUCCESS, init.getDistributionActionResult());
 
 		String confString = client.getConfiguration().toString();
@@ -300,31 +257,12 @@ public class DistributionClientTest {
 	}
 
 	@Test
-	public void initWithMocksTest() throws HttpException, CambriaApiException, IOException {
-
+	public void initWithMocksTest() {
 		mockArtifactTypeList();
-
-		TopicRegistrationResponse topics = new TopicRegistrationResponse();
-		topics.setDistrNotificationTopicName("notificationTopic");
-		topics.setDistrStatusTopicName("statusTopic");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-		IDistributionClientResult success = initSuccesResult();
-		Mockito.when(connector.unregisterTopics(Mockito.any(ApiCredential.class))).thenReturn(success);
-
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
+		reconfigureSdcConnector(connector, client);
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.SUCCESS, initResponse.getDistributionActionResult());
-		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
-		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
-		Mockito.verify(connector, Mockito.times(1)).registerAsdcTopics(Mockito.any(ApiCredential.class));
+		Mockito.verify(client, Mockito.times(1)).getMessageBusServerList();
 		System.out.println(initResponse);
 	}
 
@@ -339,95 +277,25 @@ public class DistributionClientTest {
 	}
 
 	@Test
-	public void testAlreadyInitTest() throws HttpException, CambriaApiException, IOException {
+	public void testAlreadyInitTest() {
 		initWithMocksTest();
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
 		assertEquals(DistributionActionResultEnum.DISTRIBUTION_CLIENT_ALREADY_INITIALIZED, initResponse.getDistributionActionResult());
 	}
 
 	@Test
-	public void initGetServerFailedTest() throws HttpException, CambriaApiException, IOException {
+	public void initGetServerFailedTest() {
 
 		// connectorMock
-		IDistributionClientResult getServersResult = new DistributionClientResultImpl(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, "problem");
+		IDistributionClientResult getServersResult = new DistributionClientResultImpl(DistributionActionResultEnum.SDC_SERVER_PROBLEM, "problem");
 		Either<List<String>, IDistributionClientResult> serversResult = Either.right(getServersResult);
-		doReturn(serversResult).when(client).getUEBServerList();
-
-		TopicRegistrationResponse topics = new TopicRegistrationResponse();
-		topics.setDistrNotificationTopicName("notificationTopic");
-		topics.setDistrStatusTopicName("statusTopic");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
+		doReturn(serversResult).when(client).getMessageBusServerList();
+		reconfigureSdcConnector(connector, client);
 		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.ASDC_SERVER_PROBLEM, initResponse.getDistributionActionResult());
+		assertEquals(DistributionActionResultEnum.SDC_SERVER_PROBLEM, initResponse.getDistributionActionResult());
 
-		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
-		Mockito.verify(cambriaMock, Mockito.times(0)).createApiKey(Mockito.anyString(), Mockito.anyString());
-		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
+		Mockito.verify(client, Mockito.times(1)).getMessageBusServerList();
 
-		System.out.println(initResponse);
-	}
-
-	@Test
-	public void initCreateKeysFailedTest() throws HttpException, CambriaApiException, IOException {
-
-		// connectorMock
-		mockArtifactTypeList();
-
-		TopicRegistrationResponse topics = new TopicRegistrationResponse();
-		topics.setDistrNotificationTopicName("notificationTopic");
-		topics.setDistrStatusTopicName("statusTopic");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.left(topics);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenThrow(new CambriaApiException("failure"));
-		client.cambriaIdentityManager = cambriaMock;
-
-		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.UEB_KEYS_CREATION_FAILED, initResponse.getDistributionActionResult());
-
-		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
-		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
-		Mockito.verify(connector, Mockito.times(0)).registerAsdcTopics(Mockito.any(ApiCredential.class));
-		System.out.println(initResponse);
-	}
-
-	@Test
-	public void initRegistrationFailedTest() throws HttpException, CambriaApiException, IOException {
-
-		// connectorMock
-		mockArtifactTypeList();
-		DistributionClientResultImpl failureResult = new DistributionClientResultImpl(DistributionActionResultEnum.BAD_REQUEST, "Bad Request");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsResult = Either.right(failureResult);
-		Mockito.when(connector.registerAsdcTopics(Mockito.any(ApiCredential.class))).thenReturn(topicsResult);
-
-		reconfigureAsdcConnector(connector, client);
-
-		// cambriaMock
-
-		CambriaIdentityManager cambriaMock = Mockito.mock(CambriaIdentityManager.class);
-		Mockito.when(cambriaMock.createApiKey(Mockito.any(String.class), Mockito.any(String.class))).thenReturn(new ApiCredential("public", "secret"));
-		client.cambriaIdentityManager = cambriaMock;
-
-		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
-		assertEquals(DistributionActionResultEnum.BAD_REQUEST, initResponse.getDistributionActionResult());
-		Mockito.verify(client, Mockito.times(1)).getUEBServerList();
-		Mockito.verify(cambriaMock, Mockito.times(1)).createApiKey(Mockito.anyString(), Mockito.anyString());
-		Mockito.verify(connector, Mockito.times(1)).registerAsdcTopics(Mockito.any(ApiCredential.class));
 		System.out.println(initResponse);
 	}
 
@@ -435,6 +303,17 @@ public class DistributionClientTest {
 	public void testStartWithoutInit() {
 		IDistributionClientResult result = client.start();
 		assertTrue(result.getDistributionActionResult() == DistributionActionResultEnum.DISTRIBUTION_CLIENT_NOT_INITIALIZED);
+	}
+
+	@org.junit.jupiter.api.Test
+	@SetEnvironmentVariable(key = "JAASCONFIG", value = "org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;")
+	public void testStartWithInitMessagingClientFailed() {
+		mockArtifactTypeList();
+		reconfigureSdcConnector(connector, client);
+		IDistributionClientResult initResponse = client.init(testConfiguration, new TestNotificationCallback());
+		Assertions.assertEquals(DistributionActionResultEnum.SUCCESS, initResponse.getDistributionActionResult());
+		IDistributionClientResult result = client.start();
+		Assertions.assertEquals(DistributionActionResultEnum.MESSAGING_CLIENT_INIT_FAILED, result.getDistributionActionResult());
 	}
 
 	private IArtifactInfo initArtifactInfo() {
@@ -502,18 +381,8 @@ public class DistributionClientTest {
 	}
 
 
-
-	public void connectorRegisterCI() {
-		SdcConnectorClient connector = new SdcConnectorClient(testConfiguration, new HttpAsdcClient(testConfiguration));
-
-		ApiCredential creds = new ApiCredential("publicKey", "secretKey");
-		Either<TopicRegistrationResponse, DistributionClientResultImpl> topicsFromAsdc = connector.registerAsdcTopics(creds);
-		assertTrue(topicsFromAsdc.isLeft());
-
-	}
-
 	public void downloadArtifactTestCI() {
-		SdcConnectorClient connector = new SdcConnectorClient(testConfiguration, new HttpAsdcClient(testConfiguration));
+		SdcConnectorClient connector = new SdcConnectorClient(testConfiguration, new HttpSdcClient(testConfiguration));
 		IArtifactInfo artifactInfo = initArtifactInfo();
 		connector.downloadArtifact(artifactInfo);
 

@@ -19,23 +19,22 @@
  */
 package org.onap.sdc.impl;
 
-import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.api.consumer.IStatusCallback;
-import org.onap.sdc.utils.DistributionActionResultEnum;
-import org.onap.sdc.utils.DistributionClientConstants;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+import org.onap.sdc.api.consumer.IConfiguration;
+import org.onap.sdc.api.consumer.IStatusCallback;
+import org.onap.sdc.utils.DistributionActionResultEnum;
+import org.onap.sdc.utils.DistributionClientConstants;
 
 public class ConfigurationValidator {
 
     private Map<Function<IConfiguration, Boolean>, DistributionActionResultEnum> cachedValidators;
 
-    DistributionActionResultEnum validateConfiguration(IConfiguration conf, IStatusCallback statusCallback) {
+    public DistributionActionResultEnum validateConfiguration(IConfiguration conf, IStatusCallback statusCallback) {
         final Map<Function<IConfiguration, Boolean>, DistributionActionResultEnum> validators = getValidators(statusCallback);
 
         for (Map.Entry<Function<IConfiguration, Boolean>, DistributionActionResultEnum> validation : validators.entrySet()) {
@@ -54,9 +53,8 @@ public class ConfigurationValidator {
             validators.put(isUserNotSet(), DistributionActionResultEnum.CONF_MISSING_USERNAME);
             validators.put(isPasswordNotSet(), DistributionActionResultEnum.CONF_MISSING_PASSWORD);
             validators.put(isMsgBusAddressNotSet(), DistributionActionResultEnum.CONF_MISSING_MSG_BUS_ADDRESS);
-            validators.put(isAsdcAddressNotSet(), DistributionActionResultEnum.CONF_MISSING_ASDC_FQDN);
-            validators.put(isFqdnValid(), DistributionActionResultEnum.CONF_INVALID_ASDC_FQDN);
-            validators.put(areFqdnsValid(), DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS);
+            validators.put(isSdcAddressNotSet(), DistributionActionResultEnum.CONF_MISSING_SDC_FQDN);
+            validators.put(isFqdnValid(), DistributionActionResultEnum.CONF_INVALID_SDC_FQDN);
             validators.put(isEnvNameNotSet(), DistributionActionResultEnum.CONF_MISSING_ENVIRONMENT_NAME);
             validators.put(isRelevantArtifactTypesNotSet(), DistributionActionResultEnum.CONF_MISSING_ARTIFACT_TYPES);
             validators.put(isConsumeStatusTopicWithCallbackNotSet(statusCallback), DistributionActionResultEnum.CONF_INVALID_CONSUME_PRODUCE_STATUS_TOPIC_FALG);
@@ -90,7 +88,7 @@ public class ConfigurationValidator {
     }
 
     private Function<IConfiguration, Boolean> isFqdnValid() {
-        return it -> !isValidFqdn(it.getAsdcAddress());
+        return it -> !isValidFqdn(it.getSdcAddress());
     }
 
     private Function<IConfiguration, Boolean> isMsgBusAddressNotSet() {
@@ -113,8 +111,8 @@ public class ConfigurationValidator {
         return it -> it.getConsumerID() == null || it.getConsumerID().isEmpty();
     }
 
-    private Function<IConfiguration, Boolean> isAsdcAddressNotSet() {
-        return it -> it.getAsdcAddress() == null || it.getAsdcAddress().isEmpty();
+    private Function<IConfiguration, Boolean> isSdcAddressNotSet() {
+        return it -> it.getSdcAddress() == null || it.getSdcAddress().isEmpty();
     }
 
     static boolean isValidFqdn(String fqdn) {

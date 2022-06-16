@@ -182,7 +182,7 @@ public class HttpClientFactory {
             return HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setProxy(getHttpsProxyHost())
                     .setSSLSocketFactory(sslsf).build();
         } catch (Exception e) {
-            throw new HttpAsdcClientException("Failed to create https client", e);
+            throw new HttpSdcClientException("Failed to create https client", e);
         }
     }
 
