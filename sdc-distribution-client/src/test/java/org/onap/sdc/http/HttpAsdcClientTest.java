@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HttpAsdcClientTest {
+class HttpSdcClientTest {
 
     private static final String URL = "http://127.0.0.1:8080/target";
     private static final int HTTP_OK = 200;
@@ -72,14 +72,14 @@ public class HttpAsdcClientTest {
         final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(
                 configuration.getUser(),
                 configuration.getPassword());
-        final HttpAsdcClient httpAsdcClient = new HttpAsdcClient(
-                configuration.getAsdcAddress(),
+        final HttpSdcClient httpSdcClient = new HttpSdcClient(
+                configuration.getSdcAddress(),
                 new HttpClientFactory(configuration),
                 httpRequestFactory);
 
         // then
-        assertNotNull(httpAsdcClient);
-        assertEquals(HttpClientFactory.HTTP, httpAsdcClient.getHttpSchema());
+        assertNotNull(httpSdcClient);
+        assertEquals(HttpClientFactory.HTTP, httpSdcClient.getHttpSchema());
     }
 
     @Test
@@ -92,25 +92,25 @@ public class HttpAsdcClientTest {
         final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(
                 configuration.getUser(),
                 configuration.getPassword());
-        final HttpAsdcClient httpAsdcClient = new HttpAsdcClient(
-                configuration.getAsdcAddress(),
+        final HttpSdcClient httpSdcClient = new HttpSdcClient(
+                configuration.getSdcAddress(),
                 new HttpClientFactory(configuration),
                 httpRequestFactory);
 
         // then
-        assertNotNull(httpAsdcClient);
-        assertEquals(HttpClientFactory.HTTPS, httpAsdcClient.getHttpSchema());
+        assertNotNull(httpSdcClient);
+        assertEquals(HttpClientFactory.HTTPS, httpSdcClient.getHttpSchema());
     }
 
     @Test
     public void shouldSendGetRequestWithoutAnyError() throws IOException {
         // given
         TestConfiguration configuration = givenHttpConfiguration();
-        final HttpAsdcClient httpAsdcClient = createTestObj(HttpClientFactory.HTTP, configuration, httpClient);
+        final HttpSdcClient httpSdcClient = createTestObj(HttpClientFactory.HTTP, configuration, httpClient);
         CloseableHttpResponse httpResponse = givenHttpResponse();
 
         // when
-        final HttpAsdcResponse response = httpAsdcClient.getRequest(URL, HEADERS_MAP);
+        final HttpSdcResponse response = httpSdcClient.getRequest(URL, HEADERS_MAP);
 
         // then
         assertThat(response).isNotNull();
@@ -128,11 +128,11 @@ public class HttpAsdcClientTest {
     public void shouldSendPostRequestWithoutAnyError() throws IOException {
         // given
         TestConfiguration configuration = givenHttpConfiguration();
-        final HttpAsdcClient httpAsdcClient = createTestObj(HttpClientFactory.HTTP, configuration, httpClient);
+        final HttpSdcClient httpSdcClient = createTestObj(HttpClientFactory.HTTP, configuration, httpClient);
         CloseableHttpResponse httpResponse = givenHttpResponse();
 
         // when
-        final HttpAsdcResponse response = httpAsdcClient.postRequest(URL,httpEntity, HEADERS_MAP);
+        final HttpSdcResponse response = httpSdcClient.postRequest(URL,httpEntity, HEADERS_MAP);
 
         // then
         assertThat(response).isNotNull();
@@ -142,17 +142,17 @@ public class HttpAsdcClientTest {
 
     }
 
-    private HttpAsdcClient createTestObj(String httpProtocol, TestConfiguration configuration, CloseableHttpClient httpClient) {
+    private HttpSdcClient createTestObj(String httpProtocol, TestConfiguration configuration, CloseableHttpClient httpClient) {
         final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(
                 configuration.getUser(),
                 configuration.getPassword());
         HttpClientFactory httpClientFactory = mock(HttpClientFactory.class);
         when(httpClientFactory.createInstance()).thenReturn(new Pair<>(httpProtocol, httpClient));
-        final HttpAsdcClient httpAsdcClient = new HttpAsdcClient(
-                configuration.getAsdcAddress(),
+        final HttpSdcClient httpSdcClient = new HttpSdcClient(
+                configuration.getSdcAddress(),
                 httpClientFactory,
                 httpRequestFactory);
-        return httpAsdcClient;
+        return httpSdcClient;
     }
 
     private CloseableHttpResponse givenHttpResponse(HttpEntity httpEntity, Header[] headers) {

@@ -26,34 +26,37 @@ import java.util.List;
 
 public class DistributionClientConfig implements IConfiguration {
 
-    public static final String DEFAULT_ASDC_ADDRESS = "localhost:30206";
+    public static final String DEFAULT_SDC_ADDRESS = "localhost:30206";
     public static final String DEFAULT_COMSUMER_ID = "dcae-openapi-manager";
     public static final String DEFAULT_CONSUMER_GROUP = "noapp";
     public static final String DEFAULT_ENVIRONMENT_NAME = "AUTO";
     public static final String DEFAULT_PASSWORD = "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U";
     public static final int DEFAULT_POLLING_INTERVAL = 20;
     public static final int DEFAULT_POLLING_TIMEOUT = 20;
+    public static final String DEFAULT_STATUS_TOPIC = "STATUS-TOPIC";
+    public static final String DEFAULT_NOTIF_TOPIC = "NOTIF-TOPIC";
     public static final String DEFAULT_USER = "dcae";
-    public static final String DEFAULT_KEY_STORE_PATH = "etc/asdc-client.jks";
+    public static final String DEFAULT_KEY_STORE_PATH = "etc/sdc-client.jks";
     public static final String DEFAULT_KEY_STORE_PASSWORD = "Aa123456";
     public static final boolean DEFAULT_ACTIVATE_SERVER_TLS_AUTH = false;
     public static final boolean DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES = true;
     public static final boolean DEFAULT_USE_HTTPS_WITH_SDC = false;
-    public static final String DEFAULT_MSG_BUS_ADDRESS = "localhost";
-    private String asdcAddress;
+    public static final String DEFAULT_MSG_BUS_ADDRESS = "localhost:9092";
+    private String sdcAddress;
     private String user;
     private String password;
     private int pollingInterval;
     private int pollingTimeout;
     private List<String> relevantArtifactTypes;
     private String consumerGroup;
+    private final String sdcStatusTopicName;
+    private final String sdcNotificationTopicName;
     private String environmentName;
     private String comsumerID;
     private String keyStorePath;
     private String keyStorePassword;
     private boolean activateServerTLSAuth;
     private boolean isFilterInEmptyResources;
-    private boolean useHttpsWithDmaap;
     private boolean useHttpsWithSDC;
     private List<String> msgBusAddress;
     private String httpProxyHost;
@@ -63,7 +66,9 @@ public class DistributionClientConfig implements IConfiguration {
     private boolean useSystemProxy;
 
     public DistributionClientConfig(IConfiguration other) {
-        this.asdcAddress = other.getAsdcAddress();
+        this.sdcAddress = other.getSdcAddress();
+        this.sdcStatusTopicName = other.getStatusTopicName();
+        this.sdcNotificationTopicName = other.getNotificationTopicName();
         this.comsumerID = other.getConsumerID();
         this.consumerGroup = other.getConsumerGroup();
         this.environmentName = other.getEnvironmentName();
@@ -81,10 +86,13 @@ public class DistributionClientConfig implements IConfiguration {
         this.httpsProxyHost = other.getHttpsProxyHost();
         this.httpsProxyPort = other.getHttpsProxyPort();
         this.useSystemProxy = other.isUseSystemProxy();
+        this.msgBusAddress = other.getMsgBusAddress();
     }
 
     public DistributionClientConfig() {
-        this.asdcAddress = DEFAULT_ASDC_ADDRESS;
+        this.sdcAddress = DEFAULT_SDC_ADDRESS;
+        this.sdcStatusTopicName = DEFAULT_STATUS_TOPIC;
+        this.sdcNotificationTopicName = DEFAULT_NOTIF_TOPIC;
         this.comsumerID = DEFAULT_COMSUMER_ID;
         this.consumerGroup = DEFAULT_CONSUMER_GROUP;
         this.environmentName = DEFAULT_ENVIRONMENT_NAME;
@@ -99,20 +107,31 @@ public class DistributionClientConfig implements IConfiguration {
         this.activateServerTLSAuth = DEFAULT_ACTIVATE_SERVER_TLS_AUTH;
         this.isFilterInEmptyResources = DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES;
         this.useHttpsWithSDC = DEFAULT_USE_HTTPS_WITH_SDC;
-        msgBusAddress = new ArrayList<>();
-        msgBusAddress.add(DEFAULT_MSG_BUS_ADDRESS);
-        msgBusAddress.add(DEFAULT_MSG_BUS_ADDRESS);
-        msgBusAddress.add(DEFAULT_MSG_BUS_ADDRESS);
+        this.msgBusAddress = new ArrayList<>();
+        this.msgBusAddress.add(DEFAULT_MSG_BUS_ADDRESS);
     }
 
     @Override
-    public String getAsdcAddress() {
-        return asdcAddress;
+    public String getSdcAddress() {
+        return sdcAddress;
+    }
+    @Override
+    public String getStatusTopicName() {
+        return sdcStatusTopicName;
+    }
+
+    @Override
+    public String getNotificationTopicName() {
+        return sdcNotificationTopicName;
     }
 
     @Override
     public List<String> getMsgBusAddress() {
         return msgBusAddress;
+    }
+
+    public void setMsgBusAddress(List<String> msgBusAddress) {
+        this.msgBusAddress = msgBusAddress;
     }
 
     @Override
@@ -173,8 +192,8 @@ public class DistributionClientConfig implements IConfiguration {
         this.comsumerID = comsumerID;
     }
 
-    public void setAsdcAddress(String asdcAddress) {
-        this.asdcAddress = asdcAddress;
+    public void setSdcAddress(String sdcAddress) {
+        this.sdcAddress = sdcAddress;
     }
 
     public void setUser(String user) {
@@ -217,7 +236,7 @@ public class DistributionClientConfig implements IConfiguration {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((asdcAddress == null) ? 0 : asdcAddress.hashCode());
+        result = prime * result + ((sdcAddress == null) ? 0 : sdcAddress.hashCode());
         result = prime * result + ((comsumerID == null) ? 0 : comsumerID.hashCode());
         result = prime * result + ((consumerGroup == null) ? 0 : consumerGroup.hashCode());
         result = prime * result + ((environmentName == null) ? 0 : environmentName.hashCode());
@@ -251,11 +270,11 @@ public class DistributionClientConfig implements IConfiguration {
             return false;
         }
         DistributionClientConfig other = (DistributionClientConfig) obj;
-        if (asdcAddress == null) {
-            if (other.asdcAddress != null) {
+        if (sdcAddress == null) {
+            if (other.sdcAddress != null) {
                 return false;
             }
-        } else if (!asdcAddress.equals(other.asdcAddress)) {
+        } else if (!sdcAddress.equals(other.sdcAddress)) {
             return false;
         }
         if (comsumerID == null) {
@@ -322,7 +341,7 @@ public class DistributionClientConfig implements IConfiguration {
 
     @Override
     public String toString() {
-        return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
+        return "TestConfiguration [sdcAddress=" + sdcAddress + ", user=" + user + ", password=" + password
                 + ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
                 + ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
                 + ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
@@ -335,11 +354,6 @@ public class DistributionClientConfig implements IConfiguration {
 
     public void setFilterInEmptyResources(boolean isFilterInEmptyResources) {
         this.isFilterInEmptyResources = isFilterInEmptyResources;
-    }
-
-    @Override
-    public Boolean isUseHttpsWithDmaap() {
-        return this.useHttpsWithDmaap;
     }
 
     public Boolean isUseHttpsWithSDC() {

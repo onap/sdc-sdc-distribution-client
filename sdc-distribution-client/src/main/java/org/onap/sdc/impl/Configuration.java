@@ -28,7 +28,9 @@ import org.onap.sdc.utils.DistributionClientConstants;
 public class Configuration implements IConfiguration {
 
     private List<String> msgBusAddressList;
-    private String asdcAddress;
+    private final String sdcStatusTopicName;
+    private final String sdcNotificationTopicName;
+    private String sdcAddress;
     private String user;
     private String password;
     private int pollingInterval = DistributionClientConstants.MIN_POLLING_INTERVAL_SEC;
@@ -40,10 +42,9 @@ public class Configuration implements IConfiguration {
     private String keyStorePath;
     private String keyStorePassword;
     private boolean activateServerTLSAuth;
-    private boolean filterInEmptyResources;
-    private Boolean useHttpsWithDmaap;
+    private final boolean filterInEmptyResources;
     private Boolean useHttpsWithSDC;
-    private boolean consumeProduceStatusTopic;
+    private final boolean consumeProduceStatusTopic;
     private String httpProxyHost;
     private int httpProxyPort;
     private String httpsProxyHost;
@@ -51,23 +52,24 @@ public class Configuration implements IConfiguration {
     private boolean useSystemProxy;
 
     public Configuration(IConfiguration other) {
-        this.asdcAddress = other.getAsdcAddress();
         this.msgBusAddressList = other.getMsgBusAddress();
+        this.sdcStatusTopicName = other.getStatusTopicName();
+        this.sdcNotificationTopicName = other.getNotificationTopicName();
         this.comsumerID = other.getConsumerID();
         this.consumerGroup = other.getConsumerGroup();
-        this.environmentName = other.getEnvironmentName();
-        this.password = other.getPassword();
         this.pollingInterval = other.getPollingInterval();
         this.pollingTimeout = other.getPollingTimeout();
-        this.relevantArtifactTypes = other.getRelevantArtifactTypes();
+        this.environmentName = other.getEnvironmentName();
+        this.consumeProduceStatusTopic = other.isConsumeProduceStatusTopic();
+        this.sdcAddress = other.getSdcAddress();
         this.user = other.getUser();
+        this.password = other.getPassword();
+        this.relevantArtifactTypes = other.getRelevantArtifactTypes();
         this.useHttpsWithSDC = other.isUseHttpsWithSDC();
         this.keyStorePath = other.getKeyStorePath();
         this.keyStorePassword = other.getKeyStorePassword();
         this.activateServerTLSAuth = other.activateServerTLSAuth();
         this.filterInEmptyResources = other.isFilterInEmptyResources();
-        this.useHttpsWithDmaap = other.isUseHttpsWithDmaap();
-        this.consumeProduceStatusTopic = other.isConsumeProduceStatusTopic();
         this.httpProxyHost = other.getHttpProxyHost();
         this.httpProxyPort = other.getHttpProxyPort();
         this.httpsProxyHost = other.getHttpsProxyHost();
@@ -76,13 +78,27 @@ public class Configuration implements IConfiguration {
     }
 
     @Override
-    public String getAsdcAddress() {
-        return asdcAddress;
+    public String getSdcAddress() {
+        return sdcAddress;
+    }
+
+    @Override
+    public String getStatusTopicName() {
+        return sdcStatusTopicName;
+    }
+
+    @Override
+    public String getNotificationTopicName() {
+        return sdcNotificationTopicName;
     }
 
     @Override
     public List<String> getMsgBusAddress() {
         return msgBusAddressList;
+    }
+
+    public void setMsgBusAddress(List<String> newMsgBusAddress) {
+        msgBusAddressList = newMsgBusAddress;
     }
 
     @Override
@@ -169,8 +185,8 @@ public class Configuration implements IConfiguration {
         this.comsumerID = comsumerID;
     }
 
-    public void setAsdcAddress(String asdcAddress) {
-        this.asdcAddress = asdcAddress;
+    public void setSdcAddress(String sdcAddress) {
+        this.sdcAddress = sdcAddress;
     }
 
     public void setUser(String user) {
@@ -243,17 +259,8 @@ public class Configuration implements IConfiguration {
         return this.filterInEmptyResources;
     }
 
-    @Override
-    public Boolean isUseHttpsWithDmaap() {
-        return this.useHttpsWithDmaap;
-    }
-
     public void setUseHttpsWithSDC(boolean useHttpsWithSDC) {
         this.useHttpsWithSDC = useHttpsWithSDC;
-    }
-
-    public void setUseHttpsWithDmaap(boolean useHttpsWithDmaap) {
-        this.useHttpsWithDmaap = useHttpsWithDmaap;
     }
 
     @Override
@@ -265,11 +272,13 @@ public class Configuration implements IConfiguration {
     public String toString() {
         //@formatter:off
         return "Configuration ["
-                + "asdcAddress=" + asdcAddress
+                + "sdcAddress=" + sdcAddress
                 + ", user=" + user
                 + ", password=" + password
                 + ", useHttpsWithSDC=" + useHttpsWithSDC
                 + ", pollingInterval=" + pollingInterval
+                + ", sdcStatusTopicName=" + sdcStatusTopicName
+                + ", sdcNotificationTopicName=" + sdcNotificationTopicName
                 + ", pollingTimeout=" + pollingTimeout
                 + ", relevantArtifactTypes=" + relevantArtifactTypes
                 + ", consumerGroup=" + consumerGroup
@@ -279,7 +288,6 @@ public class Configuration implements IConfiguration {
                 + ", keyStorePassword=" + keyStorePassword
                 + ", activateServerTLSAuth=" + activateServerTLSAuth
                 + ", filterInEmptyResources=" + filterInEmptyResources
-                + ", useHttpsWithDmaap=" + useHttpsWithDmaap
                 + ", consumeProduceStatusTopic=" + consumeProduceStatusTopic
                 + ", useSystemProxy=" + useSystemProxy
                 + ", httpProxyHost=" + httpProxyHost

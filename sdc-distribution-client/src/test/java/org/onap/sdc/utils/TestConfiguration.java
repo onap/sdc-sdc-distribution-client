@@ -22,12 +22,11 @@ package org.onap.sdc.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.onap.sdc.api.consumer.IConfiguration;
 
 public class TestConfiguration implements IConfiguration {
 
-	private String asdcAddress;
+	private String sdcAddress;
 	private String user;
 	private String password;
 	private int pollingInterval = DistributionClientConstants.MIN_POLLING_INTERVAL_SEC;
@@ -36,11 +35,12 @@ public class TestConfiguration implements IConfiguration {
 	private String consumerGroup;
 	private String environmentName;
 	private String comsumerID;
+	private final String sdcStatusTopicName;
+	private final String sdcNotificationTopicName;
 	private String keyStorePath;
 	private String keyStorePassword;
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
-	private boolean useHttpsWithDmaap;
 	private boolean useHttpsWithSDC;
 	private List<String> msgBusAddress;
 	private String httpProxyHost;
@@ -50,9 +50,11 @@ public class TestConfiguration implements IConfiguration {
 	private boolean useSystemProxy;
 
 	public TestConfiguration(IConfiguration other) {
-		this.asdcAddress = other.getAsdcAddress();
+		this.sdcAddress = other.getSdcAddress();
 		this.comsumerID = other.getConsumerID();
 		this.consumerGroup = other.getConsumerGroup();
+		this.sdcStatusTopicName = other.getStatusTopicName();
+		this.sdcNotificationTopicName = other.getNotificationTopicName();
 		this.environmentName = other.getEnvironmentName();
 		this.password = other.getPassword();
 		this.pollingInterval = other.getPollingInterval();
@@ -71,35 +73,53 @@ public class TestConfiguration implements IConfiguration {
 	}
 
 	public TestConfiguration() {
-		this.asdcAddress = "localhost:8443";
+		this.sdcAddress = "localhost:8443";
 		this.comsumerID = "mso-123456";
 		this.consumerGroup = "mso-group";
 		this.environmentName = "PROD";
 		this.password = "password";
 		this.pollingInterval = 20;
 		this.pollingTimeout = 20;
-		this.relevantArtifactTypes = new ArrayList<String>();
+		this.sdcStatusTopicName = "SDC-STATUS-TOPIC";
+		this.sdcNotificationTopicName = "SDC-NOTIF-TOPIC";
+		this.relevantArtifactTypes = new ArrayList<>();
 		this.relevantArtifactTypes.add(ArtifactTypeEnum.HEAT.name());
 		this.user = "mso-user";
-		this.keyStorePath = "etc/asdc-client.jks";
+		this.keyStorePath = "etc/sdc-client.jks";
 		this.keyStorePassword = "Aa123456";
 		this.activateServerTLSAuth = false;
 		this.isFilterInEmptyResources = false;
 		this.useHttpsWithSDC = true;
-		msgBusAddress = new ArrayList<String>();
-		msgBusAddress.add("www.cnn.com");
-		msgBusAddress.add("www.cnn.com");
-		msgBusAddress.add("www.cnn.com");
+		msgBusAddress = new ArrayList<>();
+		msgBusAddress.add("kafka-bootstrap1:9092");
+		msgBusAddress.add("kafka-bootstrap2:9092");
+		msgBusAddress.add("kafka-bootstrap3:9092");
+		this.httpProxyHost = "proxy";
+		this.httpProxyPort = 8080;
 	}
 
 	@Override
-	public String getAsdcAddress() {
-		return asdcAddress;
+	public String getSdcAddress() {
+		return sdcAddress;
+	}
+
+	@Override
+	public String getStatusTopicName() {
+		return sdcStatusTopicName;
+	}
+
+	@Override
+	public String getNotificationTopicName() {
+		return sdcNotificationTopicName;
 	}
 
 	@Override
 	public List<String> getMsgBusAddress() {
 		return msgBusAddress;
+	}
+
+	public void setMsgBusAddress(List<String> newMsgBusAddress) {
+		msgBusAddress = newMsgBusAddress;
 	}
 
 	@Override
@@ -185,8 +205,8 @@ public class TestConfiguration implements IConfiguration {
 		this.comsumerID = comsumerID;
 	}
 
-	public void setAsdcAddress(String asdcAddress) {
-		this.asdcAddress = asdcAddress;
+	public void setSdcAddress(String sdcAddress) {
+		this.sdcAddress = sdcAddress;
 	}
 
 	public void setUser(String user) {
@@ -249,7 +269,7 @@ public class TestConfiguration implements IConfiguration {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((asdcAddress == null) ? 0 : asdcAddress.hashCode());
+		result = prime * result + ((sdcAddress == null) ? 0 : sdcAddress.hashCode());
 		result = prime * result + ((comsumerID == null) ? 0 : comsumerID.hashCode());
 		result = prime * result + ((consumerGroup == null) ? 0 : consumerGroup.hashCode());
 		result = prime * result + ((environmentName == null) ? 0 : environmentName.hashCode());
@@ -280,10 +300,10 @@ public class TestConfiguration implements IConfiguration {
 		if (getClass() != obj.getClass())
 			return false;
 		TestConfiguration other = (TestConfiguration) obj;
-		if (asdcAddress == null) {
-			if (other.asdcAddress != null)
+		if (sdcAddress == null) {
+			if (other.sdcAddress != null)
 				return false;
-		} else if (!asdcAddress.equals(other.asdcAddress))
+		} else if (!sdcAddress.equals(other.sdcAddress))
 			return false;
 		if (comsumerID == null) {
 			if (other.comsumerID != null)
@@ -335,7 +355,7 @@ public class TestConfiguration implements IConfiguration {
 
 	@Override
 	public String toString() {
-		return "TestConfiguration [asdcAddress=" + asdcAddress + ", user=" + user + ", password=" + password
+		return "TestConfiguration [sdcAddress=" + sdcAddress + ", user=" + user + ", password=" + password
 				+ ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
 				+ ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
 				+ ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
@@ -348,11 +368,6 @@ public class TestConfiguration implements IConfiguration {
 
 	public void setFilterInEmptyResources(boolean isFilterInEmptyResources) {
 		this.isFilterInEmptyResources = isFilterInEmptyResources;
-	}
-
-	@Override
-	public Boolean isUseHttpsWithDmaap() {
-		return this.useHttpsWithDmaap;
 	}
 
 	@Override

@@ -20,21 +20,18 @@
 
 package org.onap.sdc.utils;
 
-import com.att.nsa.cambria.client.CambriaBatchingPublisher;
-import com.att.nsa.cambria.client.CambriaPublisher;
-import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.impl.DistributionClientResultImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.apache.kafka.common.KafkaException;
+import org.onap.sdc.api.results.IDistributionClientResult;
+import org.onap.sdc.impl.DistributionClientResultImpl;
+import org.onap.sdc.utils.kafka.SdcKafkaProducer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NotificationSender {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationSender.class);
-    private static final long PUBLISHER_CLOSING_TIMEOUT = 10L;
     private static final long SLEEP_TIME = 1;
 
     private final List<String> brokerServers;
@@ -43,32 +40,27 @@ public class NotificationSender {
         this.brokerServers = brokerServers;
     }
 
-    public IDistributionClientResult send(CambriaBatchingPublisher publisher, String status) {
+    public IDistributionClientResult send(SdcKafkaProducer producer, String topic, String status) {
         log.info("DistributionClient - sendStatus");
         DistributionClientResultImpl distributionResult;
         try {
-            log.debug("Publisher server list: {}", brokerServers);
             log.debug("Trying to send status: {}", status);
-            publisher.send("MyPartitionKey", status);
+            producer.send(topic, "MyPartitionKey", status);
             TimeUnit.SECONDS.sleep(SLEEP_TIME);
-        } catch (IOException | InterruptedException e) {
+        } catch (KafkaException | InterruptedException e) {
             log.error("DistributionClient - sendDownloadStatus. Failed to send download status", e);
         } finally {
-            distributionResult = closePublisher(publisher);
+            distributionResult = closeProducer(producer);
         }
         return distributionResult;
     }
 
-    private DistributionClientResultImpl closePublisher(CambriaBatchingPublisher publisher) {
+    private DistributionClientResultImpl closeProducer(SdcKafkaProducer producer) {
         DistributionClientResultImpl distributionResult = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
         try {
-            List<CambriaPublisher.message> notSentMessages = publisher.close(PUBLISHER_CLOSING_TIMEOUT, TimeUnit.SECONDS);
-            if (notSentMessages.isEmpty()) {
-                distributionResult = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
-            } else {
-                log.debug("DistributionClient - sendDownloadStatus. {} messages were not sent", notSentMessages.size());
-            }
-        } catch (IOException | InterruptedException e) {
+            producer.flush();
+            distributionResult = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
+        } catch (KafkaException | IllegalArgumentException e) {
             log.error("DistributionClient - sendDownloadStatus. Failed to send messages and close publisher.", e);
         }
         return distributionResult;

@@ -20,24 +20,16 @@
 
 package org.onap.sdc.http;
 
-public class TopicRegistrationResponse {
-    private String distrNotificationTopicName;
-    private String distrStatusTopicName;
+import java.util.Map;
 
+import org.apache.http.HttpEntity;
 
-    public void setDistrNotificationTopicName(String distrNotificationTopicName) {
-        this.distrNotificationTopicName = distrNotificationTopicName;
-    }
+public interface IHttpSdcClient {
 
-    public void setDistrStatusTopicName(String distrStatusTopicName) {
-        this.distrStatusTopicName = distrStatusTopicName;
-    }
+    HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap);
 
-    public String getDistrNotificationTopicName() {
-        return distrNotificationTopicName;
-    }
+    HttpSdcResponse getRequest(String requestUrl, Map<String, String> headersMap);
 
-    public String getDistrStatusTopicName() {
-        return distrStatusTopicName;
-    }
+    void closeHttpClient();
+
 }

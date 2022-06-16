@@ -20,113 +20,75 @@
 
 package org.onap.sdc.utils;
 
-import com.att.nsa.cambria.client.CambriaBatchingPublisher;
-import com.att.nsa.cambria.client.CambriaPublisher;
-import fj.data.Either;
-import org.junit.Test;
-import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.impl.DistributionClientResultImpl;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Future;
+import nl.altindag.log.LogCaptor;
+import org.apache.kafka.common.KafkaException;
+import org.junit.Test;
+import org.onap.sdc.api.consumer.IConfiguration;
+import org.onap.sdc.api.results.IDistributionClientResult;
+import org.onap.sdc.impl.DistributionClientResultImpl;
+import org.onap.sdc.utils.kafka.SdcKafkaProducer;
 
 public class NotificationSenderTest {
 
     private final String status = "status";
-    private final CambriaPublisher.message message = new CambriaPublisher.message("sample-partition", "sample-message");
-    private final List<CambriaPublisher.message> notEmptySendingFailedMessages = Collections.singletonList(message);
+
     private final DistributionClientResultImpl successResponse = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
     private final DistributionClientResultImpl generalErrorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
-
-    private final CambriaBatchingPublisher publisher = mock(CambriaBatchingPublisher.class);
+    private final IConfiguration testConfig = new TestConfiguration();
+    private final SdcKafkaProducer producer = mock(SdcKafkaProducer.class);
     private final List<String> emptyServers = Collections.emptyList();
-    private final NotificationSender validNotificationSender = new NotificationSender(emptyServers);;
+    private final NotificationSender validNotificationSender = new NotificationSender(emptyServers);
 
 
     @Test
-    public void whenPublisherIsValidAndNoExceptionsAreThrownShouldReturnSuccessStatus() throws IOException, InterruptedException {
+    public void whenPublisherIsValidAndNoExceptionsAreThrownShouldReturnSuccessStatus() {
         //given
-        when(publisher.send(anyString(), anyString())).thenReturn(0);
-        when(publisher.close(anyLong(), any())).thenReturn(Collections.emptyList());
+        when(producer.send(anyString(), anyString(), anyString())).thenReturn(mock(Future.class));
 
         //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
+        IDistributionClientResult result = validNotificationSender.send(producer, "mytopic", status);
 
         //then
         assertEquals(successResponse.getDistributionActionResult(), result.getDistributionActionResult());
     }
 
     @Test
-    public void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    public void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() {
         //given
-        when(publisher.send(anyString(), anyString())).thenReturn(0);
-        when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
+        when(producer.send(anyString(), anyString(), anyString())).thenReturn(mock(Future.class));
+        doThrow(KafkaException.class)
+            .when(producer)
+            .flush();
 
         //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
+        IDistributionClientResult result = validNotificationSender.send(producer, "mytopic", status);
 
         //then
         assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
     }
 
     @Test
-    public void whenSendingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    public void whenSendingThrowsIOExceptionShouldReturnGeneralErrorStatus() {
+        LogCaptor logCaptor = LogCaptor.forClass(NotificationSender.class);
+
         //given
-        when(publisher.send(anyString(), anyString())).thenThrow(new IOException());
-        when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
+        when(producer.send(anyString(), anyString(), anyString())).thenThrow(new KafkaException());
 
         //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
+        validNotificationSender.send(producer, "mytopic", status);
 
         //then
-        assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
+        assertThat(logCaptor.getLogs()).contains("DistributionClient - sendDownloadStatus. Failed to send download status");
     }
 
-    @Test
-    public void whenSendingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
-        //given
-        when(publisher.send(anyString(), anyString())).thenAnswer(invocationOnMock -> {throw new InterruptedException();});
-        when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
-
-        //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
-
-        //then
-        assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
-    }
-
-    @Test
-    public void whenClosingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
-        //given
-        when(publisher.send(anyString(), anyString())).thenReturn(0);
-        when(publisher.close(anyLong(), any())).thenThrow(new IOException());
-
-        //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
-
-        //then
-        assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
-    }
-
-    @Test
-    public void whenClosingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
-        //given
-        when(publisher.send(anyString(), anyString())).thenReturn(0);
-        when(publisher.close(anyLong(), any())).thenAnswer(invocationOnMock -> {throw new InterruptedException();});
-
-        //when
-        IDistributionClientResult result = validNotificationSender.send(publisher, status);
-
-        //then
-        assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
-    }
 }
