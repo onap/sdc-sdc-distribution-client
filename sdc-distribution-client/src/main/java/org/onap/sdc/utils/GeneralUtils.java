@@ -70,24 +70,4 @@ public class GeneralUtils {
         }
         return isEncoded;
     }
-
-
-    public static Either<List<String>, IDistributionClientResult> convertToValidHostName(List<String> msgBusAddresses) {
-        List<String> uebLocalHostsNames = new ArrayList<>();
-        for (String name : msgBusAddresses) {
-            try {
-                uebLocalHostsNames.add(InetAddress.getByName(name).getHostName());
-            } catch (UnknownHostException e) {
-                LOGGER.debug("UnknownHost: {}", e.getMessage(), e);
-            }
-        }
-        Either<List<String>, IDistributionClientResult> response;
-        if (uebLocalHostsNames.isEmpty()) {
-            response = Either.right(new DistributionClientResultImpl(DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS, "configuration is invalid: " + DistributionActionResultEnum.CONF_INVALID_MSG_BUS_ADDRESS.name()));
-
-        } else {
-            response = Either.left(uebLocalHostsNames);
-        }
-        return response;
-    }
 }
