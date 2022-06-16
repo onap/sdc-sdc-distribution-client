@@ -19,18 +19,15 @@
  */
 package org.onap.test.it;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.onap.sdc.impl.DistributionClientImpl;
 import org.onap.test.core.config.DistributionClientConfig;
 import org.onap.test.core.service.ArtifactsValidator;
 import org.onap.test.core.service.ClientInitializer;
 import org.onap.test.core.service.ClientNotifyCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class RegisterToAsdcTopicIT {
+public class RegisterToSdcTopicIT {
 
 
     public static void main(String[] args) {
@@ -40,12 +37,10 @@ public class RegisterToAsdcTopicIT {
         ClientNotifyCallback callback = new ClientNotifyCallback(validators, client);
         ClientInitializer clientInitializer = new ClientInitializer(clientConfig, callback, client);
         clientInitializer.initialize();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-                client.stop();
-                System.out.println("Shutdown Hook is running !");
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            client.stop();
+            System.out.println("Shutdown Hook is running !");
+        }));
 
     }
 }

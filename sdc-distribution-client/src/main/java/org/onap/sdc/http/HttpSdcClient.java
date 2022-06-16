@@ -41,9 +41,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HttpAsdcClient implements IHttpAsdcClient {
+public class HttpSdcClient implements IHttpSdcClient {
 
-    private static final Logger log = LoggerFactory.getLogger(HttpAsdcClient.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(HttpSdcClient.class.getName());
     private static final boolean ALWAYS_CLOSE_THE_REQUEST_CONNECTION = true;
     private final CloseableHttpClient httpClient;
     private final String httpSchema;
@@ -56,18 +56,18 @@ public class HttpAsdcClient implements IHttpAsdcClient {
      * @deprecated
      * This constructor will be removed in the future.
      *
-     * @param configuration Asdc client configuration
+     * @param configuration Sdc client configuration
      */
     @Deprecated
-    public HttpAsdcClient(IConfiguration configuration) {
-        this(configuration.getAsdcAddress(),
+    public HttpSdcClient(IConfiguration configuration) {
+        this(configuration.getSdcAddress(),
                 new HttpClientFactory(configuration),
                 new HttpRequestFactory(configuration.getUser(), configuration.getPassword())
         );
     }
 
-    public HttpAsdcClient(String asdcAddress, HttpClientFactory httpClientFactory, HttpRequestFactory httpRequestFactory) {
-        this.serverFqdn = asdcAddress;
+    public HttpSdcClient(String sdcAddress, HttpClientFactory httpClientFactory, HttpRequestFactory httpRequestFactory) {
+        this.serverFqdn = sdcAddress;
         this.httpRequestFactory = httpRequestFactory;
 
         Pair<String, CloseableHttpClient> httpClientPair = httpClientFactory.createInstance();
@@ -75,21 +75,21 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         this.httpClient = httpClientPair.getSecond();
     }
 
-    public HttpAsdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap) {
+    public HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap) {
         return postRequest(requestUrl, entity, headersMap, ALWAYS_CLOSE_THE_REQUEST_CONNECTION).getFirst();
     }
 
-    public Pair<HttpAsdcResponse, CloseableHttpResponse> postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap, boolean closeTheRequest) {
-        Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+    public Pair<HttpSdcResponse, CloseableHttpResponse> postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap, boolean closeTheRequest) {
+        Pair<HttpSdcResponse, CloseableHttpResponse> ret;
         final String url = resolveUrl(requestUrl);
         log.debug("url to send {}", url);
         HttpPost httpPost = httpRequestFactory.createHttpPostRequest(url, headersMap, entity);
 
         CloseableHttpResponse httpResponse = null;
-        HttpAsdcResponse response = null;
+        HttpSdcResponse response = null;
         try {
             httpResponse = httpClient.execute(httpPost);
-            response = new HttpAsdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity());
+            response = new HttpSdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity());
         } catch (IOException e) {
             log.error("failed to send request to url: {}", requestUrl);
             response = createHttpResponse(HttpStatus.SC_INTERNAL_SERVER_ERROR, "failed to send request");
@@ -100,19 +100,19 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         return ret;
     }
 
-    public HttpAsdcResponse getRequest(String requestUrl, Map<String, String> headersMap) {
+    public HttpSdcResponse getRequest(String requestUrl, Map<String, String> headersMap) {
         return getRequest(requestUrl, headersMap, ALWAYS_CLOSE_THE_REQUEST_CONNECTION).getFirst();
     }
 
-    public Pair<HttpAsdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
-        Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+    public Pair<HttpSdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
+        Pair<HttpSdcResponse, CloseableHttpResponse> ret;
 
         final String url = resolveUrl(requestUrl);
         log.debug("url to send {}", url);
         HttpGet httpGet = httpRequestFactory.createHttpGetRequest(url, headersMap);
 
         CloseableHttpResponse httpResponse = null;
-        HttpAsdcResponse response = null;
+        HttpSdcResponse response = null;
         try {
             httpResponse = httpClient.execute(httpGet);
 
@@ -122,7 +122,7 @@ public class HttpAsdcClient implements IHttpAsdcClient {
             for (Header header : headersRes) {
                 headersResMap.put(header.getName(), header.getValue());
             }
-            response = new HttpAsdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity(), headersResMap);
+            response = new HttpSdcResponse(httpResponse.getStatusLine().getStatusCode(), httpResponse.getEntity(), headersResMap);
 
         } catch (UnknownHostException | ConnectException e) {
             log.error("failed to connect to url: {}", requestUrl, e);
@@ -145,8 +145,8 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         return this.httpSchema + serverFqdn + requestUrl;
     }
 
-    private Pair<HttpAsdcResponse, CloseableHttpResponse> finalizeHttpRequest(boolean closeTheRequest, CloseableHttpResponse httpResponse, HttpAsdcResponse response) {
-        Pair<HttpAsdcResponse, CloseableHttpResponse> ret;
+    private Pair<HttpSdcResponse, CloseableHttpResponse> finalizeHttpRequest(boolean closeTheRequest, CloseableHttpResponse httpResponse, HttpSdcResponse response) {
+        Pair<HttpSdcResponse, CloseableHttpResponse> ret;
         if (closeTheRequest) {
             if (httpResponse != null) {
                 try {
@@ -163,8 +163,8 @@ public class HttpAsdcClient implements IHttpAsdcClient {
         return ret;
     }
 
-    static HttpAsdcResponse createHttpResponse(int httpStatusCode, String httpMessage) {
-        return new HttpAsdcResponse(httpStatusCode, new StringEntity(httpMessage, StandardCharsets.UTF_8));
+    static HttpSdcResponse createHttpResponse(int httpStatusCode, String httpMessage) {
+        return new HttpSdcResponse(httpStatusCode, new StringEntity(httpMessage, StandardCharsets.UTF_8));
     }
 
     public void closeHttpClient() {

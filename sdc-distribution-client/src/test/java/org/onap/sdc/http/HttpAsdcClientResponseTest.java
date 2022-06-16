@@ -33,8 +33,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class HttpAsdcClientResponseTest {
-
+class HttpSdcClientResponseTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
             {HttpStatus.SC_INTERNAL_SERVER_ERROR, "failed to send request"},
@@ -47,14 +46,14 @@ class HttpAsdcClientResponseTest {
     @MethodSource("data")
     void shouldCreateHttpResponse(int httpStatusCode, String httpMessage) throws IOException {
         // when
-        final HttpAsdcResponse response = HttpAsdcClient.createHttpResponse(httpStatusCode, httpMessage);
+        final HttpSdcResponse response = HttpSdcClient.createHttpResponse(httpStatusCode, httpMessage);
 
         // then
         assertEquals(httpStatusCode, response.getStatus());
         assertEquals(httpMessage, getResponseMessage(response));
     }
 
-    private String getResponseMessage(HttpAsdcResponse response) throws IOException {
+    private String getResponseMessage(HttpSdcResponse response) throws IOException {
         return IOUtils.toString(response.getMessage().getContent(), StandardCharsets.UTF_8);
     }
-}
+  }
