@@ -22,6 +22,7 @@ package org.onap.sdc.api.consumer;
 
 import java.util.List;
 
+import org.apache.kafka.common.KafkaException;
 import org.onap.sdc.api.notification.INotificationData;
 
 public interface IConfiguration {
@@ -30,13 +31,39 @@ public interface IConfiguration {
      * without port), IP:port or FQDN (Fully Qualified Domain Name). * @return SDC
      * Distribution Engine address.
      */
-    String getAsdcAddress();
+    String getSdcAddress();
 
     /**
      * SDC Distribution Addresses from ONAP Component Values need to be set from
      * impl
      */
     List<String> getMsgBusAddress();
+
+    /**
+     * Kafka security.protocol
+     */
+    default String getKafkaSecurityProtocolConfig() {
+        return System.getenv().getOrDefault("SECURITY_PROTOCOL", "SASL_PLAINTEXT");
+    }
+
+    /**
+     * Kafka sasl.mechanism
+     */
+    default String getKafkaSaslMechanism() {
+        return System.getenv().getOrDefault("SASL_MECHANISM", "SCRAM-SHA-512");
+    }
+
+    /**
+     * Kafka sasl.jaas.config
+     */
+    default String getKafkaSaslJaasConfig() {
+        String saslJaasConfFromEnv = System.getenv("SASL_JAAS_CONFIG");
+        if(saslJaasConfFromEnv != null) {
+            return saslJaasConfFromEnv;
+        } else {
+            throw new KafkaException("sasl.jaas.config not set for Kafka Consumer");
+        }
+    }
 
     /**
      * User Name for SDC distribution consumer authentication.
@@ -64,7 +91,7 @@ public interface IConfiguration {
     String getPassword();
 
     /**
-     * Distribution Client Polling Interval towards UEB in seconds. Can Be
+     * Distribution Client Polling Interval towards messaging bus in seconds. Can Be
      * reconfigured in runtime.
      *
      * @return Distribution Client Polling Interval.
@@ -72,7 +99,7 @@ public interface IConfiguration {
     int getPollingInterval();
 
     /**
-     * Distribution Client Timeout in seconds waiting to UEB server response in each
+     * Distribution Client Timeout in seconds waiting for messaging bus server response in each
      * fetch interval. Can Be reconfigured in runtime.
      *
      * @return Distribution Client Timeout in seconds.
@@ -89,10 +116,10 @@ public interface IConfiguration {
     List<String> getRelevantArtifactTypes();
 
     /**
-     * Returns the consumer group defined for this ECOMP component, if no consumer
+     * Returns the consumer group defined for this component, if no consumer
      * group is defined return null.
      *
-     * @return Consumer group.
+     * @return SdcKafkaConsumer group.
      */
     String getConsumerGroup();
 
@@ -105,7 +132,7 @@ public interface IConfiguration {
     String getEnvironmentName();
 
     /**
-     * Unique ID of ECOMP component instance (e.x INSTAR name).
+     * Unique ID of component instance (e.x INSTAR name).
      *
      * @return
      */
@@ -113,7 +140,7 @@ public interface IConfiguration {
 
     /**
      * Return full path to Client's Key Store that contains either CA certificate or
-     * the ASDC's public key (e.g /etc/keystore/asdc-client.jks) file will be
+     * the SDC's public key (e.g /etc/keystore/sdc-client.jks) file will be
      * deployed with sdc-distribution jar.
      *
      * @return
@@ -145,15 +172,6 @@ public interface IConfiguration {
      * @return
      */
     boolean isFilterInEmptyResources();
-
-    /**
-     * By default, Distribution Client will use HTTPS (TLS 1.2) when connecting to
-     * DMAAP. This param can be null, then default (HTTPS) behavior will be applied.
-     * If set to false, distribution client will use HTTP when connecting to DMAAP.
-     *
-     * @return
-     */
-    Boolean isUseHttpsWithDmaap();
 
     /**
      * By default, (false value) Distribution Client will trigger the regular

@@ -25,8 +25,8 @@ import org.onap.sdc.utils.DistributionActionResultEnum;
 
 public class DistributionClientResultImpl implements IDistributionClientResult {
 
-    private DistributionActionResultEnum responseStatus;
-    private String responseMessage;
+    private final DistributionActionResultEnum responseStatus;
+    private final String responseMessage;
 
     public DistributionClientResultImpl(DistributionActionResultEnum responseStatus, String responseMessage) {
         this.responseStatus = responseStatus;
