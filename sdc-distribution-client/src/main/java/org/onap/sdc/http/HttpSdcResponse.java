@@ -18,38 +18,53 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.api.asdc;
+package org.onap.sdc.http;
 
-import java.util.List;
+import java.util.Map;
 
-public class RegistrationRequest {
+import org.apache.http.HttpEntity;
 
-    private String apiPublicKey;
-    private String distrEnvName;
-    private Boolean isConsumerToSdcDistrStatusTopic;
-    private List<String> distEnvEndPoints;
+public class HttpSdcResponse {
 
-    public RegistrationRequest(String apiPublicKey, String distrEnvName, boolean isConsumerToSdcDistrStatusTopic, List<String> distEnvEndPoints) {
-        this.apiPublicKey = apiPublicKey;
-        this.distrEnvName = distrEnvName;
-        this.isConsumerToSdcDistrStatusTopic = isConsumerToSdcDistrStatusTopic;
-        this.distEnvEndPoints = distEnvEndPoints;
+    private int status;
+    private HttpEntity message;
+    private Map<String, String> headersMap;
+
+    public HttpSdcResponse(int status, HttpEntity message) {
+        super();
+        this.status = status;
+        this.message = message;
     }
 
-    public String getApiPublicKey() {
-        return apiPublicKey;
+    public HttpSdcResponse(int status, HttpEntity message, Map<String, String> headersMap) {
+        super();
+        this.status = status;
+        this.message = message;
+        this.headersMap = headersMap;
     }
 
-    public String getDistrEnvName() {
-        return distrEnvName;
+    public Map<String, String> getHeadersMap() {
+        return headersMap;
     }
 
-    public Boolean getIsConsumerToSdcDistrStatusTopic() {
-        return isConsumerToSdcDistrStatusTopic;
+    public void setHeadersMap(Map<String, String> headersMap) {
+        this.headersMap = headersMap;
     }
 
-    public List<String> getDistEnvEndPoints() {
-        return distEnvEndPoints;
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public HttpEntity getMessage() {
+        return message;
+    }
+
+    public void setMessage(HttpEntity message) {
+        this.message = message;
     }
 
 

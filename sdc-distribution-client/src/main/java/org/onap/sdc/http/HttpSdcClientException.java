@@ -19,9 +19,9 @@
  */
 package org.onap.sdc.http;
 
-public class HttpAsdcClientException extends RuntimeException {
+public class HttpSdcClientException extends RuntimeException {
 
-    public HttpAsdcClientException(String message, Throwable cause) {
+    public HttpSdcClientException(String message, Throwable cause) {
         super(message, cause);
     }
 }
