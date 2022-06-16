@@ -33,7 +33,7 @@ import java.util.Collection;
 
 
 @RunWith(value = Parameterized.class)
-public class HttpAsdcClientResponseTest {
+class HttpSdcClientResponseTest {
     @Parameterized.Parameter
     public int httpStatusCode;
 
@@ -52,14 +52,14 @@ public class HttpAsdcClientResponseTest {
     @Test
     public void shouldCreateHttpResponse() throws IOException {
         // when
-        final HttpAsdcResponse response = HttpAsdcClient.createHttpResponse(httpStatusCode, httpMessage);
+        final HttpSdcResponse response = HttpSdcClient.createHttpResponse(httpStatusCode, httpMessage);
 
         // then
         Assert.assertEquals(httpStatusCode, response.getStatus());
         Assert.assertEquals(httpMessage, getResponseMessage(response));
     }
 
-    private String getResponseMessage(HttpAsdcResponse response) throws IOException {
+    private String getResponseMessage(HttpSdcResponse response) throws IOException {
         return IOUtils.toString(response.getMessage().getContent(), StandardCharsets.UTF_8);
     }
 }

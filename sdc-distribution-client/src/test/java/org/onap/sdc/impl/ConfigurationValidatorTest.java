@@ -29,7 +29,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ConfigurationValidatorTest {
-    private static final String[] VALID_FQDNS = {"myHostname", "myHostname:80", "myHostname:8080", "1.1.1.1", "1.1.1.1:8080", "ueb01hydc.it.open.com", "ueb01hydc.it.open.com:8080", "ueb01hydc.it", "my-good.and-simple.fqdn"};
+    private static final String[] VALID_FQDNS = {"myHostname", "myHostname:80", "myHostname:8080", "1.1.1.1", "1.1.1.1:8080", "mb01hydc.it.open.com", "mb01hydc.it.open.com:8080", "mb01hydc.it", "my-good.and-simple.fqdn"};
     private static final String[] INVALID_FQDNS = {"myHostname:808080", /* 70 letters */"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij", "not**good", "very#not#good#"};
 
     @Test

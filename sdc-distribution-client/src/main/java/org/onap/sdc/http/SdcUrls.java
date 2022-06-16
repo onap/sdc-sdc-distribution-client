@@ -20,16 +20,11 @@
 
 package org.onap.sdc.http;
 
-import java.util.Map;
+public class SdcUrls {
 
-import org.apache.http.HttpEntity;
+    private SdcUrls() {
 
-public interface IHttpAsdcClient {
-
-    HttpAsdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap);
-
-    HttpAsdcResponse getRequest(String requestUrl, Map<String, String> headersMap);
-
-    void closeHttpClient();
-
+    }
+    public static final String GET_VALID_ARTIFACT_TYPES = "/sdc/v1/artifactTypes";
+    public static final String GET_KAFKA_DIST_DATA = "/sdc/v1/distributionKafkaData";
 }
