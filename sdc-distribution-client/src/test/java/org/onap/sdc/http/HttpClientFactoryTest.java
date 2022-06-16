@@ -41,7 +41,7 @@ class HttpClientFactoryTest {
         TestConfiguration config = spy(new TestConfiguration());
         HttpClientFactory httpClientFactory = new HttpClientFactory(config);
         when(config.activateServerTLSAuth()).thenReturn(true);
-        when(config.getKeyStorePath()).thenReturn("src/test/resources/asdc-client.jks");
+        when(config.getKeyStorePath()).thenReturn("src/test/resources/sdc-client.jks");
         when(config.getKeyStorePassword()).thenReturn("Aa123456");
         Pair<String, CloseableHttpClient> client = httpClientFactory.createInstance();
         SSLConnectionSocketFactory sslsf = spy(SSLConnectionSocketFactory.getSocketFactory());
@@ -74,13 +74,13 @@ class HttpClientFactoryTest {
     }
 
     @Test
-    void shouldReturnSSLConnectionError() throws HttpAsdcClientException {
+    void shouldReturnSSLConnectionError() throws HttpSdcClientException{
         TestConfiguration config = spy(new TestConfiguration());
         HttpClientFactory httpClientFactory = new HttpClientFactory(config);
         when(config.activateServerTLSAuth()).thenReturn(true);
         when(config.getKeyStorePath()).thenReturn("src/test/resources/dummy.jks");
         when(config.getKeyStorePassword()).thenReturn("Aa123456");
-        assertThrows(HttpAsdcClientException.class, () -> httpClientFactory.createInstance());
+        assertThrows(HttpSdcClientException.class, () -> httpClientFactory.createInstance());
     }
 
 }
