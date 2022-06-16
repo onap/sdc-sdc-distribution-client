@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2020 Nokia. All rights reserved.
+ * Copyright (C) 2022 Nordix Foundation. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,19 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.sdc.http;
 
-public class HttpAsdcClientException extends RuntimeException {
+package org.onap.sdc.utils.kafka;
 
-    public HttpAsdcClientException(String message, Throwable cause) {
-        super(message, cause);
-    }
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class KafkaDataResponse {
+
+    private String kafkaBootStrapServer;
+    private String distrNotificationTopicName;
+    private String distrStatusTopicName;
 }
