@@ -20,40 +20,38 @@
 
 package org.onap.sdc.utils;
 
-import com.att.nsa.cambria.client.CambriaBatchingPublisher;
-import com.att.nsa.cambria.client.CambriaPublisher;
-import fj.data.Either;
-import org.junit.Test;
-import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.impl.DistributionClientResultImpl;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.att.nsa.cambria.client.CambriaBatchingPublisher;
+import com.att.nsa.cambria.client.CambriaPublisher;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.onap.sdc.api.results.IDistributionClientResult;
+import org.onap.sdc.impl.DistributionClientResultImpl;
 
-public class NotificationSenderTest {
+class NotificationSenderTest {
 
     private final String status = "status";
     private final CambriaPublisher.message message = new CambriaPublisher.message("sample-partition", "sample-message");
     private final List<CambriaPublisher.message> notEmptySendingFailedMessages = Collections.singletonList(message);
-    private final DistributionClientResultImpl successResponse = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
-    private final DistributionClientResultImpl generalErrorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
+    private final DistributionClientResultImpl successResponse = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS,
+        "Messages successfully sent");
+    private final DistributionClientResultImpl generalErrorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR,
+        "Failed to send status");
 
     private final CambriaBatchingPublisher publisher = mock(CambriaBatchingPublisher.class);
     private final List<String> emptyServers = Collections.emptyList();
-    private final NotificationSender validNotificationSender = new NotificationSender(emptyServers);;
-
+    private final NotificationSender validNotificationSender = new NotificationSender(emptyServers);
 
     @Test
-    public void whenPublisherIsValidAndNoExceptionsAreThrownShouldReturnSuccessStatus() throws IOException, InterruptedException {
+    void whenPublisherIsValidAndNoExceptionsAreThrownShouldReturnSuccessStatus() throws IOException, InterruptedException {
         //given
         when(publisher.send(anyString(), anyString())).thenReturn(0);
         when(publisher.close(anyLong(), any())).thenReturn(Collections.emptyList());
@@ -66,7 +64,7 @@ public class NotificationSenderTest {
     }
 
     @Test
-    public void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
         //given
         when(publisher.send(anyString(), anyString())).thenReturn(0);
         when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
@@ -79,7 +77,7 @@ public class NotificationSenderTest {
     }
 
     @Test
-    public void whenSendingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    void whenSendingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
         //given
         when(publisher.send(anyString(), anyString())).thenThrow(new IOException());
         when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
@@ -92,9 +90,11 @@ public class NotificationSenderTest {
     }
 
     @Test
-    public void whenSendingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    void whenSendingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
         //given
-        when(publisher.send(anyString(), anyString())).thenAnswer(invocationOnMock -> {throw new InterruptedException();});
+        when(publisher.send(anyString(), anyString())).thenAnswer(invocationOnMock -> {
+            throw new InterruptedException();
+        });
         when(publisher.close(anyLong(), any())).thenReturn(notEmptySendingFailedMessages);
 
         //when
@@ -105,7 +105,7 @@ public class NotificationSenderTest {
     }
 
     @Test
-    public void whenClosingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    void whenClosingThrowsIOExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
         //given
         when(publisher.send(anyString(), anyString())).thenReturn(0);
         when(publisher.close(anyLong(), any())).thenThrow(new IOException());
@@ -118,10 +118,12 @@ public class NotificationSenderTest {
     }
 
     @Test
-    public void whenClosingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
+    void whenClosingThrowsInterruptedExceptionShouldReturnGeneralErrorStatus() throws IOException, InterruptedException {
         //given
         when(publisher.send(anyString(), anyString())).thenReturn(0);
-        when(publisher.close(anyLong(), any())).thenAnswer(invocationOnMock -> {throw new InterruptedException();});
+        when(publisher.close(anyLong(), any())).thenAnswer(invocationOnMock -> {
+            throw new InterruptedException();
+        });
 
         //when
         IDistributionClientResult result = validNotificationSender.send(publisher, status);

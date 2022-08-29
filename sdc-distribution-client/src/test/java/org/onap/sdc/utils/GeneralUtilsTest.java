@@ -20,22 +20,22 @@
 
 package org.onap.sdc.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import java.util.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GeneralUtilsTest {
+class GeneralUtilsTest {
 
     private static final String TEXT_TO_CODE = "This is example text.";
 
     @Test
-    public void shouldCalculateMD5ForBytes() {
+    void shouldCalculateMD5ForBytes() {
         String hashed = GeneralUtils.calculateMD5(TEXT_TO_CODE.getBytes());
         byte[] decoded = Base64.getDecoder().decode(hashed);
         HashCode expected = Hashing.md5().hashString(TEXT_TO_CODE, Charsets.UTF_8);
@@ -43,7 +43,7 @@ public class GeneralUtilsTest {
     }
 
     @Test
-    public void shouldCalculateMD5ForString() {
+    void shouldCalculateMD5ForString() {
         String hashed = GeneralUtils.calculateMD5(TEXT_TO_CODE);
         byte[] decoded = Base64.getDecoder().decode(hashed);
         HashCode expected = Hashing.md5().hashString(TEXT_TO_CODE, Charsets.UTF_8);
@@ -51,14 +51,14 @@ public class GeneralUtilsTest {
     }
 
     @Test
-    public void shouldValidateBase64EncodedString() {
+    void shouldValidateBase64EncodedString() {
         HashCode expected = Hashing.md5().hashString(TEXT_TO_CODE, Charsets.UTF_8);
         String base64String = Base64.getEncoder().encodeToString(expected.asBytes());
         assertTrue(GeneralUtils.isBase64Encoded(base64String));
     }
 
     @Test
-    public void shouldInvalidateBase64EncodedString() {
+    void shouldInvalidateBase64EncodedString() {
         String base64String = Base64.getEncoder().encodeToString(TEXT_TO_CODE.getBytes());
         assertFalse(GeneralUtils.isBase64Encoded(base64String));
     }

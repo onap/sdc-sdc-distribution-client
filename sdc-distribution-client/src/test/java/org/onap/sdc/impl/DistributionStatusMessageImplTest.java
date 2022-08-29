@@ -19,15 +19,15 @@
  */
 package org.onap.sdc.impl;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.sdc.api.consumer.IComponentDoneStatusMessage;
 import org.onap.sdc.api.consumer.IDistributionStatusMessage;
 import org.onap.sdc.api.consumer.IFinalDistrStatusMessage;
 import org.onap.sdc.utils.DistributionStatusEnum;
 
-public class DistributionStatusMessageImplTest {
+class DistributionStatusMessageImplTest {
 
     private static final String ARTIFACT = "ARTIFACT";
     private static final String DISTRIBUTION_ID = "DISTRIBUTION_ID";
@@ -35,7 +35,7 @@ public class DistributionStatusMessageImplTest {
     private static final String COMPONENT_NAME = "COMPONENT_NAME";
 
     @Test
-    public void shouldProperlySetPropertiesFromIDistributionStatusMessage() {
+    void shouldProperlySetPropertiesFromIDistributionStatusMessage() {
         IDistributionStatusMessage copyFrom = new IDistributionStatusMessage() {
             @Override
             public String getArtifactURL() {
@@ -72,7 +72,7 @@ public class DistributionStatusMessageImplTest {
     }
 
     @Test
-    public void shouldProperlySetPropertiesFromIComponentDoneStatusMessage() {
+    void shouldProperlySetPropertiesFromIComponentDoneStatusMessage() {
         IComponentDoneStatusMessage copyFrom = new IComponentDoneStatusMessage() {
             @Override
             public String getComponentName() {
@@ -109,7 +109,7 @@ public class DistributionStatusMessageImplTest {
     }
 
     @Test
-    public void shouldProperlySetPropertiesFromIFinalDistrStatusMessage() {
+    void shouldProperlySetPropertiesFromIFinalDistrStatusMessage() {
         IFinalDistrStatusMessage copyFrom = new IFinalDistrStatusMessage() {
 
             @Override

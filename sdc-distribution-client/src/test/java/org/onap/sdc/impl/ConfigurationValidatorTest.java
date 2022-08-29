@@ -20,40 +20,42 @@
  */
 package org.onap.sdc.impl;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+class ConfigurationValidatorTest {
 
-public class ConfigurationValidatorTest {
-    private static final String[] VALID_FQDNS = {"myHostname", "myHostname:80", "myHostname:8080", "1.1.1.1", "1.1.1.1:8080", "ueb01hydc.it.open.com", "ueb01hydc.it.open.com:8080", "ueb01hydc.it", "my-good.and-simple.fqdn"};
-    private static final String[] INVALID_FQDNS = {"myHostname:808080", /* 70 letters */"abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij", "not**good", "very#not#good#"};
+    private static final String[] VALID_FQDNS = {"myHostname", "myHostname:80", "myHostname:8080", "1.1.1.1", "1.1.1.1:8080", "ueb01hydc.it.open.com",
+        "ueb01hydc.it.open.com:8080", "ueb01hydc.it", "my-good.and-simple.fqdn"};
+    private static final String[] INVALID_FQDNS = {"myHostname:808080", /* 70 letters */
+        "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij", "not**good", "very#not#good#"};
 
     @Test
-    public void shouldReportThatFqdnIsValid() {
+    void shouldReportThatFqdnIsValid() {
         for (String validFqdn : VALID_FQDNS) {
             boolean validationResult = ConfigurationValidator.isValidFqdn(validFqdn);
-            assertEquals("assertion failed for FQDN " + validFqdn + " expected to be valid, actual invalid", true, validationResult);
+            assertTrue(validationResult, "assertion failed for FQDN " + validFqdn + " expected to be valid, actual invalid");
         }
     }
 
     @Test
-    public void shouldReportThatFqdnIsInvalid() {
+    void shouldReportThatFqdnIsInvalid() {
         for (String invalidFqdn : INVALID_FQDNS) {
             boolean validationResult = ConfigurationValidator.isValidFqdn(invalidFqdn);
-            assertEquals("assertion failed for FQDN " + invalidFqdn + " expected to be invalid, actual valid", false, validationResult);
+            assertFalse(validationResult, "assertion failed for FQDN " + invalidFqdn + " expected to be invalid, actual valid");
         }
     }
+
     @Test
-    public void shouldReportThatFqdnsAreValid() {
+    void shouldReportThatFqdnsAreValid() {
         assertTrue(ConfigurationValidator.isValidFqdns(Arrays.asList(VALID_FQDNS)));
     }
 
     @Test
-    public void shouldReportThatFqdnsAreInvalid() {
+    void shouldReportThatFqdnsAreInvalid() {
         assertFalse(ConfigurationValidator.isValidFqdns(Arrays.asList(INVALID_FQDNS)));
     }
 }

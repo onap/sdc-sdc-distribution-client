@@ -19,14 +19,14 @@
  */
 package org.onap.sdc.api.asdc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class RegistrationRequestTest {
+class RegistrationRequestTest {
 
     private static final List<String> DIST_ENV_END_POINTS = Collections.emptyList();
     private static final boolean IS_CONSUMER_TO_SDC_DISTR_STATUS_TOPIC = true;
@@ -34,12 +34,12 @@ public class RegistrationRequestTest {
     private static final String API_KEY = "API_KEY";
 
     @Test
-    public void testConstructorShouldSetProperties() {
+    void testConstructorShouldSetProperties() {
         RegistrationRequest registrationRequest =
-                new RegistrationRequest(API_KEY, ENV_NAME, IS_CONSUMER_TO_SDC_DISTR_STATUS_TOPIC, DIST_ENV_END_POINTS);
-        assertEquals(registrationRequest.getApiPublicKey(), API_KEY);
-        assertEquals(registrationRequest.getDistEnvEndPoints(), DIST_ENV_END_POINTS);
-        assertEquals(registrationRequest.getDistrEnvName(), ENV_NAME);
+            new RegistrationRequest(API_KEY, ENV_NAME, IS_CONSUMER_TO_SDC_DISTR_STATUS_TOPIC, DIST_ENV_END_POINTS);
+        assertEquals(API_KEY, registrationRequest.getApiPublicKey());
+        assertEquals(DIST_ENV_END_POINTS, registrationRequest.getDistEnvEndPoints());
+        assertEquals(ENV_NAME, registrationRequest.getDistrEnvName());
         assertTrue(registrationRequest.getIsConsumerToSdcDistrStatusTopic());
     }
 }
