@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.onap.oparent</groupId>
 		<artifactId>oparent</artifactId>
-		<version>2.0.0</version>
+		<version>3.2.1</version>
 		<relativePath/>
 	</parent>
 
@@ -36,14 +36,17 @@
 		<org.glassfish.jersey.version>2.24</org.glassfish.jersey.version>
 		<functionaljava.version>4.8</functionaljava.version>
 		<httpclient.version>4.5.13</httpclient.version>
-		<httpcore.version>4.4.14</httpcore.version>
-		<logback.version>1.2.3</logback.version>
-		<junit.version>5.7.0</junit.version>
-		<snakeyaml.version>1.28</snakeyaml.version>
-		<guava.version>30.0-jre</guava.version>
-		<jetty.version>9.4.35.v20201120</jetty.version>
+		<httpcore.version>4.4.15</httpcore.version>
+		<logback.version>1.2.11</logback.version>
+		<junit.version>5.9.0</junit.version>
+		<snakeyaml.version>1.30</snakeyaml.version>
+		<guava.version>31.1-jre</guava.version>
+		<jetty.version>9.4.48.v20220622</jetty.version>
 		<bean-matchers.version>0.12</bean-matchers.version>
 		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
+		<mockito.version>3.12.4</mockito.version>
+		<slf4j-api.version>1.7.36</slf4j-api.version>
+		<assertj-core.version>3.23.1</assertj-core.version>
 
 		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<sitePath>/content/sites/site/org/onap/sdc/sdc-distribution-client/${project.version}</sitePath>
@@ -70,7 +73,8 @@
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-compiler-plugin.source>11</maven-compiler-plugin.source>
 		<maven-compiler-plugin.target>11</maven-compiler-plugin.target>
-		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+		<sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
+		<checkstyle.skip>true</checkstyle.skip>
 	</properties>
 
 	<profiles>
@@ -138,6 +142,7 @@
 				<configuration>
 					<suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
 					<suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+					<skip>${checkstyle.skip}</skip>
 				</configuration>
 			</plugin>
 			<plugin>
