@@ -19,7 +19,19 @@
  */
 package org.onap.test.core.service;
 
-import org.awaitility.Duration;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import org.awaitility.Durations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,19 +49,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.mockito.Mockito.verify;
-
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
 class ClientInitializerTest {
@@ -59,24 +58,19 @@ class ClientInitializerTest {
     private static final int SUCCESSFUL_INIT_MSG_INDEX = 0;
     private static final int SUCCESSFUL_DIST_MSG_INDEX = 3;
     private static final int EXPECTED_HEAT_ARTIFACTS = 4;
-    private ClientInitializer clientInitializer;
-    private ClientNotifyCallback clientNotifyCallback;
     private static final Logger testLog = LoggerFactory.getLogger(ClientInitializerTest.class);
-
     @Container
     public GenericContainer mockDmaap = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-dmaap:latest")
-            .withNetworkMode("host");
-
-
+        .withNetworkMode("host");
     @Container
     public GenericContainer mockSdc = new GenericContainer("registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-sdc:latest")
-            .withNetworkMode("host");
+        .withNetworkMode("host");
     @Mock
-    Logger log;
-
+    private Logger log;
     @Mock
-    Logger distClientLog;
-
+    private Logger distClientLog;
+    private ClientInitializer clientInitializer;
+    private ClientNotifyCallback clientNotifyCallback;
 
     @BeforeEach
     public void initializeClient() {
@@ -88,7 +82,7 @@ class ClientInitializerTest {
     }
 
     @Test
-    public void shouldRegisterToDmaapAfterClientInitialization() {
+    void shouldRegisterToDmaapAfterClientInitialization() {
         //given
         final ArgumentCaptor<String> exceptionCaptor = ArgumentCaptor.forClass(String.class);
         //when
@@ -102,7 +96,7 @@ class ClientInitializerTest {
     }
 
     @Test
-    public void shouldUnregisterAndStopClient() {
+    void shouldUnregisterAndStopClient() {
         //given
         final ArgumentCaptor<String> exceptionCaptor = ArgumentCaptor.forClass(String.class);
         //when
@@ -116,13 +110,13 @@ class ClientInitializerTest {
     }
 
     @Test
-    public void shouldDownloadArtifactsWithArtifactTypeHeat() throws IOException, InterruptedException {
+    void shouldDownloadArtifactsWithArtifactTypeHeat() throws IOException, InterruptedException {
 
         //given
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:3904/events/testName/add"))
-                .POST(HttpRequest.BodyPublishers.ofFile(Paths.get("src/test/resources/artifacts.json")))
-                .build();
+            .uri(URI.create("http://localhost:3904/events/testName/add"))
+            .POST(HttpRequest.BodyPublishers.ofFile(Paths.get("src/test/resources/artifacts.json")))
+            .build();
         HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
         //when
         clientInitializer.initialize();
@@ -135,7 +129,7 @@ class ClientInitializerTest {
     private void waitForArtifacts() {
         testLog.info("Waiting for artifacts");
         await()
-                .atMost(Duration.ONE_MINUTE)
-                .until(() -> !clientNotifyCallback.getPulledArtifacts().isEmpty());
+            .atMost(Durations.ONE_MINUTE)
+            .until(() -> !clientNotifyCallback.getPulledArtifacts().isEmpty());
     }
 }

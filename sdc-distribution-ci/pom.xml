@@ -22,8 +22,6 @@
     <junit-jupiter-engine.version>${junit.version}</junit-jupiter-engine.version>
     <junit-jupiter-params.version>${junit.version}</junit-jupiter-params.version>
     <junit-jupiter-api.version>${junit.version}</junit-jupiter-api.version>
-    <awaitility-proxy.version>3.0.0</awaitility-proxy.version>
-    <awaitility.version>3.0.0</awaitility.version>
   </properties>
 
   <dependencies>
@@ -174,18 +172,6 @@
         <exclusion>
           <artifactId>objenesis</artifactId>
           <groupId>org.objenesis</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.awaitility</groupId>
-      <artifactId>awaitility-proxy</artifactId>
-      <version>${awaitility-proxy.version}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>byte-buddy</artifactId>
-          <groupId>net.bytebuddy</groupId>
         </exclusion>
       </exclusions>
     </dependency>

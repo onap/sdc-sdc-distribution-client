@@ -47,6 +47,8 @@
 		<mockito.version>3.12.4</mockito.version>
 		<slf4j-api.version>1.7.36</slf4j-api.version>
 		<assertj-core.version>3.23.1</assertj-core.version>
+		<awaitility-proxy.version>3.1.6</awaitility-proxy.version>
+		<awaitility.version>4.2.0</awaitility.version>
 
 		<nexus.proxy>https://nexus.onap.org</nexus.proxy>
 		<sitePath>/content/sites/site/org/onap/sdc/sdc-distribution-client/${project.version}</sitePath>
@@ -235,6 +237,4 @@
     </site>
 	</distributionManagement>
 
-
 </project>
-

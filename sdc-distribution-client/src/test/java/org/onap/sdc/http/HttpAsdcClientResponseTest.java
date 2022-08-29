@@ -19,44 +19,39 @@
  */
 package org.onap.sdc.http;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpStatus;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
+class HttpAsdcClientResponseTest {
 
-@RunWith(value = Parameterized.class)
-public class HttpAsdcClientResponseTest {
-    @Parameterized.Parameter
-    public int httpStatusCode;
-
-    @Parameterized.Parameter(value = 1)
-    public String httpMessage;
-
-    @Parameterized.Parameters(name = "{index}: test({0},{1}) = {0} {1}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {HttpStatus.SC_INTERNAL_SERVER_ERROR, "failed to send request"},
-                {HttpStatus.SC_BAD_GATEWAY, "failed to connect"},
-                {HttpStatus.SC_BAD_GATEWAY, "failed to send request "}
+            {HttpStatus.SC_INTERNAL_SERVER_ERROR, "failed to send request"},
+            {HttpStatus.SC_BAD_GATEWAY, "failed to connect"},
+            {HttpStatus.SC_BAD_GATEWAY, "failed to send request "}
         });
     }
 
-    @Test
-    public void shouldCreateHttpResponse() throws IOException {
+    @ParameterizedTest
+    @MethodSource("data")
+    void shouldCreateHttpResponse(int httpStatusCode, String httpMessage) throws IOException {
         // when
         final HttpAsdcResponse response = HttpAsdcClient.createHttpResponse(httpStatusCode, httpMessage);
 
         // then
-        Assert.assertEquals(httpStatusCode, response.getStatus());
-        Assert.assertEquals(httpMessage, getResponseMessage(response));
+        assertEquals(httpStatusCode, response.getStatus());
+        assertEquals(httpMessage, getResponseMessage(response));
     }
 
     private String getResponseMessage(HttpAsdcResponse response) throws IOException {

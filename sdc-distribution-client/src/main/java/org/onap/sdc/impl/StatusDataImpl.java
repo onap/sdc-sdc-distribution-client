@@ -21,9 +21,15 @@
 
 package org.onap.sdc.impl;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.onap.sdc.api.notification.IStatusData;
 import org.onap.sdc.utils.DistributionStatusEnum;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class StatusDataImpl implements IStatusData {
 
     private String distributionID;
@@ -35,65 +41,9 @@ public class StatusDataImpl implements IStatusData {
     private String errorReason;
 
     @Override
-    public String getDistributionID() {
-        return distributionID;
-    }
-
-    public void setDistributionID(String distributionId) {
-        this.distributionID = distributionId;
-    }
-
-    @Override
-    public String getConsumerID() {
-        return consumerID;
-    }
-
-    public void setConsumerID(String consumerId) {
-        this.consumerID = consumerId;
-    }
-
-    @Override
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public String getArtifactURL() {
-        return artifactURL;
-    }
-
-    public void setArtifactURL(String artifactURL) {
-        this.artifactURL = artifactURL;
-    }
-
-    @Override
-    public DistributionStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(DistributionStatusEnum status) {
-        this.status = status;
-    }
-
-
-    @Override
     public String toString() {
-        return "StatusDataImpl [distributionID=" + distributionID + ", consumerID=" + consumerID + ", timestamp=" + timestamp + ", artifactURL=" + artifactURL + ", status=" + status + ", errorReason=" + errorReason + "]";
+        return "StatusDataImpl [distributionID=" + distributionID + ", consumerID=" + consumerID + ", timestamp=" + timestamp + ", artifactURL="
+            + artifactURL + ", status=" + status + ", errorReason=" + errorReason + "]";
     }
-
-    @Override
-    public String getComponentName() {
-        return componentName;
-    }
-
-    @Override
-    public String getErrorReason() {
-        return errorReason;
-    }
-
 
 }

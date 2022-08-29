@@ -21,20 +21,25 @@
 
 package org.onap.sdc.http;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.att.nsa.apiClient.credentials.ApiCredential;
 import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import fj.data.Either;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,59 +48,48 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.Matchers;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.onap.sdc.api.asdc.RegistrationRequest;
+import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientResultImpl;
-import org.onap.sdc.api.asdc.RegistrationRequest;
-import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.Pair;
 
-import com.att.nsa.apiClient.credentials.ApiCredential;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+class SdcConnectorClientTest {
 
-import fj.data.Either;
-
-public class SdcConnectorClientTest {
-
-    private static Gson gson = new GsonBuilder().create();
     private static final String MOCK_ENV = "MockEnv";
     private static final String MOCK_API_KEY = "MockApikey";
+    private static final String ARTIFACT_URL = "http://127.0.0.1/artifact/url";
+    private static final String IT_JUST_DIDN_T_WORK = "It just didn't work";
+    private static final List<String> ARTIFACT_TYPES = Arrays.asList("Service", "Resource", "VF", "VFC");
+    private static final int PORT = 49512;
+    private static final byte[] BYTES = new byte[]{0xA, 0xB, 0xC, 0xD};
+    private static Gson gson = new GsonBuilder().create();
+    private static final String VALID_JSON_PAYLOAD = gson.toJson(ARTIFACT_TYPES);
     private static HttpAsdcClient httpClient = mock(HttpAsdcClient.class);
     private static IConfiguration configuration = mock(IConfiguration.class);
     private static ApiCredential apiCredential = mock(ApiCredential.class);
     private static HttpAsdcResponse httpAsdcResponse = mock(HttpAsdcResponse.class);
     @SuppressWarnings("unchecked")
     private static Either<TopicRegistrationResponse, DistributionClientResultImpl> mockResponse =
-            Mockito.mock(Either.class);
+        Mockito.mock(Either.class);
     private static Map<String, String> mockHeaders = new HashMap<>();
+    private static SdcConnectorClient asdcClient;
     Pair<HttpAsdcResponse, CloseableHttpResponse> mockPair = new Pair<>(httpAsdcResponse, null);
     private HttpEntity lastHttpEntity = null;
 
-    private static SdcConnectorClient asdcClient;
-
-    private static final String ARTIFACT_URL = "http://127.0.0.1/artifact/url";
-    private static final String IT_JUST_DIDN_T_WORK = "It just didn't work";
-    private static final List<String> ARTIFACT_TYPES = Arrays.asList("Service", "Resource", "VF", "VFC");
-    private static final String VALID_JSON_PAYLOAD = gson.toJson(ARTIFACT_TYPES);
-    private static final int PORT = 49512;
-    private static final byte[] BYTES = new byte[] {0xA, 0xB, 0xC, 0xD};
-
-
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         asdcClient = Mockito.spy(new SdcConnectorClient(configuration, httpClient));
         when(apiCredential.getApiKey()).thenReturn(MOCK_API_KEY);
@@ -105,12 +99,11 @@ public class SdcConnectorClientTest {
         doReturn(mockResponse).when(asdcClient).parseRegistrationResponse(httpAsdcResponse);
     }
 
-    @Before
+    @BeforeEach
     public void beforeMethod() {
         Mockito.reset(configuration, httpClient);
         lastHttpEntity = null;
         when(configuration.getEnvironmentName()).thenReturn(MOCK_ENV);
-
 
         doAnswer(new Answer<Pair<HttpAsdcResponse, CloseableHttpResponse>>() {
             @Override
@@ -118,12 +111,11 @@ public class SdcConnectorClientTest {
                 lastHttpEntity = invocation.getArgument(1, HttpEntity.class);
                 return mockPair;
             }
-        }).when(httpClient).postRequest(Mockito.eq(AsdcUrls.POST_FOR_TOPIC_REGISTRATION), Mockito.any(HttpEntity.class),
-                Mockito.eq(mockHeaders), Mockito.eq(false));
+        }).when(httpClient).postRequest(eq(AsdcUrls.POST_FOR_TOPIC_REGISTRATION), any(HttpEntity.class), eq(mockHeaders), eq(false));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void initAndCloseTest() {
+    @Test
+    void initAndCloseTest() {
         IConfiguration conf = Mockito.mock(IConfiguration.class);
         when(conf.getUser()).thenReturn("user");
         when(conf.getPassword()).thenReturn("password");
@@ -134,56 +126,51 @@ public class SdcConnectorClientTest {
         SdcConnectorClient client = new SdcConnectorClient(conf, httpClient);
         client.close();
 
-        //check if client is really closed
-        httpClient.getRequest(AsdcUrls.POST_FOR_TOPIC_REGISTRATION, new HashMap<>());
+        assertThrows(IllegalStateException.class, () -> {
+            //check if client is really closed
+            httpClient.getRequest(AsdcUrls.POST_FOR_TOPIC_REGISTRATION, new HashMap<>());
+        });
+
     }
 
     @Test
-    public void testConsumeProduceStatusTopicFalse() throws UnsupportedOperationException, IOException {
-
+    void testConsumeProduceStatusTopicFalse() throws UnsupportedOperationException, IOException {
         testConsumeProduceStatusTopic(false);
-
     }
 
     @Test
-    public void testConsumeProduceStatusTopicTrue() throws UnsupportedOperationException, IOException {
-
+    void testConsumeProduceStatusTopicTrue() throws UnsupportedOperationException, IOException {
         testConsumeProduceStatusTopic(true);
-
     }
 
     private void testConsumeProduceStatusTopic(final boolean isConsumeProduceStatusFlag) throws IOException {
         when(configuration.isConsumeProduceStatusTopic()).thenReturn(isConsumeProduceStatusFlag);
         asdcClient.registerAsdcTopics(apiCredential);
-        verify(httpClient, times(1))
-                .postRequest(Mockito.eq(AsdcUrls.POST_FOR_TOPIC_REGISTRATION), any(HttpEntity.class),
-                        Mockito.eq(mockHeaders), Mockito.eq(false));
+        verify(httpClient, times(1)).postRequest(eq(AsdcUrls.POST_FOR_TOPIC_REGISTRATION), any(HttpEntity.class), eq(mockHeaders), eq(false));
         assertNotNull(lastHttpEntity);
-        RegistrationRequest actualRegRequest =
-                gson.fromJson(IOUtils.toString(lastHttpEntity.getContent(), StandardCharsets.UTF_8),
-                        RegistrationRequest.class);
-        RegistrationRequest expectedRegRequest =
-                gson.fromJson(excpectedStringBody(isConsumeProduceStatusFlag), RegistrationRequest.class);
+        RegistrationRequest actualRegRequest
+            = gson.fromJson(IOUtils.toString(lastHttpEntity.getContent(), StandardCharsets.UTF_8), RegistrationRequest.class);
+        RegistrationRequest expectedRegRequest
+            = gson.fromJson(excpectedStringBody(isConsumeProduceStatusFlag), RegistrationRequest.class);
 
-        assertTrue(actualRegRequest.getApiPublicKey().equals(expectedRegRequest.getApiPublicKey()));
-        assertTrue(actualRegRequest.getDistrEnvName().equals(expectedRegRequest.getDistrEnvName()));
-        assertTrue(actualRegRequest.getIsConsumerToSdcDistrStatusTopic()
-                           .equals(expectedRegRequest.getIsConsumerToSdcDistrStatusTopic()));
+        assertEquals(expectedRegRequest.getApiPublicKey(), actualRegRequest.getApiPublicKey());
+        assertEquals(expectedRegRequest.getDistrEnvName(), actualRegRequest.getDistrEnvName());
+        assertEquals(expectedRegRequest.getIsConsumerToSdcDistrStatusTopic(), actualRegRequest.getIsConsumerToSdcDistrStatusTopic());
     }
 
     @Test
-    public void getValidArtifactTypesListHappyScenarioTest() throws IOException {
+    void getValidArtifactTypesListHappyScenarioTest() throws IOException {
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         CloseableHttpResponse closeableHttpResponseMock = mock(CloseableHttpResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
         Pair<HttpAsdcResponse, CloseableHttpResponse> responsePair =
-                new Pair<>(responseMock, closeableHttpResponseMock);
+            new Pair<>(responseMock, closeableHttpResponseMock);
 
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_OK);
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(VALID_JSON_PAYLOAD.getBytes()));
-        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), Matchers.any(), eq(false)))
-                .thenReturn(responsePair);
+        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), any(), eq(false)))
+            .thenReturn(responsePair);
 
         Either<List<String>, IDistributionClientResult> result = asdcClient.getValidArtifactTypesList();
         assertTrue(result.isLeft());
@@ -192,7 +179,7 @@ public class SdcConnectorClientTest {
     }
 
     @Test
-    public void getValidArtifactTypesListErrorResponseScenarioTest() throws IOException {
+    void getValidArtifactTypesListErrorResponseScenarioTest() throws IOException {
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
         Pair<HttpAsdcResponse, CloseableHttpResponse> responsePair = new Pair<>(responseMock, null);
@@ -200,30 +187,30 @@ public class SdcConnectorClientTest {
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_GATEWAY_TIMEOUT);
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(IT_JUST_DIDN_T_WORK.getBytes()));
-        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), Matchers.any(), eq(false)))
-                .thenReturn(responsePair);
+        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), any(), eq(false)))
+            .thenReturn(responsePair);
 
         Either<List<String>, IDistributionClientResult> result = asdcClient.getValidArtifactTypesList();
         assertTrue(result.isRight());
         IDistributionClientResult distributionClientResult = result.right().value();
         assertEquals(DistributionActionResultEnum.ASDC_SERVER_TIMEOUT,
-                distributionClientResult.getDistributionActionResult());
+            distributionClientResult.getDistributionActionResult());
     }
 
 
     @Test
-    public void getValidArtifactTypesListExceptionDuringConnectionClosingTest() throws IOException {
+    void getValidArtifactTypesListExceptionDuringConnectionClosingTest() throws IOException {
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         CloseableHttpResponse closeableHttpResponseMock = mock(CloseableHttpResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
         Pair<HttpAsdcResponse, CloseableHttpResponse> responsePair =
-                new Pair<>(responseMock, closeableHttpResponseMock);
+            new Pair<>(responseMock, closeableHttpResponseMock);
 
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_GATEWAY_TIMEOUT);
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(VALID_JSON_PAYLOAD.getBytes()));
-        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), Matchers.any(), eq(false)))
-                .thenReturn(responsePair);
+        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), any(), eq(false)))
+            .thenReturn(responsePair);
 
         doThrow(new IOException("Test exception")).when(closeableHttpResponseMock).close();
 
@@ -231,36 +218,36 @@ public class SdcConnectorClientTest {
         assertTrue(result.isRight());
         IDistributionClientResult distributionClientResult = result.right().value();
         assertEquals(DistributionActionResultEnum.ASDC_SERVER_TIMEOUT,
-                distributionClientResult.getDistributionActionResult());
+            distributionClientResult.getDistributionActionResult());
     }
 
     @Test
-    public void getValidArtifactTypesListParsingExceptionHandlingTest() throws IOException {
+    void getValidArtifactTypesListParsingExceptionHandlingTest() throws IOException {
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
         CloseableHttpResponse closeableHttpResponseMock = mock(CloseableHttpResponse.class);
         HttpEntity messageMock = mock(HttpEntity.class);
         Pair<HttpAsdcResponse, CloseableHttpResponse> responsePair =
-                new Pair<>(responseMock, closeableHttpResponseMock);
+            new Pair<>(responseMock, closeableHttpResponseMock);
 
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_OK);
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ThrowingInputStreamForTesting());
-        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), Matchers.any(), eq(false)))
-                .thenReturn(responsePair);
+        when(httpClient.getRequest(eq(AsdcUrls.GET_VALID_ARTIFACT_TYPES), any(), eq(false)))
+            .thenReturn(responsePair);
 
         Either<List<String>, IDistributionClientResult> result = asdcClient.getValidArtifactTypesList();
         assertTrue(result.isRight());
         IDistributionClientResult distributionClientResult = result.right().value();
         assertEquals(DistributionActionResultEnum.GENERAL_ERROR,
-                distributionClientResult.getDistributionActionResult());
+            distributionClientResult.getDistributionActionResult());
     }
 
     @Test
-    public void unregisterTopicsErrorDuringProcessingTest() throws IOException {
+    void unregisterTopicsErrorDuringProcessingTest() throws IOException {
         when(configuration.getAsdcAddress()).thenReturn("127.0.0.1" + PORT);
         when(configuration.isConsumeProduceStatusTopic()).thenReturn(false);
         when(configuration.getMsgBusAddress())
-                .thenReturn(Arrays.asList("http://127.0.0.1:45321/dmaap", "http://127.0.0.1:45321/dmaap"));
+            .thenReturn(Arrays.asList("http://127.0.0.1:45321/dmaap", "http://127.0.0.1:45321/dmaap"));
 
         String failMessage = "It just didn't work";
         HttpAsdcResponse responseMock = mock(HttpAsdcResponse.class);
@@ -271,14 +258,14 @@ public class SdcConnectorClientTest {
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(failMessage.getBytes()));
         doReturn(responsePair).when(httpClient)
-                .postRequest(eq(AsdcUrls.POST_FOR_UNREGISTER), any(HttpEntity.class), any(), eq(false));
+            .postRequest(eq(AsdcUrls.POST_FOR_UNREGISTER), any(HttpEntity.class), any(), eq(false));
 
         IDistributionClientResult result = asdcClient.unregisterTopics(apiCredential);
         assertEquals(DistributionActionResultEnum.ASDC_CONNECTION_FAILED, result.getDistributionActionResult());
     }
 
     @Test
-    public void unregisterTopicsHappyScenarioTest() throws IOException {
+    void unregisterTopicsHappyScenarioTest() throws IOException {
         when(configuration.getAsdcAddress()).thenReturn("127.0.0.1" + PORT);
         when(configuration.isConsumeProduceStatusTopic()).thenReturn(false);
 
@@ -291,14 +278,14 @@ public class SdcConnectorClientTest {
         when(responseMock.getMessage()).thenReturn(messageMock);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(failMessage.getBytes()));
         doReturn(responsePair).when(httpClient)
-                .postRequest(eq(AsdcUrls.POST_FOR_UNREGISTER), any(HttpEntity.class), any(), eq(false));
+            .postRequest(eq(AsdcUrls.POST_FOR_UNREGISTER), any(HttpEntity.class), any(), eq(false));
 
         IDistributionClientResult result = asdcClient.unregisterTopics(apiCredential);
         assertEquals(DistributionActionResultEnum.SUCCESS, result.getDistributionActionResult());
     }
 
     @Test
-    public void downloadArtifactHappyScenarioTest() throws IOException {
+    void downloadArtifactHappyScenarioTest() throws IOException {
         Map<String, String> headers = new HashMap<>();
         headers.put(asdcClient.CONTENT_DISPOSITION_HEADER, "SomeHeader");
 
@@ -321,7 +308,7 @@ public class SdcConnectorClientTest {
     }
 
     @Test
-    public void downloadArtifactDataIntegrityProblemTest() throws IOException {
+    void downloadArtifactDataIntegrityProblemTest() throws IOException {
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
 
@@ -339,7 +326,7 @@ public class SdcConnectorClientTest {
     }
 
     @Test
-    public void downloadArtifactExceptionDuringDownloadHandlingTest() throws IOException {
+    void downloadArtifactExceptionDuringDownloadHandlingTest() throws IOException {
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
 
@@ -357,7 +344,7 @@ public class SdcConnectorClientTest {
     }
 
     @Test
-    public void downloadArtifactHandleDownloadErrorTest() throws IOException {
+    void downloadArtifactHandleDownloadErrorTest() throws IOException {
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
 
@@ -376,8 +363,8 @@ public class SdcConnectorClientTest {
 
     private String excpectedStringBody(boolean isConsumeProduceStatusTopic) {
         String stringBodyTemplate =
-                "{\r\n" + "  \"apiPublicKey\": \"MockApikey\",\r\n" + "  \"distrEnvName\": \"MockEnv\",\r\n"
-                        + "  \"isConsumerToSdcDistrStatusTopic\": %s\r\n" + "}";
+            "{\r\n" + "  \"apiPublicKey\": \"MockApikey\",\r\n" + "  \"distrEnvName\": \"MockEnv\",\r\n"
+                + "  \"isConsumerToSdcDistrStatusTopic\": %s\r\n" + "}";
         return String.format(stringBodyTemplate, isConsumeProduceStatusTopic);
 
     }
