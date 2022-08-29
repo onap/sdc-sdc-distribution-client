@@ -1,15 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <assertj-core.version>3.18.1</assertj-core.version>
-        <mockito-all.version>3.6.28</mockito-all.version>
         <commons-io.version>2.8.0</commons-io.version>
-        <gson.version>2.8.6</gson.version>
+        <gson.version>2.8.9</gson.version>
         <cambriaClient.version>0.0.1</cambriaClient.version>
-        <slf4j-api.version>1.7.30</slf4j-api.version>
+        <lombok.version>1.18.24</lombok.version>
     </properties>
 
     <parent>
@@ -23,32 +21,16 @@
     <description>Distribution client JAR file to use by consumers</description>
     <packaging>jar</packaging>
 
-
     <dependencies>
-
         <dependency>
-            <groupId>com.att.nsa</groupId>
-            <artifactId>saClientLibrary</artifactId>
-            <version>${cambriaClient.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>  <!-- declare the exclusion here -->
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>commons-io</artifactId>
-                    <groupId>commons-io</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -61,6 +43,12 @@
             <artifactId>cambriaClient</artifactId>
             <version>${cambriaClient.version}</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -101,19 +89,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpmime</artifactId>
-            <version>${httpclient.version}</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>httpclient</artifactId>
-                    <groupId>org.apache.httpcomponents</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- YAML parser -->
         <dependency>
             <groupId>org.yaml</groupId>
@@ -143,8 +118,12 @@
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <artifactId>jetty-util</artifactId>
                     <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-util</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-security</artifactId>
                 </exclusion>
             </exclusions>
             <version>${jetty.version}</version>
@@ -163,23 +142,36 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
+<!--        TODO - remove after migration to Junit5-->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito-all.version}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
 
