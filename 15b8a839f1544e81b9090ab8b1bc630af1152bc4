@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5b89eb36_459fb084",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2022-10-10T14:46:03Z",
+      "side": 1,
+      "message": "Could be being used by SO as they want to poll on the STATUS topic also",
+      "parentUuid": "63d87239_d774a952",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 4
+      },
+      "revId": "15b8a839f1544e81b9090ab8b1bc630af1152bc4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d5a56ac_fb7665d9",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2022-10-05T14:54:33Z",
       "side": 1,
       "message": "Not sure this \"Boolean.TRUE\" was needed around the original 2 parameters, before adding the additional one.",
+      "range": {
+        "startLine": 593,
+        "startChar": 12,
+        "endLine": 593,
+        "endChar": 31
+      },
+      "revId": "15b8a839f1544e81b9090ab8b1bc630af1152bc4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46ff480e_df1c6dc6",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/DistributionClientImpl.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2022-10-10T14:46:03Z",
+      "side": 1,
+      "message": "Intellij told me to do it 😊",
+      "parentUuid": "2d5a56ac_fb7665d9",
       "range": {
         "startLine": 593,
         "startChar": 12,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "16a63ab7_9dd97812",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/KafkaDataResponse.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2022-10-10T14:46:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7819ca49_5d996877",
+      "revId": "15b8a839f1544e81b9090ab8b1bc630af1152bc4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea5e23e8_b7405cdf",
         "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/SdcKafkaTest.java",
         "patchSetId": 6
@@ -79,6 +145,24 @@
       "revId": "15b8a839f1544e81b9090ab8b1bc630af1152bc4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3542d44f_63e5090b",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/SdcKafkaTest.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2022-10-10T14:46:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea5e23e8_b7405cdf",
+      "revId": "15b8a839f1544e81b9090ab8b1bc630af1152bc4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
