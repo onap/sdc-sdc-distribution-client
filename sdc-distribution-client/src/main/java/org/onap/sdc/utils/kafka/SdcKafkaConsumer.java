@@ -94,6 +94,10 @@ public class SdcKafkaConsumer {
         return msgs;
     }
 
+    /**
+     *
+     * @return The topic being polled by the consumer
+     */
     public String getTopicName() {
         return topicName;
     }
