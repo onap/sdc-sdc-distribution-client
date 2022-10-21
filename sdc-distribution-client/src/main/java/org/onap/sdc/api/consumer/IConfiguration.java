@@ -34,27 +34,28 @@ public interface IConfiguration {
     String getSdcAddress();
 
     /**
-     * SDC Distribution Addresses from ONAP Component Values need to be set from
-     * impl
-     */
-    List<String> getMsgBusAddress();
-
-    /**
-     * Kafka security.protocol
+     * Kafka security protocol to be used by the client to Auth towards the kafka cluster
+     *
+     * @return Kafka security.protocol. Default is SASL_PLAINTEXT
      */
     default String getKafkaSecurityProtocolConfig() {
         return System.getenv().getOrDefault("SECURITY_PROTOCOL", "SASL_PLAINTEXT");
     }
 
     /**
-     * Kafka sasl.mechanism
+     * Kafka SASL mechanism to be used by the client to Auth towards the kafka cluster
+     *
+     * @return Kafka sasl.mechanism. Default is SCRAM-SHA-512
      */
     default String getKafkaSaslMechanism() {
         return System.getenv().getOrDefault("SASL_MECHANISM", "SCRAM-SHA-512");
     }
 
     /**
-     * Kafka sasl.jaas.config
+     * Kafka JAAS config to be used by the client to Auth towards the kafka cluster.
+     * If overridden, must align with sasl.jaas.config convention set out by the sasl.mechanism being used
+     * otherwise, mandatory setting of the environment variable SASL_JAAS_CONFIG is required to provide default behaviour
+     * @return Kafka sasl.jaas.config
      */
     default String getKafkaSaslJaasConfig() {
         String saslJaasConfFromEnv = System.getenv("SASL_JAAS_CONFIG");
@@ -77,7 +78,7 @@ public interface IConfiguration {
      * default (HTTPS) behavior will be applied. If set to false, distribution
      * client will use HTTP when connecting to SDC.
      *
-     * @return
+     * @return default is true
      */
     default Boolean isUseHttpsWithSDC() {
         return true;
@@ -127,14 +128,14 @@ public interface IConfiguration {
      * Returns the environment name (testing, production etc...). Can Be
      * reconfigured in runtime.
      *
-     * @return
+     * @return Environment name
      */
     String getEnvironmentName();
 
     /**
-     * Unique ID of component instance (e.x INSTAR name).
+     * Unique ID of component instance to be used to poll the kafka topic.
      *
-     * @return
+     * @return SdcKafkaConsumer id.
      */
     String getConsumerID();
 
@@ -143,12 +144,14 @@ public interface IConfiguration {
      * the SDC's public key (e.g /etc/keystore/sdc-client.jks) file will be
      * deployed with sdc-distribution jar.
      *
-     * @return
+     * @return Client's Key store path
      */
     String getKeyStorePath();
 
     /**
-     * @return Returns client's Key Store password
+     * Return the password for the Client's Key Store
+     *
+     * @return Client's Key Store password
      */
     String getKeyStorePassword();
 
@@ -156,7 +159,7 @@ public interface IConfiguration {
      * Sets whether SDC server TLS authentication is activated. If set to false, Key
      * Store path and password are not needed to be set.
      *
-     * @return
+     * @return true by default
      */
     boolean activateServerTLSAuth();
 
@@ -169,12 +172,12 @@ public interface IConfiguration {
      * Setting the method to false will activate the legacy behavior, in which empty
      * resources are not part of the notification.<br>
      *
-     * @return
+     * @return true or false
      */
     boolean isFilterInEmptyResources();
 
     /**
-     * By default, (false value) Distribution Client will trigger the regular
+     * By default: false. Distribution Client will trigger the regular
      * registration towards SDC (register component as consumer to the
      * SDC-DISTR-NOTIF-TOPIC-[ENV] topic and register component as producer to the
      * SDC-DISTR-STATUS-TOPIC-[ENV]).<br>
@@ -182,7 +185,7 @@ public interface IConfiguration {
      * this component request to be consumer and producer of the
      * SDC-DISTR-STATUS-TOPIC-[ENV] topic.<br>
      *
-     * @return
+     * @return false by default
      */
     default boolean isConsumeProduceStatusTopic() {
         return false;
@@ -193,7 +196,7 @@ public interface IConfiguration {
      * available proxies from JVM arguments. If set to false, distribution client
      * will use proxy parameters configured through properties file.
      *
-     * @return
+     * @return false by default
      */
     default Boolean isUseSystemProxy() {
         return false;
@@ -205,7 +208,7 @@ public interface IConfiguration {
      * Client will register the proxy configuration with the HttpClient instance
      * using HTTP and route requests through the proxy.
      * 
-     * @return
+     * @return Hostname of the http proxy
      */
     String getHttpProxyHost();
 
@@ -216,7 +219,7 @@ public interface IConfiguration {
      * register the proxy configuration with the HttpClient instance using HTTP and
      * route requests through the proxy.
      * 
-     * @return
+     * @return Port of the http proxy
      */
     int getHttpProxyPort();
 
@@ -226,7 +229,7 @@ public interface IConfiguration {
      * Client will register the proxy configuration with the HttpClient instance
      * using HTTPS and route requests through the proxy.
      * 
-     * @return
+     * @return Hostname of the https proxy
      */
     String getHttpsProxyHost();
 
@@ -237,7 +240,7 @@ public interface IConfiguration {
      * register the proxy configuration with the HttpClient instance using HTTPS and
      * route requests through the proxy.
      * 
-     * @return
+     * @return Port of the https proxy
      */
     int getHttpsProxyPort();
 }

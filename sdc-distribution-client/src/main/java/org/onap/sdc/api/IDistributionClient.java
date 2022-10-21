@@ -76,16 +76,18 @@ public interface IDistributionClient {
     /**
      * Downloads an artifact from SDC Catalog <br>
      *
-     * @param artifactInfo
+     * @param artifactInfo - the info about the Artifact to be downloaded
      * @return IDistributionClientDownloadResult
      */
     IDistributionClientDownloadResult download(IArtifactInfo artifactInfo);
 
     /**
      * Initialize the distribution client <br>
-     * - get MessageBus server list from configuration <br>
+     * - validate the config <br>
+     * - set up the SDC connector <br>
      * - validate artifact types against sdc server <br>
      * - set the notification callback <br>
+     * - get and set up the Kafka endpoint and topics <br>
      * - set up notification sender <br>
      * <p>
      * Note: all configuration fields are mandatory. <br>
@@ -93,17 +95,19 @@ public interface IDistributionClient {
      * ONAP-Component MUST store password as SHA-2 (256) hashed with
      * dynamically generated salt value <br>
      *
-     * @param conf
-     * @param callback
+     * @param conf - contains configuration
+     * @param callback - the NotificationCallback logic
      * @return IDistributionClientResult
      */
     IDistributionClientResult init(IConfiguration conf, INotificationCallback callback);
 
     /**
      * Initialize the distribution client <br>
-     * - get MessageBus server list from configuration <br>
+     * - validate the config <br>
+     * - set up the SDC connector <br>
      * - validate artifact types against sdc server <br>
      * - set the notification callback <br>
+     * - get and set up the Kafka endpoint and topics <br>
      * - set up notification sender <br>
      * <p>
      * Note: all configuration fields are mandatory. <br>
@@ -111,9 +115,9 @@ public interface IDistributionClient {
      * ONAP-Component MUST store password as SHA-2 (256) hashed with
      * dynamically generated salt value <br>
      *
-     * @param conf
-     * @param notificationCallback
-     * @param statusCallback
+     * @param conf - contains configuration
+     * @param notificationCallback - the NotificationCallback logic
+     * @param statusCallback - the StatusCallback logic
      * @return IDistributionClientResult
      */
     IDistributionClientResult init(IConfiguration conf, INotificationCallback notificationCallback,
@@ -123,7 +127,7 @@ public interface IDistributionClient {
      * Build and publish Distribution Download Status event to Distribution
      * Status Topic
      *
-     * @param statusMessage
+     * @param statusMessage - the status message to be published
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage);
@@ -132,8 +136,8 @@ public interface IDistributionClient {
      * Build and publish Distribution Download Status event to Distribution
      * Status Topic With Error Reason.
      *
-     * @param statusMessage
-     * @param errorReason
+     * @param statusMessage - the status message to be published
+     * @param errorReason - the error details
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage, String errorReason);
@@ -142,7 +146,7 @@ public interface IDistributionClient {
      * Build and publish Distribution Deployment Status event to Distribution
      * Status Topic
      *
-     * @param statusMessage
+     * @param statusMessage - the status message to be published
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage);
@@ -151,8 +155,8 @@ public interface IDistributionClient {
      * Build and publish Distribution Deployment Status event to Distribution
      * Status Topic With Error Reason.
      *
-     * @param statusMessage
-     * @param errorReason
+     * @param statusMessage - the status message to be published
+     * @param errorReason - the error details
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage, String errorReason);
@@ -161,7 +165,7 @@ public interface IDistributionClient {
      * Build and publish Distribution Component Status event to Distribution
      * Status Topic
      *
-     * @param statusMessage
+     * @param statusMessage - the status message to be published
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage);
@@ -170,8 +174,8 @@ public interface IDistributionClient {
      * Build and publish Distribution Component Status event to Distribution
      * Status Topic With Error Reason.
      *
-     * @param statusMessage
-     * @param errorReason
+     * @param statusMessage - the status message to be published
+     * @param errorReason - the error details
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage, String errorReason);
@@ -181,7 +185,7 @@ public interface IDistributionClient {
      * Build and publish Distribution Final Status event to Distribution
      * Status Topic
      *
-     * @param statusMessage
+     * @param statusMessage - the status message to be published
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage);
@@ -191,8 +195,8 @@ public interface IDistributionClient {
      * Build and publish Distribution Final Status event to Distribution
      * Status Topic With Error Reason.
      *
-     * @param statusMessage
-     * @param errorReason
+     * @param statusMessage - the status message to be published
+     * @param errorReason - the error details
      * @return IDistributionClientResult
      */
     IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage, String errorReason);
@@ -204,7 +208,7 @@ public interface IDistributionClient {
      * @deprecated Method is deprecated due to VF Module changes. Only backward
      * compatibility is supported.<br>
      *
-     * @param artifactPayload
+     * @param artifactPayload - the payload of artifact data
      * @return IVfModuleMetadata list
      */
     @Deprecated
