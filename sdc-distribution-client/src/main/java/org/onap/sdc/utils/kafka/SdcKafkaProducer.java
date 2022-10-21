@@ -45,6 +45,10 @@ public class SdcKafkaProducer {
     private final List<String> msgBusAddresses;
     private final String topicName;
 
+    /**
+     *
+     * @param configuration The config provided to the client
+     */
     public SdcKafkaProducer(Configuration configuration) {
         Properties props = new Properties();
         props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, configuration.getMsgBusAddress());
@@ -76,8 +80,9 @@ public class SdcKafkaProducer {
         }
         return data;
     }
+
     /**
-     *
+     * Flush accumulated records in producer
      */
     public void flush() {
         try {
@@ -88,10 +93,16 @@ public class SdcKafkaProducer {
         }
     }
 
+    /**
+     * @return The list kafka endpoints
+     */
     public List<String> getMsgBusAddresses() {
         return msgBusAddresses;
     }
 
+    /**
+     * @return The topic name being published to
+     */
     public String getTopicName() {
         return topicName;
     }

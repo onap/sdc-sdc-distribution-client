@@ -111,11 +111,6 @@ public class TestConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public List<String> getMsgBusAddress() {
-		return msgBusAddress;
-	}
-
-	@Override
 	public String getKafkaSecurityProtocolConfig() {
 		return kafkaSecurityProtocolConfig;
 	}

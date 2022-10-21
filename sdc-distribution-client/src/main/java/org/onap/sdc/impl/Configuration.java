@@ -23,7 +23,6 @@ package org.onap.sdc.impl;
 import java.util.List;
 
 import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.utils.DistributionClientConstants;
 
 public class Configuration implements IConfiguration {
 
@@ -36,8 +35,8 @@ public class Configuration implements IConfiguration {
     private String sdcAddress;
     private String user;
     private String password;
-    private int pollingInterval = DistributionClientConstants.MIN_POLLING_INTERVAL_SEC;
-    private int pollingTimeout = DistributionClientConstants.POLLING_TIMEOUT_SEC;
+    private int pollingInterval;
+    private int pollingTimeout;
     private List<String> relevantArtifactTypes;
     private String consumerGroup;
     private String environmentName;
@@ -83,31 +82,6 @@ public class Configuration implements IConfiguration {
     @Override
     public String getSdcAddress() {
         return sdcAddress;
-    }
-
-    public String getStatusTopicName() {
-        return sdcStatusTopicName;
-    }
-
-    public void setStatusTopicName(String sdcStatusTopicName) {
-        this.sdcStatusTopicName = sdcStatusTopicName;
-    }
-
-    public String getNotificationTopicName() {
-        return sdcNotificationTopicName;
-    }
-
-    public void setNotificationTopicName(String sdcNotificationTopicName) {
-        this.sdcNotificationTopicName = sdcNotificationTopicName;
-    }
-
-    @Override
-    public List<String> getMsgBusAddress() {
-        return msgBusAddressList;
-    }
-
-    public void setMsgBusAddress(List<String> newMsgBusAddress) {
-        msgBusAddressList = newMsgBusAddress;
     }
 
     @Override
@@ -205,6 +179,40 @@ public class Configuration implements IConfiguration {
         return useSystemProxy;
     }
 
+    @Override
+    public boolean activateServerTLSAuth() {
+        return this.activateServerTLSAuth;
+    }
+
+    @Override
+    public boolean isFilterInEmptyResources() {
+        return this.filterInEmptyResources;
+    }
+
+    public String getStatusTopicName() {
+        return sdcStatusTopicName;
+    }
+
+    public void setStatusTopicName(String sdcStatusTopicName) {
+        this.sdcStatusTopicName = sdcStatusTopicName;
+    }
+
+    public String getNotificationTopicName() {
+        return sdcNotificationTopicName;
+    }
+
+    public void setNotificationTopicName(String sdcNotificationTopicName) {
+        this.sdcNotificationTopicName = sdcNotificationTopicName;
+    }
+
+    public List<String> getMsgBusAddress() {
+        return msgBusAddressList;
+    }
+
+    public void setMsgBusAddress(List<String> newMsgBusAddress) {
+        msgBusAddressList = newMsgBusAddress;
+    }
+
     public void setComsumerID(String comsumerID) {
         this.comsumerID = comsumerID;
     }
@@ -271,16 +279,6 @@ public class Configuration implements IConfiguration {
 
     public void setUseSystemProxy(boolean useSystemProxy) {
         this.useSystemProxy = useSystemProxy;
-    }
-
-    @Override
-    public boolean activateServerTLSAuth() {
-        return this.activateServerTLSAuth;
-    }
-
-    @Override
-    public boolean isFilterInEmptyResources() {
-        return this.filterInEmptyResources;
     }
 
     public void setUseHttpsWithSDC(boolean useHttpsWithSDC) {

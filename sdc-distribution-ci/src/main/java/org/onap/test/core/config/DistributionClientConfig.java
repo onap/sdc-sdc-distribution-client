@@ -95,14 +95,6 @@ public class DistributionClientConfig implements IConfiguration {
         return sdcAddress;
     }
 
-    public List<String> getMsgBusAddress() {
-        return msgBusAddress;
-    }
-
-    public void setMsgBusAddress(List<String> msgBusAddress) {
-        this.msgBusAddress = msgBusAddress;
-    }
-
     @Override
     public String getUser() {
         return user;
