@@ -7,12 +7,14 @@
 # Introduction
 
 ONAP SDC Distribution client is delivered as helper JAR that can be used by clients that work with SDC.
-It register to SDC for getting notifications, listen for notification from SDC, download artifacts from SDC, and send response back to SDC.
+It listens for notifications from SDC, download artifacts from SDC, and send response back to SDC.
 
 
 # Compiling ONAP SDC Distribution client
 
-As mentioned in the onap wiki https://wiki.onap.org/display/DW/Setting+Up+Your+Development+Environment, the settings.xml (https://git.onap.org/oparent/plain/settings.xml) from the oparent project must be installed in your ~/.m2 folder and referenced by your IDE.
+As mentioned in the onap wiki https://wiki.onap.org/display/DW/Setting+Up+Your+Development+Environment, 
+the settings.xml (https://git.onap.org/oparent/plain/settings.xml) from the oparent project must be 
+installed in your ~/.m2 folder and referenced by your IDE.
 
 Once maven is set up properly, ONAP SDC Distribution client can be compiled easily using maven command: `mvn clean install`
 The result is JAR file under "target" folder
@@ -21,102 +23,8 @@ The result is JAR file under "target" folder
 ### How to use ONAP SDC Distribution client
 Every client that wants to use the JAR, need to implement IConfiguration interface.
 
-Configuration parameters:
---------------------------
-- sdcAddress 			: SDC Distribution Engine address. Value can be either hostname (with or without port), IP:port or FQDN (Fully Qualified Domain Name).
-- User					: User Name for SDC distribution consumer authentication.
-- Password				: User Password for SDC distribution consumer authentication.
-- PollingInterval		: Distribution Client Polling Interval towards MessageBus in seconds. Can Be reconfigured in runtime.
-- PollingTimeout		: Distribution Client Timeout in seconds waiting to MessageBus server response in each fetch interval. Can Be reconfigured in runtime.
-- RelevantArtifactTypes	: List of artifact types. If the service contains any of the artifacts in the list, the callback will be activated. Can Be reconfigured in runtime.
-- ConsumerGroup			: Returns the consumer group defined for this ONAP component, if no consumer group is defined return null. 
-- EnvironmentName		: Returns the environment name (testing, production etc... Can Be reconfigured in runtime.
-- ConsumerID			: Unique ID of ONAP component instance (e.x INSTAR name).
-- KeyStorePath			: Return full path to Client's Key Store that contains either CA certificate or the SDC's public key (e.g /etc/keystore/sdc-client.jks). file will be deployed with sdc-distribution jar
-- KeyStorePassword		: Return client's Key Store password.
-- activateServerTLSAuth	: Sets whether SDC server TLS authentication is activated. If set to false, Key Store path and password are not needed to be set.
-- UseSystemProxy		: If set to true, SDC Distribution Client will use system wide proxy configuration passed through JVM arguments.
-- HttpProxyHost			: Optional config. If configured, SDC Distribution client will use this http proxy host with HTTP client.
-- HttpProxyPort			: Mandatory if HttpProxyHost is configured. If configured, SDC Distribution client will use this https proxy port with HTTP client.
-- HttpsProxyHost		: Optional config. If configured, SDC Distribution client will use this https proxy host with HTTPS client.
-- HttpsProxyPort		: Mandatory if HttpsProxyHost is configured. If configured, SDC Distribution client will use this https proxy port with HTTPS client.
-
-Example of configuration file implementing IConfiguration interface:
---------------------------------------------------------------------
-package org.onap.conf;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.utils.ArtifactTypeEnum;
-
-public class SimpleConfiguration implements IConfiguration{
-	int randomSeed;
-	String sdcAddress;
-	
-	public SimpleConfiguration(){
-		randomSeed = ((int)(Math.random()*1000));
-		sdcAddress = "127.0.0.1:8443";
-	}
-	public String getUser() {
-		return "ci";
-	}
-	
-	public List<String> getRelevantArtifactTypes() {
-		List<String> res = new ArrayList<>();
-		for(ArtifactTypeEnum artifactTypeEnum : ArtifactTypeEnum.values()){
-			res.add(artifactTypeEnum.name());
-		}
-		return res;
-	}
-	
-	public int getPollingTimeout() {
-		return 20;
-	}
-	
-	public int getPollingInterval() {
-		return 20;
-	}
-	
-	public String getPassword() {
-		return "123456";
-	}
-	
-	public String getEnvironmentName() {
-		return "PROD";
-	}
-	
-	public String getConsumerID() {
-		return "unique-Consumer-ID"+randomSeed;
-	}
-	
-	public String getConsumerGroup() {
-		return "unique-Consumer-Group"+randomSeed;
-	}
-	
-	public String getSdcAddress() {
-		return sdcAddress;
-	}
-	
-	public void setSdcAddress(String sdcAddress) {
-		this.sdcAddress = sdcAddress;
-	}
-	@Override
-	public String getKeyStorePath() {
-		return null;
-	}
-	@Override
-	public String getKeyStorePassword() {
-		return null;
-	}
-	@Override
-	public boolean activateServerTLSAuth() {
-		return false;
-	}
-
-}
-
+See the SDC ONAP read the docs for more detail in relation to the sdc-distribution-client usage.
+https://docs.onap.org/projects/onap-sdc/en/kohn/sdcsdks.html#sdc-tosca-and-sdc-distribution-client
 
 # Logging
 Loggin can be done using log4j

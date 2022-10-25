@@ -19,3 +19,4 @@ target/
 /bin/
 sdc-tosca-parser/test-output/**/*
 *.iml
+/onap_docs/
