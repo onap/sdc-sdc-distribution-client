@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "697049ba_fd67d948",
+        "filename": "docs/sections/architecture.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 5269
+      },
+      "writtenOn": "2022-10-25T11:40:20Z",
+      "side": 1,
+      "message": "Reword a bit:\nThe SDC Distribution client is a library that applications can use to simplify the handling of distribution related notifications from/to SDC and to download artifacts from SDC based on those notification.\n\nAlso add a paragraph stating use Kafka, and verion 1.x.y can be used for MR",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 71
+      },
+      "revId": "05f1aaf31b2a9adfa46fc6621b67e4108fe4b84b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba29e1c2_3073b791",
+        "filename": "docs/sections/architecture.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 5269
+      },
+      "writtenOn": "2022-10-25T11:40:20Z",
+      "side": 1,
+      "message": "this is superfluous, If people want to know what SDC does they should read the SDC documentation",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 60
+      },
+      "revId": "05f1aaf31b2a9adfa46fc6621b67e4108fe4b84b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93ea2546_d45a8e71",
+        "filename": "docs/sections/release-notes.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 5269
+      },
+      "writtenOn": "2022-10-25T11:40:20Z",
+      "side": 1,
+      "message": "Add reference to SDC page if possible",
+      "revId": "05f1aaf31b2a9adfa46fc6621b67e4108fe4b84b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
