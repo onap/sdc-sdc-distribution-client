@@ -46,6 +46,30 @@
       "revId": "ece674df14c8ecf818438c3bc6626a104cf9c305",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f99729c1_19db9489",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/Configuration.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 5269
+      },
+      "writtenOn": "2022-10-25T12:20:13Z",
+      "side": 1,
+      "message": "ok, thats fine",
+      "parentUuid": "8293e5f8_f6161775",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 5
+      },
+      "revId": "ece674df14c8ecf818438c3bc6626a104cf9c305",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
