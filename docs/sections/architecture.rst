@@ -55,8 +55,8 @@ Kafka
 ^^^^^
 The client uses kafka as it's messaging bus to publish and subscribe to the relevant SDC topics.
 
-.. _SDCE-6 Swagger api: https://docs.onap.org/projects/onap-sdc/en/latest/_downloads/4eca2a3848d70e58566570a5ef889efb/swagger-sdce-6.json
-.. _SDCE-7 Swagger api: https://docs.onap.org/projects/onap-sdc/en/latest/_downloads/542e76906472dae2e00adfad5fc7d879/swagger-sdce-7.json
+.. _SDCE-6 Swagger api: https://docs.onap.org/projects/onap-sdc/en/latest/_downloads/ebe3a425ddf8fa5f372ee1cb7ec8409e/openapi-sdce-6.json
+.. _SDCE-7 Swagger api: https://docs.onap.org/projects/onap-sdc/en/latest/_downloads/48c3493c63ae93ebd9d55025f0ba2e85/openapi-sdce-7.json
 
 SDC
 ^^^
