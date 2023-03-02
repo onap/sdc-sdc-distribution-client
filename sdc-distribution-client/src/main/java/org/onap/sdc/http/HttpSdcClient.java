@@ -31,6 +31,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.utils.Pair;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,11 +76,11 @@ public class HttpSdcClient implements IHttpSdcClient {
         this.httpClient = httpClientPair.getSecond();
     }
 
-    public HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap) {
+    public HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, CaseInsensitiveMap<String, String> headersMap) {
         return postRequest(requestUrl, entity, headersMap, ALWAYS_CLOSE_THE_REQUEST_CONNECTION).getFirst();
     }
 
-    public Pair<HttpSdcResponse, CloseableHttpResponse> postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap, boolean closeTheRequest) {
+    public Pair<HttpSdcResponse, CloseableHttpResponse> postRequest(String requestUrl, HttpEntity entity, CaseInsensitiveMap<String, String> headersMap, boolean closeTheRequest) {
         Pair<HttpSdcResponse, CloseableHttpResponse> ret;
         final String url = resolveUrl(requestUrl);
         log.debug("url to send {}", url);
@@ -100,11 +101,11 @@ public class HttpSdcClient implements IHttpSdcClient {
         return ret;
     }
 
-    public HttpSdcResponse getRequest(String requestUrl, Map<String, String> headersMap) {
+    public HttpSdcResponse getRequest(String requestUrl, CaseInsensitiveMap<String, String> headersMap) {
         return getRequest(requestUrl, headersMap, ALWAYS_CLOSE_THE_REQUEST_CONNECTION).getFirst();
     }
 
-    public Pair<HttpSdcResponse, CloseableHttpResponse> getRequest(String requestUrl, Map<String, String> headersMap, boolean closeTheRequest) {
+    public Pair<HttpSdcResponse, CloseableHttpResponse> getRequest(String requestUrl, CaseInsensitiveMap<String, String> headersMap, boolean closeTheRequest) {
         Pair<HttpSdcResponse, CloseableHttpResponse> ret;
 
         final String url = resolveUrl(requestUrl);
@@ -118,7 +119,7 @@ public class HttpSdcClient implements IHttpSdcClient {
 
             log.debug("GET Response Status {}", httpResponse.getStatusLine().getStatusCode());
             Header[] headersRes = httpResponse.getAllHeaders();
-            Map<String, String> headersResMap = new HashMap<>();
+            CaseInsensitiveMap<String, String> headersResMap = new CaseInsensitiveMap<>();
             for (Header header : headersRes) {
                 headersResMap.put(header.getName(), header.getValue());
             }
