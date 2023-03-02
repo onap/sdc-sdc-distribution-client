@@ -20,15 +20,14 @@
 
 package org.onap.sdc.http;
 
-import java.util.Map;
-
+import org.onap.sdc.utils.CaseInsensitiveMap;
 import org.apache.http.HttpEntity;
 
 public interface IHttpSdcClient {
 
-    HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, Map<String, String> headersMap);
+    HttpSdcResponse postRequest(String requestUrl, HttpEntity entity, CaseInsensitiveMap<String, String> headersMap);
 
-    HttpSdcResponse getRequest(String requestUrl, Map<String, String> headersMap);
+    HttpSdcResponse getRequest(String requestUrl, CaseInsensitiveMap<String, String> headersMap);
 
     void closeHttpClient();
 

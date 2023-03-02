@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import org.apache.commons.io.IOUtils;
@@ -50,6 +48,7 @@ import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionClientConstants;
 import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.kafka.KafkaDataResponse;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,7 +115,7 @@ public class SdcConnectorClient {
 
     private Pair<HttpSdcResponse, CloseableHttpResponse> performSdcServerRequest(String sdcUrl) {
         String requestId = generateRequestId();
-        Map<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
+        CaseInsensitiveMap<String, String> requestHeaders = addHeadersToHttpRequest(requestId);
         log.debug("about to perform get on SDC. requestId= {} url= {}", requestId, sdcUrl);
         return httpClient.getRequest(sdcUrl, requestHeaders, false);
     }
@@ -129,7 +128,7 @@ public class SdcConnectorClient {
         DistributionClientDownloadResultImpl response;
 
         String requestId = generateRequestId();
-        Map<String, String> requestHeaders = new HashMap<>();
+        CaseInsensitiveMap<String, String> requestHeaders = new CaseInsensitiveMap<>();
         requestHeaders.put(DistributionClientConstants.HEADER_REQUEST_ID, requestId);
         requestHeaders.put(DistributionClientConstants.HEADER_INSTANCE_ID, configuration.getConsumerID());
         requestHeaders.put(HttpHeaders.ACCEPT, ContentType.APPLICATION_OCTET_STREAM.toString());
@@ -196,8 +195,8 @@ public class SdcConnectorClient {
         return result;
     }
 
-    protected Map<String, String> addHeadersToHttpRequest(String requestId) {
-        Map<String, String> requestHeaders = new HashMap<>();
+    protected CaseInsensitiveMap<String, String> addHeadersToHttpRequest(String requestId) {
+        CaseInsensitiveMap<String, String> requestHeaders = new CaseInsensitiveMap<>();
         requestHeaders.put(DistributionClientConstants.HEADER_REQUEST_ID, requestId);
         requestHeaders.put(DistributionClientConstants.HEADER_INSTANCE_ID, configuration.getConsumerID());
         requestHeaders.put(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString());
@@ -269,8 +268,8 @@ public class SdcConnectorClient {
         try {
             is = entity.getContent();
             String artifactName = "";
-            if (getServersResponse.getHeadersMap().containsKey(CONTENT_DISPOSITION_HEADER)) {
-                artifactName = getServersResponse.getHeadersMap().get(CONTENT_DISPOSITION_HEADER);
+            if (getServersResponse.getHeadersMap().containsCaseInsensitiveKey(CONTENT_DISPOSITION_HEADER)) {
+                artifactName = getServersResponse.getHeadersMap().getCaseInsensitiveKey(CONTENT_DISPOSITION_HEADER);
             }
 
             byte[] payload = IOUtils.toByteArray(is);

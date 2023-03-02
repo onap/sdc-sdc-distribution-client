@@ -20,15 +20,15 @@
 
 package org.onap.sdc.http;
 
-import java.util.Map;
-
 import org.apache.http.HttpEntity;
+
+import org.onap.sdc.utils.CaseInsensitiveMap;
 
 public class HttpSdcResponse {
 
     private int status;
     private HttpEntity message;
-    private Map<String, String> headersMap;
+    private CaseInsensitiveMap<String, String> headersMap;
 
     public HttpSdcResponse(int status, HttpEntity message) {
         super();
@@ -36,18 +36,18 @@ public class HttpSdcResponse {
         this.message = message;
     }
 
-    public HttpSdcResponse(int status, HttpEntity message, Map<String, String> headersMap) {
+    public HttpSdcResponse(int status, HttpEntity message, CaseInsensitiveMap<String, String> headersMap) {
         super();
         this.status = status;
         this.message = message;
         this.headersMap = headersMap;
     }
 
-    public Map<String, String> getHeadersMap() {
+    public CaseInsensitiveMap<String, String> getHeadersMap() {
         return headersMap;
     }
 
-    public void setHeadersMap(Map<String, String> headersMap) {
+    public void setHeadersMap(CaseInsensitiveMap<String, String> headersMap) {
         this.headersMap = headersMap;
     }
 

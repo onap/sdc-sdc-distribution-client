@@ -25,12 +25,11 @@ import static org.mockito.Mockito.mock;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.junit.jupiter.api.Test;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 
 class HttpRequestFactoryTest {
 
@@ -40,7 +39,7 @@ class HttpRequestFactoryTest {
     private static final String HEADER_KEY_2 = "key2";
     private static final String HEADER_VALUE_1 = "value1";
     private static final String HEADER_VALUE_2 = "value2";
-    private static final Map<String, String> HEADERS = new HashMap<String, String>() {
+    private static final CaseInsensitiveMap<String, String> HEADERS = new CaseInsensitiveMap<String, String>() {
         {
             put(HEADER_KEY_1, HEADER_VALUE_1);
             put(HEADER_KEY_2, HEADER_VALUE_2);

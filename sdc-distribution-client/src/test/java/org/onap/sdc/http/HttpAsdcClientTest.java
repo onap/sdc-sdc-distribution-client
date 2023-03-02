@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.TestConfiguration;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 
 @ExtendWith(MockitoExtension.class)
 class HttpSdcClientTest {
@@ -51,7 +52,7 @@ class HttpSdcClientTest {
     private static final String K_2 = "k2";
     private static final String V_2 = "v2";
     private static final Header[] HEADERS = new Header[]{new BasicHeader(K_1, V_1), new BasicHeader(K_2, V_2)};
-    private static final HashMap<String, String> HEADERS_MAP = new HashMap<String, String>() {{
+    private static final CaseInsensitiveMap<String, String> HEADERS_MAP = new CaseInsensitiveMap<String, String>() {{
         put("key1", "key2");
     }};
 

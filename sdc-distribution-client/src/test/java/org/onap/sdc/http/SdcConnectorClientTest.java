@@ -38,7 +38,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.HttpEntity;
@@ -54,6 +53,7 @@ import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.kafka.KafkaDataResponse;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 
 public class SdcConnectorClientTest {
 
@@ -61,7 +61,7 @@ public class SdcConnectorClientTest {
     private static final HttpSdcClient httpClient = mock(HttpSdcClient.class);
     private static final IConfiguration configuration = mock(IConfiguration.class);
     private static final HttpSdcResponse httpSdcResponse = mock(HttpSdcResponse.class);
-    private static final Map<String, String> mockHeaders = new HashMap<>();
+    private static final Map<String, String> mockHeaders = new CaseInsensitiveMap<>();
     private static SdcConnectorClient sdcClient;
 
     private static final String ARTIFACT_URL = "http://127.0.0.1/artifact/url";
@@ -219,7 +219,7 @@ public class SdcConnectorClientTest {
 
     @Test
     public void downloadArtifactHappyScenarioTest() throws IOException {
-        Map<String, String> headers = new HashMap<>();
+        CaseInsensitiveMap<String, String> headers = new CaseInsensitiveMap<>();
         headers.put(SdcConnectorClient.CONTENT_DISPOSITION_HEADER, "SomeHeader");
 
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
@@ -242,6 +242,9 @@ public class SdcConnectorClientTest {
 
     @Test
     public void downloadArtifactDataIntegrityProblemTest() throws IOException {
+        CaseInsensitiveMap<String, String> headers = new CaseInsensitiveMap<>();
+        headers.put(SdcConnectorClient.CONTENT_DISPOSITION_HEADER, "SomeHeader");
+
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
 
@@ -251,6 +254,7 @@ public class SdcConnectorClientTest {
 
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_OK);
         when(responseMock.getMessage()).thenReturn(messageMock);
+        when(responseMock.getHeadersMap()).thenReturn(headers);
         when(messageMock.getContent()).thenReturn(new ByteArrayInputStream(BYTES));
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 
@@ -260,6 +264,9 @@ public class SdcConnectorClientTest {
 
     @Test
     public void downloadArtifactExceptionDuringDownloadHandlingTest() throws IOException {
+        CaseInsensitiveMap<String, String> headers = new CaseInsensitiveMap<>();
+        headers.put(SdcConnectorClient.CONTENT_DISPOSITION_HEADER, "SomeHeader");
+
         IArtifactInfo artifactInfo = mock(IArtifactInfo.class);
         when(artifactInfo.getArtifactURL()).thenReturn(ARTIFACT_URL);
 
@@ -269,6 +276,7 @@ public class SdcConnectorClientTest {
 
         when(responseMock.getStatus()).thenReturn(HttpStatus.SC_OK);
         when(responseMock.getMessage()).thenReturn(messageMock);
+        when(responseMock.getHeadersMap()).thenReturn(headers);
         when(messageMock.getContent()).thenReturn(new ThrowingInputStreamForTesting());
         doReturn(responsePair).when(httpClient).getRequest(eq(ARTIFACT_URL), any(), eq(false));
 

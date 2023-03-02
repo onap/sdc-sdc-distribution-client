@@ -19,15 +19,16 @@
  */
 package org.onap.sdc.http;
 
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicHeader;
+import org.onap.sdc.utils.CaseInsensitiveMap;
 
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class HttpRequestFactory {
@@ -40,14 +41,14 @@ public class HttpRequestFactory {
         this.authHeaderValue = "Basic " + Base64.getEncoder().encodeToString(createAuthHeaderData(user, password));
     }
 
-    public HttpGet createHttpGetRequest(String url, Map<String, String> headersMap) {
+    public HttpGet createHttpGetRequest(String url, CaseInsensitiveMap<String, String> headersMap) {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setHeaders(createHttpRequestHeaders(headersMap, authHeaderValue));
 
         return httpGet;
     }
 
-    public HttpPost createHttpPostRequest(String url, Map<String, String> headersMap, HttpEntity entity) {
+    public HttpPost createHttpPostRequest(String url, CaseInsensitiveMap<String, String> headersMap, HttpEntity entity) {
         HttpPost httpPost = new HttpPost(url);
         httpPost.setHeaders(createHttpRequestHeaders(headersMap, authHeaderValue));
         httpPost.setEntity(entity);
@@ -55,7 +56,7 @@ public class HttpRequestFactory {
         return httpPost;
     }
 
-    private Header[] createHttpRequestHeaders(Map<String, String> headersMap, String authorizationValue) {
+    private Header[] createHttpRequestHeaders(CaseInsensitiveMap<String, String> headersMap, String authorizationValue) {
         final List<Header> headers = headersMap.entrySet().stream()
                 .map(it -> new BasicHeader(it.getKey(), it.getValue()))
                 .collect(Collectors.toList());
