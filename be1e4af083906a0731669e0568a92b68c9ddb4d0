@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "894bde6e_ca03b0c2",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/CaseInsensitiveMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-03-03T10:33:06Z",
+      "side": 1,
+      "message": "case-insensitive",
+      "range": {
+        "startLine": 26,
+        "startChar": 43,
+        "endLine": 26,
+        "endChar": 59
+      },
+      "revId": "be1e4af083906a0731669e0568a92b68c9ddb4d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "840719a1_cd67b31a",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/CaseInsensitiveMap.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-03-03T10:33:06Z",
+      "side": 1,
+      "message": "case-insensitive",
+      "range": {
+        "startLine": 30,
+        "startChar": 20,
+        "endLine": 30,
+        "endChar": 36
+      },
+      "revId": "be1e4af083906a0731669e0568a92b68c9ddb4d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
