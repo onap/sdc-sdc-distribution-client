@@ -30,6 +30,8 @@ public class Configuration implements IConfiguration {
     private final String kafkaSecurityProtocolConfig;
     private final String kafkaSaslMechanism;
     private final String kafkaSaslJaasConfig;
+    private final int kafkaConsumerMaxPollInterval;
+    private final int kafkaConsumerSessionTimeout;
     private String sdcStatusTopicName;
     private String sdcNotificationTopicName;
     private String sdcAddress;
@@ -77,6 +79,8 @@ public class Configuration implements IConfiguration {
         this.httpsProxyHost = other.getHttpsProxyHost();
         this.httpsProxyPort = other.getHttpsProxyPort();
         this.useSystemProxy = other.isUseSystemProxy();
+        this.kafkaConsumerMaxPollInterval = other.getKafkaConsumerMaxPollInterval();
+        this.kafkaConsumerSessionTimeout = other.getKafkaConsumerSessionTimeout();
     }
 
     @Override
@@ -97,6 +101,16 @@ public class Configuration implements IConfiguration {
     @Override
     public String getKafkaSaslJaasConfig() {
         return kafkaSaslJaasConfig;
+    }
+
+    @Override
+    public int getKafkaConsumerMaxPollInterval() {
+        return kafkaConsumerMaxPollInterval;
+    }
+
+    @Override
+    public int getKafkaConsumerSessionTimeout() {
+        return kafkaConsumerSessionTimeout;
     }
 
     @Override
