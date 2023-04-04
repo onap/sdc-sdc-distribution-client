@@ -31,11 +31,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.impl.Configuration;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.onap.sdc.utils.kafka.SdcKafkaProducer;
@@ -74,6 +73,9 @@ class SdcKafkaTest {
         SdcKafkaConsumer consumer = new SdcKafkaConsumer(configuration);
         consumer.subscribe(topicName);
         consumer.poll();
+
+        Assertions.assertEquals(configuration.getKafkaConsumerMaxPollInterval(), 600);
+        Assertions.assertEquals(configuration.getKafkaConsumerSessionTimeout(), 50);
 
         SdcKafkaProducer producer = new SdcKafkaProducer(configuration);
         producer.send(topicName, "blah", "blah");

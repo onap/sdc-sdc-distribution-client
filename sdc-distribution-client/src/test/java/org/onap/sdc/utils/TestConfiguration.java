@@ -38,6 +38,8 @@ public class TestConfiguration implements IConfiguration {
 	private final String kafkaSecurityProtocolConfig;
 	private final String kafkaSaslMechanism;
 	private final String kafkaSaslJaasConfig;
+	private final int kafkaConsumerMaxPollInterval;
+	private final int kafkaConsumerSessionTimeout;
 	private String keyStorePath;
 	private String keyStorePassword;
 	private boolean activateServerTLSAuth;
@@ -51,30 +53,6 @@ public class TestConfiguration implements IConfiguration {
 	private boolean useSystemProxy;
 	private String sdcStatusTopicName;
 	private String sdcNotificationTopicName;
-
-	public TestConfiguration(IConfiguration other) {
-		this.sdcAddress = other.getSdcAddress();
-		this.comsumerID = other.getConsumerID();
-		this.consumerGroup = other.getConsumerGroup();
-		this.kafkaSecurityProtocolConfig = other.getKafkaSecurityProtocolConfig();
-		this.kafkaSaslMechanism = other.getKafkaSaslMechanism();
-		this.kafkaSaslJaasConfig = other.getKafkaSaslJaasConfig();
-		this.environmentName = other.getEnvironmentName();
-		this.password = other.getPassword();
-		this.pollingInterval = other.getPollingInterval();
-		this.pollingTimeout = other.getPollingTimeout();
-		this.relevantArtifactTypes = other.getRelevantArtifactTypes();
-		this.user = other.getUser();
-		this.keyStorePath = other.getKeyStorePath();
-		this.keyStorePassword = other.getKeyStorePassword();
-		this.activateServerTLSAuth = other.activateServerTLSAuth();
-		this.isFilterInEmptyResources = other.isFilterInEmptyResources();
-		this.httpProxyHost = other.getHttpProxyHost();
-		this.httpProxyPort = other.getHttpProxyPort();
-		this.httpsProxyHost = other.getHttpsProxyHost();
-		this.httpsProxyPort = other.getHttpsProxyPort();
-		this.useSystemProxy = other.isUseSystemProxy();
-	}
 
 	public TestConfiguration() {
 		this.sdcAddress = "localhost:8443";
@@ -101,6 +79,8 @@ public class TestConfiguration implements IConfiguration {
 		this.kafkaSecurityProtocolConfig = "SASL_PLAINTEXT";
 		this.kafkaSaslMechanism = "PLAIN";
 		this.kafkaSaslJaasConfig = "org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;";
+		this.kafkaConsumerMaxPollInterval = 600;
+		this.kafkaConsumerSessionTimeout = 50;
 		this.httpProxyHost = "proxy";
 		this.httpProxyPort = 8080;
 	}
@@ -123,6 +103,16 @@ public class TestConfiguration implements IConfiguration {
 	@Override
 	public String getKafkaSaslJaasConfig() {
 		return kafkaSaslJaasConfig;
+	}
+
+	@Override
+	public int getKafkaConsumerMaxPollInterval() {
+		return kafkaConsumerMaxPollInterval;
+	}
+
+	@Override
+	public int getKafkaConsumerSessionTimeout() {
+		return kafkaConsumerSessionTimeout;
 	}
 
 	@Override
