@@ -67,6 +67,24 @@ public interface IConfiguration {
     }
 
     /**
+     * Kafka consumer max.poll.interval.ms
+     *
+     * @return Kafka max.poll.interval.ms. Default is 300 seconds
+     */
+    default int getKafkaConsumerMaxPollInterval() {
+        return 300;
+    }
+
+    /**
+     * Kafka consumer session.timeout.ms
+     *
+     * @return Kafka session.timeout.ms. Default is 45 seconds
+     */
+    default int getKafkaConsumerSessionTimeout() {
+        return 45;
+    }
+
+    /**
      * User Name for SDC distribution consumer authentication.
      *
      * @return User Name.
