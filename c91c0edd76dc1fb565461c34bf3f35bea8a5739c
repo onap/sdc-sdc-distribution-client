@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "75b5a367_eb13ac19",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2023-04-18T10:51:05Z",
+      "side": 1,
+      "message": "Can reuse the keystore pass",
+      "parentUuid": "b0a78582_be0a534b",
+      "revId": "c91c0edd76dc1fb565461c34bf3f35bea8a5739c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f2d98aa_370541cb",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaConsumer.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2023-04-18T10:01:47Z",
       "side": 1,
       "message": "Not needed just yet....but it will be! 😊",
+      "revId": "c91c0edd76dc1fb565461c34bf3f35bea8a5739c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c802cd53_d64f67b3",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaConsumer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2023-04-18T10:51:05Z",
+      "side": 1,
+      "message": "Oops. Added it for you. :D",
+      "parentUuid": "6f2d98aa_370541cb",
       "revId": "c91c0edd76dc1fb565461c34bf3f35bea8a5739c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
