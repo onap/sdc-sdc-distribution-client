@@ -173,6 +173,24 @@ public interface IConfiguration {
     String getKeyStorePassword();
 
     /**
+     * Return full path to TrustStore.
+     *
+     * @return Trust store path
+     */
+    default String getTrustStorePath() {
+        return System.getenv().getOrDefault("TRUSTSTORE_PATH", "/var/run/secrets/truststore.jks");
+    }
+
+    /**
+     * Return the password for the TrustStore Key Store
+     *
+     * @return TrustStore password
+     */
+    default String getTrustStorePassword(){
+        return System.getenv().getOrDefault("TRUSTSTORE_PASSWORD", "changeit");
+    }
+
+    /**
      * Sets whether SDC server TLS authentication is activated. If set to false, Key
      * Store path and password are not needed to be set.
      *
