@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1cb36d05_285d2215",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/api/consumer/IConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2023-04-18T13:03:10Z",
+      "side": 1,
+      "message": "I was keeping it as simple as possible. Added the truststore params as default methods so as not to break the interface",
+      "parentUuid": "aaa41dbb_fee7d8e1",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 33
+      },
+      "revId": "c91c0edd76dc1fb565461c34bf3f35bea8a5739c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0a78582_be0a534b",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/Configuration.java",
         "patchSetId": 1
