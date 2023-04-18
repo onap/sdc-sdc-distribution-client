@@ -34,7 +34,7 @@ public class TestConfiguration implements IConfiguration {
 	private List<String> relevantArtifactTypes;
 	private String consumerGroup;
 	private String environmentName;
-	private String comsumerID;
+	private String consumerID;
 	private final String kafkaSecurityProtocolConfig;
 	private final String kafkaSaslMechanism;
 	private final String kafkaSaslJaasConfig;
@@ -45,7 +45,6 @@ public class TestConfiguration implements IConfiguration {
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
 	private boolean useHttpsWithSDC;
-	private List<String> msgBusAddress;
 	private String httpProxyHost;
 	private int httpProxyPort;
 	private String httpsProxyHost;
@@ -56,7 +55,7 @@ public class TestConfiguration implements IConfiguration {
 
 	public TestConfiguration() {
 		this.sdcAddress = "localhost:8443";
-		this.comsumerID = "mso-123456";
+		this.consumerID = "mso-123456";
 		this.consumerGroup = "mso-group";
 		this.environmentName = "PROD";
 		this.password = "password";
@@ -69,13 +68,9 @@ public class TestConfiguration implements IConfiguration {
 		this.user = "mso-user";
 		this.keyStorePath = "etc/sdc-client.jks";
 		this.keyStorePassword = "Aa123456";
-		this.activateServerTLSAuth = false;
+		this.activateServerTLSAuth = true;
 		this.isFilterInEmptyResources = false;
 		this.useHttpsWithSDC = true;
-		msgBusAddress = new ArrayList<>();
-		msgBusAddress.add("kafka-bootstrap1:9092");
-		msgBusAddress.add("kafka-bootstrap2:9092");
-		msgBusAddress.add("kafka-bootstrap3:9092");
 		this.kafkaSecurityProtocolConfig = "SASL_PLAINTEXT";
 		this.kafkaSaslMechanism = "PLAIN";
 		this.kafkaSaslJaasConfig = "org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;";
@@ -151,11 +146,6 @@ public class TestConfiguration implements IConfiguration {
 	}
 
 	@Override
-	public String getConsumerID() {
-		return comsumerID;
-	}
-
-	@Override
 	public String getKeyStorePath() {
 		return keyStorePath;
 	}
@@ -165,8 +155,8 @@ public class TestConfiguration implements IConfiguration {
 		return keyStorePassword;
 	}
 
-	public String getComsumerID() {
-		return comsumerID;
+	public String getConsumerID() {
+		return consumerID;
 	}
 
 	@Override
@@ -194,8 +184,8 @@ public class TestConfiguration implements IConfiguration {
 		return useSystemProxy;
 	}
 
-	public void setComsumerID(String comsumerID) {
-		this.comsumerID = comsumerID;
+	public void setConsumerID(String consumerID) {
+		this.consumerID = consumerID;
 	}
 
 	public void setSdcAddress(String sdcAddress) {
@@ -263,7 +253,7 @@ public class TestConfiguration implements IConfiguration {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((sdcAddress == null) ? 0 : sdcAddress.hashCode());
-		result = prime * result + ((comsumerID == null) ? 0 : comsumerID.hashCode());
+		result = prime * result + ((consumerID == null) ? 0 : consumerID.hashCode());
 		result = prime * result + ((consumerGroup == null) ? 0 : consumerGroup.hashCode());
 		result = prime * result + ((environmentName == null) ? 0 : environmentName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
@@ -298,10 +288,10 @@ public class TestConfiguration implements IConfiguration {
 				return false;
 		} else if (!sdcAddress.equals(other.sdcAddress))
 			return false;
-		if (comsumerID == null) {
-			if (other.comsumerID != null)
+		if (consumerID == null) {
+			if (other.consumerID != null)
 				return false;
-		} else if (!comsumerID.equals(other.comsumerID))
+		} else if (!consumerID.equals(other.consumerID))
 			return false;
 		if (consumerGroup == null) {
 			if (other.consumerGroup != null)
@@ -348,7 +338,7 @@ public class TestConfiguration implements IConfiguration {
 		return "TestConfiguration [sdcAddress=" + sdcAddress + ", user=" + user + ", password=" + password
 				+ ", pollingInterval=" + pollingInterval + ", pollingTimeout=" + pollingTimeout
 				+ ", relevantArtifactTypes=" + relevantArtifactTypes + ", consumerGroup=" + consumerGroup
-				+ ", environmentName=" + environmentName + ", comsumerID=" + comsumerID + "]";
+				+ ", environmentName=" + environmentName + ", comsumerID=" + consumerID + "]";
 	}
 
 	@Override

@@ -45,6 +45,8 @@ public class Configuration implements IConfiguration {
     private String comsumerID;
     private String keyStorePath;
     private String keyStorePassword;
+    private String trustStorePath;
+    private String trustStorePassword;
     private boolean activateServerTLSAuth;
     private final boolean filterInEmptyResources;
     private Boolean useHttpsWithSDC;
@@ -72,6 +74,8 @@ public class Configuration implements IConfiguration {
         this.useHttpsWithSDC = other.isUseHttpsWithSDC();
         this.keyStorePath = other.getKeyStorePath();
         this.keyStorePassword = other.getKeyStorePassword();
+        this.trustStorePath = other.getTrustStorePath();
+        this.trustStorePassword = other.getTrustStorePassword();
         this.activateServerTLSAuth = other.activateServerTLSAuth();
         this.filterInEmptyResources = other.isFilterInEmptyResources();
         this.httpProxyHost = other.getHttpProxyHost();
@@ -111,6 +115,16 @@ public class Configuration implements IConfiguration {
     @Override
     public int getKafkaConsumerSessionTimeout() {
         return kafkaConsumerSessionTimeout;
+    }
+
+    @Override
+    public String getTrustStorePath() {
+        return trustStorePath;
+    }
+
+    @Override
+    public String getTrustStorePassword() {
+        return trustStorePassword;
     }
 
     @Override
@@ -271,6 +285,14 @@ public class Configuration implements IConfiguration {
         this.keyStorePassword = keyStorePassword;
     }
 
+    public void setTrustStorePath(String trustStorePath) {
+        this.trustStorePath = trustStorePath;
+    }
+
+    public void setTrustStorePassword(String trustStorePassword) {
+        this.trustStorePassword = trustStorePassword;
+    }
+
     public void setactivateServerTLSAuth(boolean activateServerTLSAuth) {
         this.activateServerTLSAuth = activateServerTLSAuth;
     }
@@ -321,7 +343,7 @@ public class Configuration implements IConfiguration {
                 + ", environmentName=" + environmentName
                 + ", comsumerID=" + comsumerID
                 + ", keyStorePath=" + keyStorePath
-                + ", keyStorePassword=" + keyStorePassword
+                + ", trustStorePath=" + trustStorePath
                 + ", activateServerTLSAuth=" + activateServerTLSAuth
                 + ", filterInEmptyResources=" + filterInEmptyResources
                 + ", consumeProduceStatusTopic=" + consumeProduceStatusTopic

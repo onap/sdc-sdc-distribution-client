@@ -29,24 +29,16 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import fj.data.Either;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.mockito.Mockito;
-import org.onap.sdc.api.IDistributionClient;
 import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
 import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.http.HttpSdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
 import org.onap.sdc.utils.ArtifactTypeEnum;
-import org.onap.sdc.utils.ArtifactsUtils;
 import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.TestConfiguration;
@@ -159,11 +151,11 @@ class DistributionClientTest {
 
         // no consumerId
         TestConfiguration testConsumerId = new TestConfiguration();
-        testConsumerId.setComsumerID(null);
+        testConsumerId.setConsumerID(null);
         validationResult = client.init(testConsumerId, new TestNotificationCallback());
         assertEquals(DistributionActionResultEnum.CONF_MISSING_CONSUMER_ID, validationResult.getDistributionActionResult());
 
-        testConsumerId.setComsumerID("");
+        testConsumerId.setConsumerID("");
         validationResult = client.init(testConsumerId, new TestNotificationCallback());
         assertEquals(DistributionActionResultEnum.CONF_MISSING_CONSUMER_ID, validationResult.getDistributionActionResult());
 

@@ -65,7 +65,7 @@ class HttpSdcClientTest {
     void shouldCreateInitializedHttpClient() {
         // given
         TestConfiguration configuration = new TestConfiguration();
-        configuration.setUseHttpsWithSDC(false);
+        configuration.setUseHttpsWithSDC(true);
 
         // when
         final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(
@@ -78,7 +78,7 @@ class HttpSdcClientTest {
 
         // then
         assertNotNull(httpSdcClient);
-        assertEquals(HttpClientFactory.HTTP, httpSdcClient.getHttpSchema());
+        assertEquals(HttpClientFactory.HTTPS, httpSdcClient.getHttpSchema());
     }
 
     @Test

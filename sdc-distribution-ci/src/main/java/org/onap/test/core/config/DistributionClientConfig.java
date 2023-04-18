@@ -33,15 +33,12 @@ public class DistributionClientConfig implements IConfiguration {
     public static final String DEFAULT_PASSWORD = "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U";
     public static final int DEFAULT_POLLING_INTERVAL = 20;
     public static final int DEFAULT_POLLING_TIMEOUT = 20;
-    public static final String DEFAULT_STATUS_TOPIC = "STATUS-TOPIC";
-    public static final String DEFAULT_NOTIF_TOPIC = "NOTIF-TOPIC";
     public static final String DEFAULT_USER = "dcae";
     public static final String DEFAULT_KEY_STORE_PATH = "etc/sdc-client.jks";
     public static final String DEFAULT_KEY_STORE_PASSWORD = "Aa123456";
     public static final boolean DEFAULT_ACTIVATE_SERVER_TLS_AUTH = false;
     public static final boolean DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES = true;
     public static final boolean DEFAULT_USE_HTTPS_WITH_SDC = false;
-    public static final String DEFAULT_MSG_BUS_ADDRESS = "localhost:9092";
     private String sdcAddress;
     private String user;
     private String password;
@@ -56,9 +53,6 @@ public class DistributionClientConfig implements IConfiguration {
     private boolean activateServerTLSAuth;
     private boolean isFilterInEmptyResources;
     private boolean useHttpsWithSDC;
-    private List<String> msgBusAddress;
-    private String sdcStatusTopicName;
-    private String sdcNotificationTopicName;
     private String kafkaSecurityProtocolConfig;
     private String kafkaSaslMechanism;
     private String kafkaSaslJaasConfig;
@@ -70,8 +64,6 @@ public class DistributionClientConfig implements IConfiguration {
 
     public DistributionClientConfig() {
         this.sdcAddress = DEFAULT_SDC_ADDRESS;
-        this.sdcStatusTopicName = DEFAULT_STATUS_TOPIC;
-        this.sdcNotificationTopicName = DEFAULT_NOTIF_TOPIC;
         this.comsumerID = DEFAULT_COMSUMER_ID;
         this.consumerGroup = DEFAULT_CONSUMER_GROUP;
         this.environmentName = DEFAULT_ENVIRONMENT_NAME;
@@ -86,8 +78,6 @@ public class DistributionClientConfig implements IConfiguration {
         this.activateServerTLSAuth = DEFAULT_ACTIVATE_SERVER_TLS_AUTH;
         this.isFilterInEmptyResources = DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES;
         this.useHttpsWithSDC = DEFAULT_USE_HTTPS_WITH_SDC;
-        this.msgBusAddress = new ArrayList<>();
-        this.msgBusAddress.add(DEFAULT_MSG_BUS_ADDRESS);
     }
 
     @Override
