@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "aaa41dbb_fee7d8e1",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/api/consumer/IConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-04-18T12:45:48Z",
+      "side": 1,
+      "message": "shouldn\u0027t we change this too, \nsimilar to TrustStore\nreturn System.getenv().getOrDefault",
+      "range": {
+        "startLine": 166,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 33
+      },
+      "revId": "c91c0edd76dc1fb565461c34bf3f35bea8a5739c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0a78582_be0a534b",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/Configuration.java",
         "patchSetId": 1
