@@ -34,14 +34,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.onap.sdc.impl.Configuration;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.onap.sdc.utils.kafka.SdcKafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SetEnvironmentVariable(key = "SASL_JAAS_CONFIG", value = "org.apache.kafka.common.security.scram.ScramLoginModule required username=admin password=admin-secret;")
 class SdcKafkaTest {
 
     private static final Logger logger = LoggerFactory.getLogger(SdcKafkaTest.class);
