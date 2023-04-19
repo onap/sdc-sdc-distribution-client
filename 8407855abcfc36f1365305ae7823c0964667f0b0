@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60328642_127f8c2b",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaConsumer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-04-19T18:10:17Z",
+      "side": 1,
+      "message": "do we need it as field, or should it be local var?",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 48
+      },
+      "revId": "8407855abcfc36f1365305ae7823c0964667f0b0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84974d0_9d649e93",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaProducer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-04-19T18:10:17Z",
+      "side": 1,
+      "message": "do we need it as field, or should it be local var",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "8407855abcfc36f1365305ae7823c0964667f0b0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
