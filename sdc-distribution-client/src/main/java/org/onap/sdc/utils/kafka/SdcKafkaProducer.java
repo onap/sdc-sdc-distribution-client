@@ -31,6 +31,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.config.SaslConfigs;
+import org.apache.kafka.common.config.SslConfigs;
 import org.onap.sdc.impl.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +51,8 @@ public class SdcKafkaProducer {
      * @param configuration The config provided to the client
      */
     public SdcKafkaProducer(Configuration configuration) {
-        Properties props = new Properties();
-        props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, configuration.getMsgBusAddress());
-        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, configuration.getKafkaSecurityProtocolConfig());
-        props.put(SaslConfigs.SASL_MECHANISM, configuration.getKafkaSaslMechanism());
-        props.put(SaslConfigs.SASL_JAAS_CONFIG, configuration.getKafkaSaslJaasConfig());
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, configuration.getConsumerID() + "-producer-" + UUID.randomUUID());
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,  "org.apache.kafka.common.serialization.StringSerializer");
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+        KafkaCommonConfig kafkaCommonConfig = new KafkaCommonConfig(configuration);
+        Properties props = kafkaCommonConfig.getProducerProperties();
         producer = new KafkaProducer<>(props);
         msgBusAddresses = configuration.getMsgBusAddress();
         topicName = configuration.getStatusTopicName();
