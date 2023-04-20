@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "792d5ddf_ee6b154b",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/TestConfigurationSSLProtocol.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-04-20T12:53:16Z",
+      "side": 1,
+      "message": "typo?",
+      "range": {
+        "startLine": 174,
+        "startChar": 52,
+        "endLine": 174,
+        "endChar": 53
+      },
+      "revId": "bd5804243cc32cbdf2259a0917b9c2b965cd3031",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
