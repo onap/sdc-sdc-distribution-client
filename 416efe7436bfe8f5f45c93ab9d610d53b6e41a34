@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d52a7790_83d44587",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/impl/Configuration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-04-20T12:58:18Z",
+      "side": 1,
+      "message": "would you mind to replace all getters/setters with lombok",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 54
+      },
+      "revId": "416efe7436bfe8f5f45c93ab9d610d53b6e41a34",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
