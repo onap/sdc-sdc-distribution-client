@@ -30,6 +30,10 @@ public class Configuration implements IConfiguration {
     private final String kafkaSecurityProtocolConfig;
     private final String kafkaSaslMechanism;
     private final String kafkaSaslJaasConfig;
+    private final String kafkaKeyStorePath;
+    private final String kafkaKeyStorePassword;
+    private final String kafkaTrustStorePath;
+    private final String kafkaTrustStorePassword;
     private final int kafkaConsumerMaxPollInterval;
     private final int kafkaConsumerSessionTimeout;
     private String sdcStatusTopicName;
@@ -85,6 +89,10 @@ public class Configuration implements IConfiguration {
         this.useSystemProxy = other.isUseSystemProxy();
         this.kafkaConsumerMaxPollInterval = other.getKafkaConsumerMaxPollInterval();
         this.kafkaConsumerSessionTimeout = other.getKafkaConsumerSessionTimeout();
+        this.kafkaKeyStorePath = other.getKafkaKeyStorePath();
+        this.kafkaKeyStorePassword = other.getKafkaKeyStorePassword();
+        this.kafkaTrustStorePath = other.getKafkaTrustStorePath();
+        this.kafkaTrustStorePassword = other.getKafkaTrustStorePassword();
     }
 
     @Override
@@ -108,6 +116,26 @@ public class Configuration implements IConfiguration {
     }
 
     @Override
+    public String getKafkaKeyStorePath() {
+        return kafkaKeyStorePath;
+    }
+
+    @Override
+    public String getKafkaKeyStorePassword() {
+        return kafkaKeyStorePassword;
+    }
+
+    @Override
+    public String getKafkaTrustStorePath() {
+        return kafkaTrustStorePath;
+    }
+
+    @Override
+    public String getKafkaTrustStorePassword() {
+        return kafkaTrustStorePassword;
+    }
+
+    @Override
     public int getKafkaConsumerMaxPollInterval() {
         return kafkaConsumerMaxPollInterval;
     }
@@ -117,20 +145,6 @@ public class Configuration implements IConfiguration {
         return kafkaConsumerSessionTimeout;
     }
 
-    @Override
-    public String getTrustStorePath() {
-        return trustStorePath;
-    }
-
-    @Override
-    public String getTrustStorePassword() {
-        return trustStorePassword;
-    }
-
-    @Override
-    public Boolean isUseHttpsWithSDC() {
-        return useHttpsWithSDC;
-    }
 
     @Override
     public String getUser() {
@@ -173,6 +187,11 @@ public class Configuration implements IConfiguration {
     }
 
     @Override
+    public Boolean isUseHttpsWithSDC() {
+        return useHttpsWithSDC;
+    }
+
+    @Override
     public String getKeyStorePath() {
         return keyStorePath;
     }
@@ -180,6 +199,16 @@ public class Configuration implements IConfiguration {
     @Override
     public String getKeyStorePassword() {
         return keyStorePassword;
+    }
+
+    @Override
+    public String getTrustStorePath() {
+        return trustStorePath;
+    }
+
+    @Override
+    public String getTrustStorePassword() {
+        return trustStorePassword;
     }
 
     @Override

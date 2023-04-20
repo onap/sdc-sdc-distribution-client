@@ -67,6 +67,43 @@ public interface IConfiguration {
     }
 
     /**
+     * Return full path to kafka KeyStore.
+     *
+     * @return Keystore store path
+     */
+    default String getKafkaKeyStorePath() {
+        return System.getenv().getOrDefault("KAFKA_KEYSTORE_PATH", "/var/run/secrets/keystore.jks");
+    }
+
+    /**
+     * Return the password for the Kafka KeyStore Key Store
+     *
+     * @return KeyStore password
+     */
+    default String getKafkaKeyStorePassword(){
+        return System.getenv().getOrDefault("KAFKA_KEYSTORE_PASSWORD", "changeit");
+    }
+
+    /**
+     * Return full path to kafka TrustStore.
+     *
+     * @return Trust store path
+     */
+    default String getKafkaTrustStorePath() {
+        return System.getenv().getOrDefault("KAFKA_TRUSTSTORE_PATH", "/var/run/secrets/truststore.jks");
+    }
+
+    /**
+     * Return the password for the Kafka TrustStore Key Store
+     *
+     * @return TrustStore password
+     */
+    default String getKafkaTrustStorePassword(){
+        return System.getenv().getOrDefault("KAFKA_TRUSTSTORE_PASSWORD", "changeit");
+    }
+
+
+    /**
      * Kafka consumer max.poll.interval.ms
      *
      * @return Kafka max.poll.interval.ms. Default is 300 seconds

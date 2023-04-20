@@ -38,6 +38,10 @@ public class TestConfiguration implements IConfiguration {
 	private final String kafkaSecurityProtocolConfig;
 	private final String kafkaSaslMechanism;
 	private final String kafkaSaslJaasConfig;
+	private final String kafkaKeyStorePath;
+	private final String kafkaKeyStorePassword;
+	private final String kafkaTrustStorePath;
+	private final String kafkaTrustStorePassword;
 	private final int kafkaConsumerMaxPollInterval;
 	private final int kafkaConsumerSessionTimeout;
 	private String keyStorePath;
@@ -78,6 +82,10 @@ public class TestConfiguration implements IConfiguration {
 		this.kafkaConsumerSessionTimeout = 50;
 		this.httpProxyHost = "proxy";
 		this.httpProxyPort = 8080;
+		this.kafkaKeyStorePath = null;
+		this.kafkaKeyStorePassword = "";
+		this.kafkaTrustStorePath = null;
+		this.kafkaTrustStorePassword = "";
 	}
 
 	@Override
@@ -98,6 +106,26 @@ public class TestConfiguration implements IConfiguration {
 	@Override
 	public String getKafkaSaslJaasConfig() {
 		return kafkaSaslJaasConfig;
+	}
+
+	@Override
+	public String getKafkaKeyStorePath() {
+		return kafkaKeyStorePath;
+	}
+
+	@Override
+	public String getKafkaKeyStorePassword() {
+		return kafkaKeyStorePassword;
+	}
+
+	@Override
+	public String getKafkaTrustStorePath() {
+		return kafkaTrustStorePath;
+	}
+
+	@Override
+	public String getKafkaTrustStorePassword() {
+		return kafkaTrustStorePassword;
 	}
 
 	@Override
