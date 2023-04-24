@@ -84,7 +84,7 @@ class ClientInitializerTest {
     @Container
     public GenericContainer<?> mockSdc =
         new GenericContainer<>(
-            "registry.gitlab.com/orange-opensource/lfn/onap/mock_servers/mock-sdc:develop")
+            "nexus3.onap.org:10001/onap/onap-component-mock-sdc:master")
             .withExposedPorts(30206);
     @Mock
     private Logger distClientLog;
