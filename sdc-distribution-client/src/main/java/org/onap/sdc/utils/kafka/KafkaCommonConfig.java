@@ -19,18 +19,22 @@
  */
 package org.onap.sdc.utils.kafka;
 
+import java.util.Properties;
+import java.util.UUID;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
 import org.onap.sdc.impl.Configuration;
-import java.util.Properties;
-import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaCommonConfig {
+    private static final Logger log = LoggerFactory.getLogger(KafkaCommonConfig.class);
+
     private final Configuration configuration;
-    public KafkaCommonConfig(Configuration configuration){
+    public KafkaCommonConfig(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -46,7 +50,6 @@ public class KafkaCommonConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, configuration.getConsumerGroup());
         props.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
-
 
         return props;
     }
@@ -70,10 +73,10 @@ public class KafkaCommonConfig {
             props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, configuration.getTrustStorePassword());
             props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, configuration.getTrustStorePath());
             props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, configuration.getKeyStorePassword());
+            props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
             props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, configuration.getKeyStorePath());
             props.put(SslConfigs.SSL_KEY_PASSWORD_CONFIG, configuration.getKeyStorePassword());
-        }
-        else{
+        } else {
             props.put(SaslConfigs.SASL_JAAS_CONFIG, configuration.getKafkaSaslJaasConfig());
             props.put(SaslConfigs.SASL_MECHANISM, configuration.getKafkaSaslMechanism());
         }
