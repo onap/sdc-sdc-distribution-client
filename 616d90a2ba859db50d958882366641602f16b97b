@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3a9152c2_a2522f19",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 4405
+      },
+      "writtenOn": "2023-05-05T16:58:46Z",
+      "side": 1,
+      "message": "I think it\u0027s ok to go with the default type for now",
+      "parentUuid": "7209dbd3_ba67e614",
+      "range": {
+        "startLine": 98,
+        "startChar": 52,
+        "endLine": 98,
+        "endChar": 60
+      },
+      "revId": "616d90a2ba859db50d958882366641602f16b97b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45086ca1_357d53fa",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
         "patchSetId": 2
