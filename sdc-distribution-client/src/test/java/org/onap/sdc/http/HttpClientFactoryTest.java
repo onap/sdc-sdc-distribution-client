@@ -41,8 +41,10 @@ class HttpClientFactoryTest {
         TestConfiguration config = spy(new TestConfiguration());
         HttpClientFactory httpClientFactory = new HttpClientFactory(config);
         when(config.activateServerTLSAuth()).thenReturn(true);
-        when(config.getKeyStorePath()).thenReturn("src/test/resources/sdc-client.jks");
-        when(config.getKeyStorePassword()).thenReturn("Aa123456");
+        when(config.getKeyStorePath()).thenReturn("src/test/resources/sdc-user-keystore.jks");
+        when(config.getKeyStorePassword()).thenReturn("zreRDCnNLsZ7");
+        when(config.getTrustStorePath()).thenReturn("src/test/resources/sdc-user-truststore.jks");
+        when(config.getTrustStorePassword()).thenReturn("changeit");
         Pair<String, CloseableHttpClient> client = httpClientFactory.createInstance();
         SSLConnectionSocketFactory sslsf = spy(SSLConnectionSocketFactory.getSocketFactory());
         CredentialsProvider credsProvider = new BasicCredentialsProvider();
