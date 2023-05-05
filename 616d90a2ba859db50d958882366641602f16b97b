@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7209dbd3_ba67e614",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-05-05T15:46:26Z",
+      "side": 1,
+      "message": "hardcoded JKS, couldn\u0027t be different?",
+      "range": {
+        "startLine": 98,
+        "startChar": 52,
+        "endLine": 98,
+        "endChar": 60
+      },
+      "revId": "616d90a2ba859db50d958882366641602f16b97b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45086ca1_357d53fa",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/http/HttpClientFactory.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 5562
+      },
+      "writtenOn": "2023-05-05T15:46:26Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 103,
+        "startChar": 52,
+        "endLine": 103,
+        "endChar": 60
+      },
+      "revId": "616d90a2ba859db50d958882366641602f16b97b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
