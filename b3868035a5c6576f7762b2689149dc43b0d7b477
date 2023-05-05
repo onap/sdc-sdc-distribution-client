@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cea08086_2e00e227",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/KafkaCommonConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 7617
+      },
+      "writtenOn": "2023-05-05T08:32:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffbd1b56_ce235069",
+      "revId": "b3868035a5c6576f7762b2689149dc43b0d7b477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "518e1f3b_2403592d",
         "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaProducer.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "b3868035a5c6576f7762b2689149dc43b0d7b477",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f86d846_df74fa45",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaProducer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 7617
+      },
+      "writtenOn": "2023-05-05T08:32:13Z",
+      "side": 1,
+      "message": "Sorry. Didn\u0027t mean to leave these comments unresolved. Not something that needs fixing",
+      "parentUuid": "518e1f3b_2403592d",
+      "revId": "b3868035a5c6576f7762b2689149dc43b0d7b477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
