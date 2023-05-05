@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffbd1b56_ce235069",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/KafkaCommonConfig.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 7617
+      },
+      "writtenOn": "2023-05-05T08:26:40Z",
+      "side": 1,
+      "message": "Couldn\u0027t have put the shortest line at the bottom of the group of props.put, no? 😄",
+      "revId": "b3868035a5c6576f7762b2689149dc43b0d7b477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "518e1f3b_2403592d",
+        "filename": "sdc-distribution-client/src/main/java/org/onap/sdc/utils/kafka/SdcKafkaProducer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 7617
+      },
+      "writtenOn": "2023-05-05T08:26:40Z",
+      "side": 1,
+      "message": "Worries me slightly that this wasn\u0027t an issue before.\nI\u0027d want to make extra sure that we aren\u0027t breaking current functionality here (or how client apps list these addresses in config)",
+      "revId": "b3868035a5c6576f7762b2689149dc43b0d7b477",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
