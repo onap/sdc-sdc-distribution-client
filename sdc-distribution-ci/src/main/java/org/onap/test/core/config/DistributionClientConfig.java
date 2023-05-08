@@ -34,8 +34,14 @@ public class DistributionClientConfig implements IConfiguration {
     public static final int DEFAULT_POLLING_INTERVAL = 20;
     public static final int DEFAULT_POLLING_TIMEOUT = 20;
     public static final String DEFAULT_USER = "dcae";
-    public static final String DEFAULT_KEY_STORE_PATH = "etc/sdc-client.jks";
-    public static final String DEFAULT_KEY_STORE_PASSWORD = "Aa123456";
+    private String keyStorePath;
+    private String keyStorePassword;
+    public static final String DEFAULT_KEY_STORE_PATH = "etc/sdc-user-keystore.jks";
+    public static final String DEFAULT_KEY_STORE_PASSWORD = "zreRDCnNLsZ7";
+    public static final String DEFAULT_TRUST_STORE_PATH = "etc/sdc-user-truststore.jks";
+    public static final String DEFAULT_TRUST_STORE_PASSWORD = "changeit";
+    public String trustStorePath;
+    public String trustStorePassword;
     public static final boolean DEFAULT_ACTIVATE_SERVER_TLS_AUTH = false;
     public static final boolean DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES = true;
     public static final boolean DEFAULT_USE_HTTPS_WITH_SDC = false;
@@ -48,10 +54,6 @@ public class DistributionClientConfig implements IConfiguration {
     private String consumerGroup;
     private String environmentName;
     private String comsumerID;
-    private String keyStorePath;
-    private String keyStorePassword;
-    private final String trustStorePath;
-    private final String trustStorePassword;
     private boolean activateServerTLSAuth;
     private boolean isFilterInEmptyResources;
     private boolean useHttpsWithSDC;
@@ -77,8 +79,8 @@ public class DistributionClientConfig implements IConfiguration {
         this.user = DEFAULT_USER;
         this.keyStorePath = DEFAULT_KEY_STORE_PATH;
         this.keyStorePassword = DEFAULT_KEY_STORE_PASSWORD;
-        this.trustStorePath = DEFAULT_KEY_STORE_PATH;
-        this.trustStorePassword = DEFAULT_KEY_STORE_PASSWORD;
+        this.trustStorePath = DEFAULT_TRUST_STORE_PATH;
+        this.trustStorePassword = DEFAULT_TRUST_STORE_PASSWORD;
         this.activateServerTLSAuth = DEFAULT_ACTIVATE_SERVER_TLS_AUTH;
         this.isFilterInEmptyResources = DEFAULT_IS_FILTER_IN_EMPTY_RESOURCES;
         this.useHttpsWithSDC = DEFAULT_USE_HTTPS_WITH_SDC;

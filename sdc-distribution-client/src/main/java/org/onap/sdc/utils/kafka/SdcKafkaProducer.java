@@ -20,18 +20,12 @@
 
 package org.onap.sdc.utils.kafka;
 
-import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.concurrent.Future;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.common.config.SslConfigs;
 import org.onap.sdc.impl.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +37,7 @@ public class SdcKafkaProducer {
 
     private static final Logger log = LoggerFactory.getLogger(SdcKafkaProducer.class);
     final KafkaProducer<String, String> producer;
-    private final List<String> msgBusAddresses;
+    private final String msgBusAddresses;
     private final String topicName;
 
     /**
@@ -89,9 +83,9 @@ public class SdcKafkaProducer {
     }
 
     /**
-     * @return The list kafka endpoints
+     * @return The list of kafka endpoints
      */
-    public List<String> getMsgBusAddresses() {
+    public String getMsgBusAddresses() {
         return msgBusAddresses;
     }
 

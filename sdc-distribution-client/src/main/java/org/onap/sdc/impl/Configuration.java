@@ -21,15 +21,14 @@
 package org.onap.sdc.impl;
 
 import java.util.List;
-
 import org.onap.sdc.api.consumer.IConfiguration;
 
 public class Configuration implements IConfiguration {
 
-    private List<String> msgBusAddressList;
+    private String msgBusAddressList;
     private final String kafkaSecurityProtocolConfig;
     private final String kafkaSaslMechanism;
-    private final String kafkaSaslJaasConfig;
+    private String kafkaSaslJaasConfig = null;
     private final int kafkaConsumerMaxPollInterval;
     private final int kafkaConsumerSessionTimeout;
     private String sdcStatusTopicName;
@@ -60,7 +59,9 @@ public class Configuration implements IConfiguration {
     public Configuration(IConfiguration other) {
         this.kafkaSecurityProtocolConfig = other.getKafkaSecurityProtocolConfig();
         this.kafkaSaslMechanism = other.getKafkaSaslMechanism();
-        this.kafkaSaslJaasConfig = other.getKafkaSaslJaasConfig();
+        if (!"SSL".equals(this.kafkaSecurityProtocolConfig)) {
+            this.kafkaSaslJaasConfig = other.getKafkaSaslJaasConfig();
+        }
         this.comsumerID = other.getConsumerID();
         this.consumerGroup = other.getConsumerGroup();
         this.pollingInterval = other.getPollingInterval();
@@ -233,11 +234,11 @@ public class Configuration implements IConfiguration {
         this.sdcNotificationTopicName = sdcNotificationTopicName;
     }
 
-    public List<String> getMsgBusAddress() {
+    public String getMsgBusAddress() {
         return msgBusAddressList;
     }
 
-    public void setMsgBusAddress(List<String> newMsgBusAddress) {
+    public void setMsgBusAddress(String newMsgBusAddress) {
         msgBusAddressList = newMsgBusAddress;
     }
 

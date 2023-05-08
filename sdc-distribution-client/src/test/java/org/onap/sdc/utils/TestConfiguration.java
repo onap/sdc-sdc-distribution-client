@@ -42,6 +42,8 @@ public class TestConfiguration implements IConfiguration {
 	private final int kafkaConsumerSessionTimeout;
 	private String keyStorePath;
 	private String keyStorePassword;
+	private String trustStorePath;
+	private String trustStorePassword;
 	private boolean activateServerTLSAuth;
 	private boolean isFilterInEmptyResources;
 	private boolean useHttpsWithSDC;
@@ -66,8 +68,10 @@ public class TestConfiguration implements IConfiguration {
 		this.relevantArtifactTypes = new ArrayList<>();
 		this.relevantArtifactTypes.add(ArtifactTypeEnum.HEAT.name());
 		this.user = "mso-user";
-		this.keyStorePath = "etc/sdc-client.jks";
-		this.keyStorePassword = "Aa123456";
+		this.keyStorePath = "src/test/resources/etc/sdc-user-keystore.jks";
+		this.keyStorePassword = "zreRDCnNLsZ7";
+		this.trustStorePath = "src/test/resources/etc/sdc-user-truststore.jks";
+		this.trustStorePassword = "changeit";
 		this.activateServerTLSAuth = true;
 		this.isFilterInEmptyResources = false;
 		this.useHttpsWithSDC = true;
@@ -153,6 +157,16 @@ public class TestConfiguration implements IConfiguration {
 	@Override
 	public String getKeyStorePassword() {
 		return keyStorePassword;
+	}
+
+	@Override
+	public String getTrustStorePath() {
+		return trustStorePath;
+	}
+
+	@Override
+	public String getTrustStorePassword() {
+		return trustStorePassword;
 	}
 
 	public String getConsumerID() {
