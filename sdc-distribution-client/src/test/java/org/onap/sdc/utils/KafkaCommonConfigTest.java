@@ -35,8 +35,7 @@ public class KafkaCommonConfigTest {
 
     @Test
     public void testConsumerPropertiesNoSSL(){
-        List<String> msgBusAddress = new ArrayList<>();
-        msgBusAddress.add("address1");
+        String msgBusAddress = "address1";
         testConfigNoSSL.setMsgBusAddress(msgBusAddress);
         KafkaCommonConfig kafkaCommonConfig = new KafkaCommonConfig(testConfigNoSSL);
         Properties consumerProperties = kafkaCommonConfig.getConsumerProperties();
@@ -45,8 +44,7 @@ public class KafkaCommonConfigTest {
 
     @Test
     public void testProducerPropertiesWithSSL(){
-        List<String> msgBusAddress = new ArrayList<>();
-        msgBusAddress.add("address1");
+        String msgBusAddress = "address1";
         testConfigWithSSL.setMsgBusAddress(msgBusAddress);
         KafkaCommonConfig kafkaCommonConfig = new KafkaCommonConfig(testConfigWithSSL);
         Properties consumerProperties = kafkaCommonConfig.getProducerProperties();
