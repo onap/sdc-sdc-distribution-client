@@ -22,6 +22,7 @@ package org.onap.sdc.http;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +30,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -39,10 +41,12 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.SSLContexts;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.utils.Pair;
 
@@ -71,9 +75,7 @@ public class HttpClientFactory {
     }
 
     private Pair<String, CloseableHttpClient> createHttpsClient(IConfiguration configuration) {
-        return new Pair<>(HTTPS,
-                initSSL(configuration.getUser(), configuration.getPassword(), configuration.getKeyStorePath(),
-                        configuration.getKeyStorePassword(), configuration.activateServerTLSAuth()));
+        return new Pair<>(HTTPS, initSSLMtls(configuration));
     }
 
     private Pair<String, CloseableHttpClient> createHttpClient(IConfiguration configuration) {
@@ -84,121 +86,35 @@ public class HttpClientFactory {
                 .setProxy(getHttpProxyHost()).build());
     }
 
-    private CloseableHttpClient initSSL(String username, String password, String keyStorePath, String keyStorePass,
-            boolean isSupportSSLVerification) {
+    private CloseableHttpClient initSSLMtls(IConfiguration configuration) {
 
-        try {
+        try (FileInputStream kis = new FileInputStream(configuration.getKeyStorePath());
+            FileInputStream tis = new FileInputStream(configuration.getTrustStorePath())) {
 
-            // SSLContextBuilder is not thread safe
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(new AuthScope("localhost", AUTHORIZATION_SCOPE_PORT),
-                    new UsernamePasswordCredentials(username, password));
-            SSLContext sslContext;
-            sslContext = SSLContext.getInstance(TLS);
-            TrustManagerFactory tmf = createTrustManagerFactory();
-            TrustManager[] tms = tmf.getTrustManagers();
-            if (isSupportSSLVerification) {
+                new UsernamePasswordCredentials(configuration.getUser(), configuration.getPassword()));
 
-                if (keyStorePath != null && !keyStorePath.isEmpty()) {
-                    // Using null here initialises the TMF with the default
-                    // trust store.
+            final KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(kis, configuration.getKeyStorePassword().toCharArray());
+            final KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            keyManagerFactory.init(ks, configuration.getKeyStorePassword().toCharArray());
 
-                    // Get hold of the default trust manager
-                    X509TrustManager defaultTm = null;
-                    for (TrustManager tm : tmf.getTrustManagers()) {
-                        if (tm instanceof X509TrustManager) {
-                            defaultTm = (X509TrustManager) tm;
-                            break;
-                        }
-                    }
+            final KeyStore ts = KeyStore.getInstance("JKS");
+            ts.load(tis, configuration.getTrustStorePassword().toCharArray());
+            final TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(ts);
 
-                    // Do the same with your trust store this time
-                    // Adapt how you load the keystore to your needs
-                    KeyStore trustStore = loadKeyStore(keyStorePath, keyStorePass);
-
-                    tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-                    tmf.init(trustStore);
-
-                    // Get hold of the default trust manager
-                    X509TrustManager myTm = null;
-                    for (TrustManager tm : tmf.getTrustManagers()) {
-                        if (tm instanceof X509TrustManager) {
-                            myTm = (X509TrustManager) tm;
-                            break;
-                        }
-                    }
-
-                    // Wrap it in your own class.
-                    final X509TrustManager finalDefaultTm = defaultTm;
-                    final X509TrustManager finalMyTm = myTm;
-                    X509TrustManager customTm = new X509TrustManager() {
-                        @Override
-                        public X509Certificate[] getAcceptedIssuers() {
-                            // If you're planning to use client-cert auth,
-                            // merge results from "defaultTm" and "myTm".
-                            return finalDefaultTm.getAcceptedIssuers();
-                        }
-
-                        @Override
-                        public void checkServerTrusted(X509Certificate[] chain, String authType)
-                                throws CertificateException {
-                            try {
-                                finalMyTm.checkServerTrusted(chain, authType);
-                            } catch (CertificateException e) {
-                                // This will throw another CertificateException
-                                // if this fails too.
-                                finalDefaultTm.checkServerTrusted(chain, authType);
-                            }
-                        }
-
-                        @Override
-                        public void checkClientTrusted(X509Certificate[] chain, String authType)
-                                throws CertificateException {
-                            // If you're planning to use client-cert auth,
-                            // do the same as checking the server.
-                            finalDefaultTm.checkClientTrusted(chain, authType);
-                        }
-                    };
-
-                    tms = new TrustManager[] { customTm };
-
-                }
-
-                sslContext.init(null, tms, null);
-                SSLContext.setDefault(sslContext);
-
-            } else {
-
-                SSLContextBuilder builder = new SSLContextBuilder();
-
-                builder.loadTrustMaterial(null, (chain, authType) -> true);
-
-                sslContext = builder.build();
-            }
-
+            final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(ts, new TrustSelfSignedStrategy()).loadKeyMaterial(ks, configuration.getKeyStorePassword().toCharArray()).build();
             HostnameVerifier hostnameVerifier = (hostname, session) -> hostname.equalsIgnoreCase(session.getPeerHost());
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[] { TLS }, null,
-                    hostnameVerifier);
+                hostnameVerifier);
+
             return HttpClientBuilder.create().setDefaultCredentialsProvider(credsProvider).setProxy(getHttpsProxyHost())
-                    .setSSLSocketFactory(sslsf).build();
+                .setSSLSocketFactory(sslsf).build();
         } catch (Exception e) {
             throw new HttpSdcClientException("Failed to create https client", e);
         }
-    }
-
-    private TrustManagerFactory createTrustManagerFactory() throws NoSuchAlgorithmException, KeyStoreException {
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(DEFAULT_INIT_KEY_STORE_VALUE);
-        return tmf;
-    }
-
-    private KeyStore loadKeyStore(String keyStorePath, String keyStorePass)
-            throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        try (FileInputStream keyStoreData = new FileInputStream(keyStorePath)) {
-            trustStore.load(keyStoreData, keyStorePass.toCharArray());
-        }
-        return trustStore;
     }
 
     private HttpHost getHttpProxyHost() {

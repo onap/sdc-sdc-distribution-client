@@ -30,6 +30,7 @@ import fj.data.Either;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -324,7 +325,7 @@ public class DistributionClientImpl implements IDistributionClient {
             errorWrapper.setInnerElement(kafkaData.right().value());
         } else {
             KafkaDataResponse kafkaDataResponse = kafkaData.left().value();
-            configuration.setMsgBusAddress(Collections.singletonList(kafkaDataResponse.getKafkaBootStrapServer()));
+            configuration.setMsgBusAddress(kafkaDataResponse.getKafkaBootStrapServer());
             configuration.setNotificationTopicName(kafkaDataResponse.getDistrNotificationTopicName());
             configuration.setStatusTopicName(kafkaDataResponse.getDistrStatusTopicName());
             log.debug("MessageBus cluster info retrieved successfully {}", kafkaData.left().value());

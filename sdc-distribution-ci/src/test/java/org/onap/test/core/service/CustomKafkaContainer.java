@@ -33,6 +33,7 @@ public class CustomKafkaContainer extends FixedHostPortGenericContainer<CustomKa
         this.externalZookeeperConnect = null;
         this.withExposedPorts(9093);
         this.withEnv("KAFKA_LISTENERS", "PLAINTEXT://0.0.0.0:9093,BROKER://0.0.0.0:9092");
+        this.withEnv("KAFKA_ADVERTISED_LISTENERS", "SSL");
         this.withEnv("KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", "BROKER:PLAINTEXT,PLAINTEXT:PLAINTEXT");
         this.withEnv("KAFKA_INTER_BROKER_LISTENER_NAME", "BROKER");
         this.withEnv("KAFKA_BROKER_ID", "1");

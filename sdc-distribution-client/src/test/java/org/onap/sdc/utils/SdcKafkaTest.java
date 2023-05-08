@@ -57,7 +57,7 @@ class SdcKafkaTest {
         startKafkaService();
         KafkaTestUtils utils = new KafkaTestUtils(kafkaTestCluster);
         utils.createTopic(topicName, 1, (short) 1);
-        configuration.setMsgBusAddress(Collections.singletonList(kafkaTestCluster.getKafkaConnectString()));
+        configuration.setMsgBusAddress(kafkaTestCluster.getKafkaConnectString());
     }
 
     @AfterAll

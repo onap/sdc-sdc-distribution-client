@@ -87,7 +87,10 @@ public class SdcConnectorClientTest {
         when(conf.getUser()).thenReturn("user");
         when(conf.getPassword()).thenReturn("password");
         when(conf.isUseHttpsWithSDC()).thenReturn(true);
-
+        when(conf.getKeyStorePath()).thenReturn("src/test/resources/sdc-user-keystore.jks");
+        when(conf.getKeyStorePassword()).thenReturn("zreRDCnNLsZ7");
+        when(conf.getTrustStorePath()).thenReturn("src/test/resources/sdc-user-truststore.jks");
+        when(conf.getTrustStorePassword()).thenReturn("changeit");
         when(conf.activateServerTLSAuth()).thenReturn(false);
         final HttpSdcClient httpClient = new HttpSdcClient(conf);
         SdcConnectorClient client = new SdcConnectorClient(conf, httpClient);
