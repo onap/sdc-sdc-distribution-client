@@ -1,0 +1,8 @@
+Verified+1: ONAP Required GHA <releng+onap.required.gha@linuxfoundation.org>
+Code-Review+2: Vasyl Razinkov <vasyl.razinkov@est.tech>
+Verified+1: Vasyl Razinkov <vasyl.razinkov@est.tech>
+Submitted-by: Vasyl Razinkov <vasyl.razinkov@est.tech>
+Submitted-at: Thu, 27 Jul 2023 15:52:59 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/sdc/sdc-distribution-client/+/135585
+Project: sdc/sdc-distribution-client
+Branch: refs/heads/master
