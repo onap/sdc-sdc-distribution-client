@@ -17,7 +17,6 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
 package org.onap.sdc.api.notification;
 
 import org.onap.sdc.utils.DistributionStatusEnum;

@@ -18,18 +18,19 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.impl;
+package org.onap.sdc.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.notification.IArtifactInfo;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ArtifactInfo implements IArtifactInfo {
+public class ArtifactInfoImpl implements IArtifactInfo {
 
     private String artifactName;
     private String artifactType;
@@ -44,7 +45,7 @@ public class ArtifactInfo implements IArtifactInfo {
     private List<String> relatedArtifacts;
     private List<IArtifactInfo> relatedArtifactsInfo;
 
-    private ArtifactInfo(IArtifactInfo iArtifactInfo) {
+    private ArtifactInfoImpl(IArtifactInfo iArtifactInfo) {
         artifactName = iArtifactInfo.getArtifactName();
         artifactType = iArtifactInfo.getArtifactType();
         artifactURL = iArtifactInfo.getArtifactURL();
@@ -69,14 +70,25 @@ public class ArtifactInfo implements IArtifactInfo {
         return relatedArtifactsUUID;
     }
 
-    public static List<ArtifactInfo> convertToArtifactInfoImpl(List<IArtifactInfo> list) {
-        List<ArtifactInfo> ret = new ArrayList<>();
+    public static List<ArtifactInfoImpl> convertToArtifactInfoImpl(List<IArtifactInfo> list) {
+        List<ArtifactInfoImpl> ret = new ArrayList<>();
         if (list != null) {
             for (IArtifactInfo artifactInfo : list) {
-                ret.add(new ArtifactInfo(artifactInfo));
+                ret.add(new ArtifactInfoImpl(artifactInfo));
             }
         }
         return ret;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseArtifactInfoImpl [artifactName=" + artifactName
+                + ", artifactType=" + artifactType + ", artifactURL="
+                + artifactURL + ", artifactChecksum=" + artifactChecksum
+                + ", artifactDescription=" + artifactDescription
+                + ", artifactVersion=" + artifactVersion
+                + ", artifactUUID=" + artifactUUID
+                + ", artifactTimeout=" + artifactTimeout + "]";
     }
 
     public List<IArtifactInfo> getRelatedArtifacts() {
@@ -89,16 +101,5 @@ public class ArtifactInfo implements IArtifactInfo {
 
     public List<String> getRelatedArtifactsUUID() {
         return relatedArtifacts;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseArtifactInfoImpl [artifactName=" + artifactName
-                + ", artifactType=" + artifactType + ", artifactURL="
-                + artifactURL + ", artifactChecksum=" + artifactChecksum
-                + ", artifactDescription=" + artifactDescription
-                + ", artifactVersion=" + artifactVersion
-                + ", artifactUUID=" + artifactUUID
-                + ", artifactTimeout=" + artifactTimeout + "]";
     }
 }

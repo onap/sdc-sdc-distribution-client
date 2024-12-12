@@ -368,7 +368,7 @@ public class DistributionClientImpl implements IDistributionClient {
         return sendErrorStatus(DistributionStatusMessageJsonBuilderFactory.getSimpleBuilder(statusMessage));
     }
 
-        @Override
+    @Override
     public IDistributionClientResult sendNotificationStatus(StatusMessage status) {
         log.info("DistributionClient - sendNotificationStatus");
         Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();

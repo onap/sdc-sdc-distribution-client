@@ -17,7 +17,6 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-
 package org.onap.sdc.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
