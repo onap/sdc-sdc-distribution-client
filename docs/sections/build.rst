@@ -27,7 +27,7 @@ Environment
 
 For more information regarding Env set up see `Setting Up Your Development Environment`_.
 
-.. _Setting Up Your Development Environment: https://wiki.onap.org/display/DW/Setting+Up+Your+Development+Environment
+.. _Setting Up Your Development Environment: https://lf-onap.atlassian.net/wiki/spaces/DW/pages/16220206/Setting+Up+Your+Development+Environment
 
 
 .. _Build steps:
@@ -40,4 +40,3 @@ Run the following from project root:
 ``mvn clean install``
 
 The result is JAR file under the ``sdc-distribution-client/target`` folder
-
