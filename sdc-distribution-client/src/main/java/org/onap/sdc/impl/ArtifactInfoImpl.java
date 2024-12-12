@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.onap.sdc.api.notification.IArtifactInfo;
 
-class ArtifactInfoImpl implements IArtifactInfo {
+public class ArtifactInfoImpl implements IArtifactInfo {
 
     private String artifactName;
     private String artifactType;
