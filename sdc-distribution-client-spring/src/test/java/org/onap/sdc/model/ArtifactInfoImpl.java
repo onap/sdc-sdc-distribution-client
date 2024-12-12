@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.impl;
+package org.onap.sdc.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +79,7 @@ public class ArtifactInfoImpl implements IArtifactInfo {
         }
         return ret;
     }
+
     @Override
     public String toString() {
         return "BaseArtifactInfoImpl [artifactName=" + artifactName

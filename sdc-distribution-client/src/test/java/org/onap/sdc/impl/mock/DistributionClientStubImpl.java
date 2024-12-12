@@ -31,6 +31,7 @@ import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.consumer.IStatusCallback;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
+import org.onap.sdc.api.notification.StatusMessage;
 import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.api.results.IDistributionClientResult;
 
@@ -123,6 +124,11 @@ public class DistributionClientStubImpl implements IDistributionClient {
     public IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage, String errorReason) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public IDistributionClientResult sendNotificationStatus(StatusMessage statusMessage) {
+        return new DistributionClientResultStubImpl();
     }
 
 
