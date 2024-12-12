@@ -24,11 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.notification.IResourceInstance;
+
+import lombok.Data;
+
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 
-
-class NotificationDataImpl implements INotificationData {
+@Data
+public class NotificationDataImpl implements INotificationData {
 
     private String distributionID;
     private String serviceName;
@@ -39,69 +42,6 @@ class NotificationDataImpl implements INotificationData {
     private List<JsonContainerResourceInstance> resources;
     private List<ArtifactInfoImpl> serviceArtifacts;
     private String workloadContext;
-
-    @Override
-    public String getDistributionID() {
-        return distributionID;
-    }
-
-    @Override
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    @Override
-    public String getServiceVersion() {
-        return serviceVersion;
-    }
-
-    @Override
-    public String getServiceUUID() {
-        return serviceUUID;
-    }
-
-    public void setDistributionID(String distributionID) {
-        this.distributionID = distributionID;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
-
-    public void setServiceVersion(String serviceVersion) {
-        this.serviceVersion = serviceVersion;
-    }
-
-    public void setServiceUUID(String serviceUUID) {
-        this.serviceUUID = serviceUUID;
-    }
-
-
-    public String getServiceDescription() {
-        return serviceDescription;
-    }
-
-    public void setServiceDescription(String serviceDescription) {
-        this.serviceDescription = serviceDescription;
-    }
-
-    @Override
-    public String getWorkloadContext() {
-        return workloadContext;
-    }
-
-    @Override
-    public void setWorkloadContext(String workloadContext) {
-        this.workloadContext = workloadContext;
-    }
-
-    @Override
-    public String toString() {
-        return "NotificationDataImpl [distributionID=" + distributionID + ", serviceName=" + serviceName
-                + ", serviceVersion=" + serviceVersion + ", serviceUUID=" + serviceUUID + ", serviceDescription="
-                + serviceDescription + ", serviceInvariantUUID=" + serviceInvariantUUID + ", resources=" + resources
-                + ", serviceArtifacts=" + serviceArtifacts + ", workloadContext=" + workloadContext + "]";
-    }
 
     @Override
     public List<IResourceInstance> getResources() {
@@ -132,21 +72,6 @@ class NotificationDataImpl implements INotificationData {
             temp.addAll(serviceArtifacts);
         }
         return temp;
-    }
-
-    void setServiceArtifacts(List<ArtifactInfoImpl> relevantServiceArtifacts) {
-        serviceArtifacts = relevantServiceArtifacts;
-
-    }
-
-    @Override
-    public String getServiceInvariantUUID() {
-        return serviceInvariantUUID;
-    }
-
-
-    public void setServiceInvariantUUID(String serviceInvariantUUID) {
-        this.serviceInvariantUUID = serviceInvariantUUID;
     }
 
     @Override
