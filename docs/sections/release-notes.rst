@@ -52,7 +52,7 @@ Release Data
 New features
 ------------
 Modify client to use kafka native to publish and subscribe to SDC topics
-https://jira.onap.org/browse/DMAAP-1745
+https://lf-onap.atlassian.net/browse/DMAAP-1745
 
 Deliverables
 ------------
@@ -98,8 +98,8 @@ For more information on the ONAP London release, please see:
 #. `SDC Portal`_
 
 .. _`ONAP Home Page`: https://www.onap.org
-.. _`ONAP Wiki Page`: https://wiki.onap.org
+.. _`ONAP Wiki Page`: https://lf-onap.atlassian.net/wiki/spaces/DW/overview?homepageId=16220162
 .. _`ONAP Documentation`: https://docs.onap.org
 .. _`ONAP Release Downloads`: https://git.onap.org
 .. _`SDC ReadTheDocs`: https://docs.onap.org/projects/onap-sdc/en/latest/
-.. _`SDC Portal`: https://wiki.onap.org/display/DW/Service+Design+and+Creation+%28SDC%29+Portal
+.. _`SDC Portal`: https://lf-onap.atlassian.net/wiki/spaces/DW/pages/16253579/Service+Design+and+Creation+SDC+Portal
