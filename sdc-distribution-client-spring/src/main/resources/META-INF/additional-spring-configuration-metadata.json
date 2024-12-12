@@ -1,0 +1,24 @@
+{
+  "properties": [
+    {
+      "name": "distribution-client.kafka.topic",
+      "type": "java.lang.String",
+      "description": "A description for 'distribution-client.kafka.topic'"
+    },
+    {
+      "name": "distribution-client.kafka.bootstrap.address",
+      "type": "java.lang.String",
+      "description": "A description for 'distribution-client.kafka.bootstrap.address'"
+    },
+    {
+      "name": "distribution-client.sdc.url",
+      "type": "java.lang.String",
+      "description": "A description for 'distribution-client.sdc.url'"
+    },
+    {
+      "name": "distribution-client.sdc.consumerId",
+      "type": "java.lang.String",
+      "description": "This is used to set the X-ECOMP-InstanceID header that is sent to the SDC"
+    }
+  ]
+}
