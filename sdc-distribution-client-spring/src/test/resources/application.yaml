@@ -1,0 +1,7 @@
+distribution-client:
+  sdc:
+    url: http://localhost:${wiremock.server.port}
+    consumerId: consumingApp
+  kafka:
+    bootstrap-address: localhost:9092
+    topic: SDC-DISTR-NOTIF-TOPIC-AUTO
