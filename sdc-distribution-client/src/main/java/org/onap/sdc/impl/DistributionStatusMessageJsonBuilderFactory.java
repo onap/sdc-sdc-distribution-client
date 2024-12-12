@@ -75,17 +75,15 @@ public class DistributionStatusMessageJsonBuilderFactory {
     }
 
     static IDistributionStatusMessageJsonBuilder prepareBuilderForNotificationStatus(final String consumerId, final long currentTimeMillis, final String distributionId,
-                                                                                     final ArtifactInfoImpl artifactInfo, boolean isNotified) {
-
-        final DistributionStatusEnum distributionStatus = isNotified ? DistributionStatusEnum.NOTIFIED : DistributionStatusEnum.NOT_NOTIFIED;
-        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactInfo, distributionStatus);
+                                                                                     final String artifactUrl, DistributionStatusEnum distributionStatus) {
+        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactUrl, distributionStatus);
 
         return () -> jsonRequest;
     }
 
     private static String buildDistributionStatusJson(final String consumerId,
                                                       final long currentTimeMillis, final String distributionId,
-                                                      final ArtifactInfoImpl artifactInfo,
+                                                      final String artifactUrl,
                                                       final DistributionStatusEnum fakeStatusToBeReplaced) {
         IDistributionStatusMessage statusMessage = new IDistributionStatusMessage() {
             @Override
@@ -111,7 +109,7 @@ public class DistributionStatusMessageJsonBuilderFactory {
 
             @Override
             public String getArtifactURL() {
-                return artifactInfo.getArtifactURL();
+                return artifactUrl;
             }
         };
 
