@@ -19,43 +19,27 @@
  */
 package org.onap.test.core.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.Mockito.verify;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.CommonClientConfigs;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
@@ -63,8 +47,7 @@ import org.onap.test.core.config.DistributionClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.WaitStrategy;
-import org.testcontainers.containers.wait.strategy.WaitStrategyTarget;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Durations;
@@ -79,13 +62,17 @@ class ClientInitializerTest {
     private static final int EXPECTED_HEAT_ARTIFACTS = 4;
     private static final DistributionClientConfig clientConfig = new DistributionClientConfig();
     private static final Logger testLog = LoggerFactory.getLogger(ClientInitializerTest.class);
+
     @Container
     CustomKafkaContainer kafka = buildBrokerInstance();
+
     @Container
     public GenericContainer<?> mockSdc =
         new GenericContainer<>(
             "nexus3.onap.org:10001/onap/onap-component-mock-sdc:master")
-            .withExposedPorts(30206);
+            .withExposedPorts(30206)
+            .waitingFor(Wait.forHttp("/sdc/v1/artifactTypes"));
+
     @Mock
     private Logger distClientLog;
     private ClientInitializer clientInitializer;
@@ -93,7 +80,7 @@ class ClientInitializerTest {
 
     @BeforeEach
     public void initializeClient() throws InterruptedException {
-        clientConfig.setSdcAddress(mockSdc.getHost()+":"+mockSdc.getFirstMappedPort());
+        clientConfig.setSdcAddress(mockSdc.getHost() + ":" + mockSdc.getFirstMappedPort());
         List<ArtifactsValidator> validators = new ArrayList<>();
         DistributionClientImpl client = new DistributionClientImpl(distClientLog);
         clientNotifyCallback = new ClientNotifyCallback(validators, client);
@@ -145,8 +132,9 @@ class ClientInitializerTest {
         props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin-secret';");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,  "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
-        String content = Files.readString(Path.of("src/test/resources/artifacts.json"));
-        producer.send(new ProducerRecord<>("SDC-DIST-NOTIF-TOPIC", "testcontainers", content)).get();
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(props)) {
+            String content = Files.readString(Path.of("src/test/resources/artifacts.json"));
+            producer.send(new ProducerRecord<>("SDC-DIST-NOTIF-TOPIC", "testcontainers", content)).get();
+        }
     }
 }
