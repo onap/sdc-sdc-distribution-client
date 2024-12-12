@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.impl;
+package org.onap.sdc.model;
 
 import java.util.ArrayList;
 import java.util.List;
