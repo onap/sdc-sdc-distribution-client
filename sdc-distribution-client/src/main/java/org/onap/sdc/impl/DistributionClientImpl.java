@@ -49,6 +49,7 @@ import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.consumer.IStatusCallback;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
+import org.onap.sdc.api.notification.StatusMessage;
 import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.http.HttpClientFactory;
@@ -367,7 +368,8 @@ public class DistributionClientImpl implements IDistributionClient {
         return sendErrorStatus(DistributionStatusMessageJsonBuilderFactory.getSimpleBuilder(statusMessage));
     }
 
-    IDistributionClientResult sendNotificationStatus(long currentTimeMillis, String distributionId, ArtifactInfoImpl artifactInfo, boolean isNotified) {
+        @Override
+    public IDistributionClientResult sendNotificationStatus(StatusMessage status) {
         log.info("DistributionClient - sendNotificationStatus");
         Wrapper<IDistributionClientResult> errorWrapper = new Wrapper<>();
         validateRunReady(errorWrapper);
@@ -376,10 +378,10 @@ public class DistributionClientImpl implements IDistributionClient {
         }
         IDistributionStatusMessageJsonBuilder builder = DistributionStatusMessageJsonBuilderFactory.prepareBuilderForNotificationStatus(
             getConfiguration().getConsumerID(),
-            currentTimeMillis,
-            distributionId,
-            artifactInfo,
-            isNotified);
+            status.getTimestamp(),
+            status.getDistributionID(),
+            status.getArtifactURL(),
+            status.getStatus());
         return sendStatus(builder);
     }
 
@@ -577,7 +579,7 @@ public class DistributionClientImpl implements IDistributionClient {
 
 
     }
-    
+
     private HttpHost getHttpProxyHost() {
         HttpHost proxyHost = null;
         if (Boolean.TRUE.equals(configuration.isUseSystemProxy() && System.getProperty("http.proxyHost") != null) && System.getProperty("http.proxyPort") != null) {
