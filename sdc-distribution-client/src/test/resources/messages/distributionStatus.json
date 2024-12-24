@@ -1,0 +1,8 @@
+{
+  "distributionID": "someId",
+  "consumerID": "someId",
+  "timestamp": 123456,
+  "artifactURL": "example.com",
+  "status":"NOTIFIED",
+  "componentName": "someName"
+}
