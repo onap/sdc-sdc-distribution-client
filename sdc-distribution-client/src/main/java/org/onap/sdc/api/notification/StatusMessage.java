@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2024 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,35 +18,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.api.notification;
 
-public enum ArtifactTypeEnum {
-    HEAT,
-    HEAT_VOL,
-    HEAT_NET,
-    MURANO_PKG,
-    HEAT_ENV,
-    YANG_XML,
-    OTHER,
-    VF_LICENSE,
-    VENDOR_LICENSE,
-    MODEL_INVENTORY_PROFILE,
-    MODEL_QUERY_SPEC,
-    APPC_CONFIG,
-    VNF_CATALOG,
-    HEAT_NESTED,
-    HEAT_ARTIFACT,
-    VF_MODULES_METADATA,
-    ETSI_PACKAGE,
-    YANG_MODULE,
-    PM_DICTIONARY,
-    VES_EVENTS,
-    TOSCA_TEMPLATE,
-    TOSCA_CSAR,
-    //DCAE Artifacts
-    DCAE_TOSCA, DCAE_JSON, DCAE_POLICY, DCAE_DOC,
-    DCAE_EVENT, DCAE_INVENTORY_TOSCA, DCAE_INVENTORY_JSON,
-    DCAE_INVENTORY_POLICY, DCAE_INVENTORY_DOC,
-    DCAE_INVENTORY_BLUEPRINT, DCAE_INVENTORY_EVENT;
+import org.onap.sdc.utils.DistributionStatusEnum;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@Builder
+@AllArgsConstructor
+public class StatusMessage {
+  private final String distributionID;
+	private final String consumerID;
+	private final long timestamp;
+	private final String artifactURL;
+	private final DistributionStatusEnum status;
+	private final String errorReason;
+
+  public StatusMessage(String distributionID, String consumerID, long timestamp, String artifactUrl, DistributionStatusEnum status) {
+    this.distributionID = distributionID;
+    this.consumerID = consumerID;
+    this.timestamp = timestamp;
+    this.artifactURL = artifactUrl;
+    this.status = status;
+    this.errorReason = null;
+  }
 }

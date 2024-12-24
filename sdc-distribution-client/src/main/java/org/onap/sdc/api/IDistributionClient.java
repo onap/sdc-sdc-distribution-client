@@ -32,6 +32,7 @@ import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
+import org.onap.sdc.api.notification.StatusMessage;
 
 /**
  Client for sending/receiving notifications/status related to distributions from SDC.
@@ -214,5 +215,6 @@ public interface IDistributionClient {
     @Deprecated
     List<IVfModuleMetadata> decodeVfModuleArtifact(byte[] artifactPayload);
 
+    IDistributionClientResult sendNotificationStatus(StatusMessage statusMessage);
 
 }
