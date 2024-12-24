@@ -26,9 +26,12 @@ import java.util.List;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IResourceInstance;
 
-class JsonContainerResourceInstance implements IResourceInstance {
-    JsonContainerResourceInstance() {
-    }
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class JsonContainerResourceInstance implements IResourceInstance {
 
     private String resourceInstanceName;
     private String resourceCustomizationUUID;
@@ -65,33 +68,6 @@ class JsonContainerResourceInstance implements IResourceInstance {
     }
 
     @Override
-    public String getResourceInstanceName() {
-        return resourceInstanceName;
-    }
-
-    public void setResourceInstanceName(String resourceInstanceName) {
-        this.resourceInstanceName = resourceInstanceName;
-    }
-
-    @Override
-    public String getResourceName() {
-        return resourceName;
-    }
-
-    public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
-    }
-
-    @Override
-    public String getResourceVersion() {
-        return resourceVersion;
-    }
-
-    public void setResourceVersion(String resourceVersion) {
-        this.resourceVersion = resourceVersion;
-    }
-
-    @Override
     public String getResourceType() {
         return resoucreType;
     }
@@ -101,61 +77,13 @@ class JsonContainerResourceInstance implements IResourceInstance {
     }
 
     @Override
-    public String getResourceUUID() {
-        return resourceUUID;
-    }
-
-    public void setResourceUUID(String resourceUUID) {
-        this.resourceUUID = resourceUUID;
-    }
-
-    @Override
     public List<IArtifactInfo> getArtifacts() {
-        List<IArtifactInfo> temp = new ArrayList<>();
-        if (artifacts != null) {
-            temp.addAll(artifacts);
-        }
-        return temp;
-    }
-
-    public void setArtifacts(List<ArtifactInfoImpl> artifacts) {
-        this.artifacts = artifacts;
+        return artifacts != null
+            ? new ArrayList<>(artifacts)
+            : new ArrayList<>();
     }
 
     public List<ArtifactInfoImpl> getArtifactsImpl() {
         return artifacts;
-    }
-
-    @Override
-    public String getResourceInvariantUUID() {
-        return resourceInvariantUUID;
-    }
-
-    public void setResourceInvariantUUID(String resourceInvariantUUID) {
-        this.resourceInvariantUUID = resourceInvariantUUID;
-    }
-
-    public String getResourceCustomizationUUID() {
-        return resourceCustomizationUUID;
-    }
-
-    public void setResourceCustomizationUUID(String resourceCustomizationUUID) {
-        this.resourceCustomizationUUID = resourceCustomizationUUID;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getSubcategory() {
-        return subcategory;
-    }
-
-    public void setSubcategory(String subcategory) {
-        this.subcategory = subcategory;
     }
 }
