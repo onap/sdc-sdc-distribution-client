@@ -22,6 +22,11 @@ package org.onap.sdc.api.notification;
 
 import java.util.List;
 
+import org.onap.sdc.impl.ResourceInstance;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = ResourceInstance.class)
 public interface IResourceInstance {
     /**
      * Logical Resource Instance Name. <br>
