@@ -1,9 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * SDC
+ * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
- * Modifications copyright (C) 2019 Nokia. All rights reserved.
+ * Copyright (C) 2024 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,27 +18,31 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.impl;
+package org.onap.sdc.api.notification;
 
-import lombok.Data;
-import org.onap.sdc.api.notification.IStatusData;
 import org.onap.sdc.utils.DistributionStatusEnum;
 
-@Data
-public class StatusDataImpl implements IStatusData {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
-    private String distributionID;
-    private String consumerID;
-    private Long timestamp;
-    private String artifactURL;
-    private DistributionStatusEnum status;
-    private String componentName;
-    private String errorReason;
+@Value
+@Builder
+@AllArgsConstructor
+public class StatusMessage {
+  private final String distributionID;
+	private final String consumerID;
+	private final long timestamp;
+	private final String artifactURL;
+	private final DistributionStatusEnum status;
+	private final String errorReason;
 
-    @Override
-    public String toString() {
-        return "StatusDataImpl [distributionID=" + distributionID + ", consumerID=" + consumerID + ", timestamp=" + timestamp + ", artifactURL="
-            + artifactURL + ", status=" + status + ", errorReason=" + errorReason + "]";
-    }
-
+  public StatusMessage(String distributionID, String consumerID, long timestamp, String artifactUrl, DistributionStatusEnum status) {
+    this.distributionID = distributionID;
+    this.consumerID = consumerID;
+    this.timestamp = timestamp;
+    this.artifactURL = artifactUrl;
+    this.status = status;
+    this.errorReason = null;
+  }
 }
