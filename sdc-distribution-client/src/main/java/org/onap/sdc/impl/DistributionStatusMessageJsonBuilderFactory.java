@@ -74,19 +74,20 @@ public class DistributionStatusMessageJsonBuilderFactory {
         return prepareBuilderFromImpl(message);
     }
 
-    static IDistributionStatusMessageJsonBuilder prepareBuilderForNotificationStatus(final String consumerId, final long currentTimeMillis, final String distributionId,
-                                                                                     final ArtifactInfoImpl artifactInfo, boolean isNotified) {
-
-        final DistributionStatusEnum distributionStatus = isNotified ? DistributionStatusEnum.NOTIFIED : DistributionStatusEnum.NOT_NOTIFIED;
-        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactInfo, distributionStatus);
+    static IDistributionStatusMessageJsonBuilder prepareBuilderForNotificationStatus(String consumerId,
+                                                                                     long currentTimeMillis,
+                                                                                     String distributionId,
+                                                                                     String artifactUrl,
+                                                                                     DistributionStatusEnum distributionStatus) {
+        final String jsonRequest = buildDistributionStatusJson(consumerId, currentTimeMillis, distributionId, artifactUrl, distributionStatus);
 
         return () -> jsonRequest;
     }
 
-    private static String buildDistributionStatusJson(final String consumerId,
-                                                      final long currentTimeMillis, final String distributionId,
-                                                      final ArtifactInfoImpl artifactInfo,
-                                                      final DistributionStatusEnum fakeStatusToBeReplaced) {
+    private static String buildDistributionStatusJson(String consumerId,
+                                                      long currentTimeMillis, String distributionId,
+                                                      String artifactUrl,
+                                                      DistributionStatusEnum fakeStatusToBeReplaced) {
         IDistributionStatusMessage statusMessage = new IDistributionStatusMessage() {
             @Override
             public long getTimestamp() {
@@ -111,7 +112,7 @@ public class DistributionStatusMessageJsonBuilderFactory {
 
             @Override
             public String getArtifactURL() {
-                return artifactInfo.getArtifactURL();
+                return artifactUrl;
             }
         };
 

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2024 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,35 +18,29 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.impl;
 
-public enum ArtifactTypeEnum {
-    HEAT,
-    HEAT_VOL,
-    HEAT_NET,
-    MURANO_PKG,
-    HEAT_ENV,
-    YANG_XML,
-    OTHER,
-    VF_LICENSE,
-    VENDOR_LICENSE,
-    MODEL_INVENTORY_PROFILE,
-    MODEL_QUERY_SPEC,
-    APPC_CONFIG,
-    VNF_CATALOG,
-    HEAT_NESTED,
-    HEAT_ARTIFACT,
-    VF_MODULES_METADATA,
-    ETSI_PACKAGE,
-    YANG_MODULE,
-    PM_DICTIONARY,
-    VES_EVENTS,
-    TOSCA_TEMPLATE,
-    TOSCA_CSAR,
-    //DCAE Artifacts
-    DCAE_TOSCA, DCAE_JSON, DCAE_POLICY, DCAE_DOC,
-    DCAE_EVENT, DCAE_INVENTORY_TOSCA, DCAE_INVENTORY_JSON,
-    DCAE_INVENTORY_POLICY, DCAE_INVENTORY_DOC,
-    DCAE_INVENTORY_BLUEPRINT, DCAE_INVENTORY_EVENT;
+import java.util.List;
 
+import org.onap.sdc.api.notification.IArtifactInfo;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+@Data
+public class ResourceInstance {
+  String resourceInstanceName;
+  String resourceName;
+  String resourceVersion;
+  @JsonAlias("resoucreType") // also recognize this spelling when deserializing to class
+  @JsonProperty("resourceType")
+  String resourceType;
+  String resourceUUID;
+  String resourceInvariantUUID;
+  String resourceCustomizationUUID;
+  String category;
+  String subcategory;
+  List<IArtifactInfo> artifacts;
 }
