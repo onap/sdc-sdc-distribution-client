@@ -24,8 +24,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.notification.IArtifactInfo;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-class ArtifactInfoImpl implements IArtifactInfo {
+@Data
+@NoArgsConstructor
+public class ArtifactInfoImpl implements IArtifactInfo {
 
     private String artifactName;
     private String artifactType;
@@ -40,9 +44,6 @@ class ArtifactInfoImpl implements IArtifactInfo {
     private List<String> relatedArtifacts;
     private List<IArtifactInfo> relatedArtifactsInfo;
 
-    ArtifactInfoImpl() {
-    }
-
     private ArtifactInfoImpl(IArtifactInfo iArtifactInfo) {
         artifactName = iArtifactInfo.getArtifactName();
         artifactType = iArtifactInfo.getArtifactType();
@@ -55,7 +56,6 @@ class ArtifactInfoImpl implements IArtifactInfo {
         generatedArtifact = iArtifactInfo.getGeneratedArtifact();
         relatedArtifactsInfo = iArtifactInfo.getRelatedArtifacts();
         relatedArtifacts = fillRelatedArtifactsUUID(relatedArtifactsInfo);
-
     }
 
 
@@ -80,52 +80,16 @@ class ArtifactInfoImpl implements IArtifactInfo {
         return ret;
     }
 
-    public String getArtifactName() {
-        return artifactName;
+    public List<IArtifactInfo> getRelatedArtifacts() {
+        List<IArtifactInfo> temp = new ArrayList<>();
+        if (relatedArtifactsInfo != null) {
+            temp.addAll(relatedArtifactsInfo);
+        }
+        return temp;
     }
 
-    public void setArtifactName(String artifactName) {
-        this.artifactName = artifactName;
-    }
-
-    public String getArtifactType() {
-        return artifactType;
-    }
-
-    public void setArtifactType(String artifactType) {
-        this.artifactType = artifactType;
-    }
-
-    public String getArtifactURL() {
-        return artifactURL;
-    }
-
-    public void setArtifactURL(String artifactURL) {
-        this.artifactURL = artifactURL;
-    }
-
-    public String getArtifactChecksum() {
-        return artifactChecksum;
-    }
-
-    public void setArtifactChecksum(String artifactChecksum) {
-        this.artifactChecksum = artifactChecksum;
-    }
-
-    public String getArtifactDescription() {
-        return artifactDescription;
-    }
-
-    public void setArtifactDescription(String artifactDescription) {
-        this.artifactDescription = artifactDescription;
-    }
-
-    public Integer getArtifactTimeout() {
-        return artifactTimeout;
-    }
-
-    public void setArtifactTimeout(Integer artifactTimeout) {
-        this.artifactTimeout = artifactTimeout;
+    public List<String> getRelatedArtifactsUUID() {
+        return relatedArtifacts;
     }
 
     @Override
@@ -138,57 +102,4 @@ class ArtifactInfoImpl implements IArtifactInfo {
                 + ", artifactUUID=" + artifactUUID
                 + ", artifactTimeout=" + artifactTimeout + "]";
     }
-
-    public String getArtifactVersion() {
-        return artifactVersion;
-    }
-
-    public void setArtifactVersion(String artifactVersion) {
-        this.artifactVersion = artifactVersion;
-    }
-
-    public String getArtifactUUID() {
-        return artifactUUID;
-    }
-
-    public void setArtifactUUID(String artifactUUID) {
-        this.artifactUUID = artifactUUID;
-    }
-
-    public String getGeneratedFromUUID() {
-        return generatedFromUUID;
-    }
-
-    public void setGeneratedFromUUID(String generatedFromUUID) {
-        this.generatedFromUUID = generatedFromUUID;
-    }
-
-    public IArtifactInfo getGeneratedArtifact() {
-        return generatedArtifact;
-    }
-
-    public void setGeneratedArtifact(IArtifactInfo generatedArtifact) {
-        this.generatedArtifact = generatedArtifact;
-    }
-
-    public List<IArtifactInfo> getRelatedArtifacts() {
-        List<IArtifactInfo> temp = new ArrayList<>();
-        if (relatedArtifactsInfo != null) {
-            temp.addAll(relatedArtifactsInfo);
-        }
-        return temp;
-    }
-
-    public void setRelatedArtifacts(List<String> relatedArtifacts) {
-        this.relatedArtifacts = relatedArtifacts;
-    }
-
-    public void setRelatedArtifactsInfo(List<IArtifactInfo> relatedArtifactsInfo) {
-        this.relatedArtifactsInfo = relatedArtifactsInfo;
-    }
-
-    public List<String> getRelatedArtifactsUUID() {
-        return relatedArtifacts;
-    }
-
 }
