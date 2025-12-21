@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.IDistributionClient;
+import org.onap.sdc.api.notification.DistributionStatusEnum;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 import org.onap.sdc.api.notification.StatusMessage;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.ArtifactTypeEnum;
-import org.onap.sdc.utils.DistributionActionResultEnum;
-import org.onap.sdc.utils.DistributionStatusEnum;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

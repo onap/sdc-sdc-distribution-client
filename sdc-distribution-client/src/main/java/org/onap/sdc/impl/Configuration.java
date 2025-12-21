@@ -21,6 +21,7 @@
 package org.onap.sdc.impl;
 
 import java.util.List;
+
 import org.onap.sdc.api.consumer.IConfiguration;
 
 public class Configuration implements IConfiguration {

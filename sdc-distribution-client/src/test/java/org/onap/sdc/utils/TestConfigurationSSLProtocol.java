@@ -23,9 +23,10 @@ package org.onap.sdc.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.onap.sdc.api.consumer.IConfiguration;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.onap.sdc.api.consumer.IConfiguration;
 
 @Getter
 @Setter

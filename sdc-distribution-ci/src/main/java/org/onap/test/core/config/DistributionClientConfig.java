@@ -19,10 +19,10 @@
  */
 package org.onap.test.core.config;
 
-import org.onap.sdc.api.consumer.IConfiguration;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.onap.sdc.api.consumer.IConfiguration;
 
 public class DistributionClientConfig implements IConfiguration {
 

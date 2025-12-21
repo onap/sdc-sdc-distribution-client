@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.onap.sdc.utils.DistributionActionResultEnum;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 
 class DistributionClientDownloadResultTest {
 
