@@ -20,8 +20,8 @@
 
 package org.onap.sdc.impl.mock;
 
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.utils.DistributionActionResultEnum;
 
 /**
  * Mock Implementation

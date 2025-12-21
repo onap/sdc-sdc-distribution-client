@@ -40,13 +40,13 @@ import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.api.consumer.INotificationCallback;
+import org.onap.sdc.api.notification.DistributionStatusEnum;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.StatusMessage;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.ArtifactTypeEnum;
-import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionClientConstants;
-import org.onap.sdc.utils.DistributionStatusEnum;
 import org.onap.sdc.utils.TestConfiguration;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 

@@ -28,11 +28,11 @@ import org.onap.sdc.api.consumer.IDistributionStatusMessage;
 import org.onap.sdc.api.consumer.IFinalDistrStatusMessage;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.consumer.IStatusCallback;
-import org.onap.sdc.api.results.IDistributionClientDownloadResult;
-import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
 import org.onap.sdc.api.notification.StatusMessage;
+import org.onap.sdc.api.results.IDistributionClientDownloadResult;
+import org.onap.sdc.api.results.IDistributionClientResult;
 
 /**
  Client for sending/receiving notifications/status related to distributions from SDC.

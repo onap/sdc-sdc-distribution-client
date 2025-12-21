@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2024 Deutsche Telekom Intellectual Property. All rights reserved.
+ * Copyright (C) 2025 Deutsche Telekom Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,32 +17,9 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+package org.onap.sdc.api;
 
-package org.onap.sdc.api.notification;
-
-import org.onap.sdc.utils.DistributionStatusEnum;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Value;
-
-@Value
-@Builder
-@AllArgsConstructor
-public class StatusMessage {
-  private final String distributionID;
-	private final String consumerID;
-	private final long timestamp;
-	private final String artifactURL;
-	private final DistributionStatusEnum status;
-	private final String errorReason;
-
-  public StatusMessage(String distributionID, String consumerID, long timestamp, String artifactUrl, DistributionStatusEnum status) {
-    this.distributionID = distributionID;
-    this.consumerID = consumerID;
-    this.timestamp = timestamp;
-    this.artifactURL = artifactUrl;
-    this.status = status;
-    this.errorReason = null;
-  }
+public interface DistributionClient {
+  void sendStatus(StatusMessage statusMessage);
+  DownloadResult download(ArtifactInfo artifactInfo);
 }

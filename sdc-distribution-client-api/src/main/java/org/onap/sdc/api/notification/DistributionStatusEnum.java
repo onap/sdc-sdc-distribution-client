@@ -18,12 +18,8 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.api.notification;
 
-/**
- * Use {@link org.onap.sdc.api.notification.DistributionStatusEnum} instead
- */
-@Deprecated
 public enum DistributionStatusEnum {
     /**
      * Can be sent  when ONAP component  successfully  downloaded the specific artifact

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.notification.IArtifactInfo;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

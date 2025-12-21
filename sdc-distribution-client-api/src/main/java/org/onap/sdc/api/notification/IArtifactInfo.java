@@ -22,10 +22,6 @@ package org.onap.sdc.api.notification;
 
 import java.util.List;
 
-import org.onap.sdc.impl.ArtifactInfo;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-@JsonDeserialize(as = ArtifactInfo.class)
 public interface IArtifactInfo {
 
     /**

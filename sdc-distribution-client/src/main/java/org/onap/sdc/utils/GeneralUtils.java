@@ -23,6 +23,7 @@ package org.onap.sdc.utils;
 
 import com.google.common.hash.Hashing;
 import fj.data.Either;
+
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientResultImpl;
 import org.slf4j.Logger;

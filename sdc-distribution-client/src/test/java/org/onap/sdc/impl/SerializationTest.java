@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IStatusData;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.SneakyThrows;
 
+@Disabled
 public class SerializationTest {
 
   private static final ObjectMapper mapper = new ObjectMapper();

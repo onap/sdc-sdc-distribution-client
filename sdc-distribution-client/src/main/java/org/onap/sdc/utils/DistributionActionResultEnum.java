@@ -20,6 +20,10 @@
 
 package org.onap.sdc.utils;
 
+/**
+ * Use {@link org.onap.sdc.api.results.DistributionActionResultEnum} instead
+ */
+@Deprecated
 public enum DistributionActionResultEnum {
     SUCCESS,
     FAIL,
