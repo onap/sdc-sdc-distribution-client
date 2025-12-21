@@ -20,7 +20,7 @@
 package org.onap.test.core.service;
 
 import org.onap.sdc.api.consumer.IDistributionStatusMessage;
-import org.onap.sdc.utils.DistributionStatusEnum;
+import org.onap.sdc.api.notification.DistributionStatusEnum;
 
 
 public class DistributionStatusMessage implements IDistributionStatusMessage {

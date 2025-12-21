@@ -21,9 +21,10 @@
 
 package org.onap.sdc.impl;
 
-import lombok.Data;
+import org.onap.sdc.api.notification.DistributionStatusEnum;
 import org.onap.sdc.api.notification.IStatusData;
-import org.onap.sdc.utils.DistributionStatusEnum;
+
+import lombok.Data;
 
 @Data
 public class StatusDataImpl implements IStatusData {

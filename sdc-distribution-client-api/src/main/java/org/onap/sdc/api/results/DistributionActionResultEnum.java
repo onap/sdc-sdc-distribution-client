@@ -18,7 +18,7 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.api.results;
 
 public enum DistributionActionResultEnum {
     SUCCESS,

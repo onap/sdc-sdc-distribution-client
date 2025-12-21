@@ -25,9 +25,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+
 import org.onap.sdc.api.consumer.IConfiguration;
 import org.onap.sdc.api.consumer.IStatusCallback;
-import org.onap.sdc.utils.DistributionActionResultEnum;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.utils.DistributionClientConstants;
 
 public class ConfigurationValidator {
