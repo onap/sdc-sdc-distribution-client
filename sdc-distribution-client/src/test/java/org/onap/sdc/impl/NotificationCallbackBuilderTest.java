@@ -31,8 +31,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.utils.ArtifactTypeEnum;
-import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.TestConfiguration;
 
 import com.google.gson.Gson;

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * sdc-distribution-client
  * ================================================================================
- * Copyright (C) 2020 Nokia. All rights reserved.
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.test.core.service;
 
-import java.util.List;
+package org.onap.sdc.api.results;
 
-import org.onap.sdc.api.notification.INotificationData;
+/**
+ * General Distribution Client Result
+ */
+public interface IDistributionClientResult {
+    DistributionActionResultEnum getDistributionActionResult();
 
-public interface ArtifactsValidator {
-    List<ValidationResult> validate(INotificationData service);
+    String getDistributionMessageResult();
 }

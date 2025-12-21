@@ -20,8 +20,8 @@
 
 package org.onap.sdc.impl;
 
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientDownloadResult;
-import org.onap.sdc.utils.DistributionActionResultEnum;
 
 public class DistributionClientDownloadResultImpl extends DistributionClientResultImpl implements IDistributionClientDownloadResult {
     private byte[] artifactPayload;

@@ -47,12 +47,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.api.notification.IArtifactInfo;
-import org.onap.sdc.api.results.IDistributionClientResult;
-import org.onap.sdc.utils.DistributionActionResultEnum;
 import org.onap.sdc.utils.Pair;
 import org.onap.sdc.utils.kafka.KafkaDataResponse;
+import org.onap.sdc.api.consumer.IConfiguration;
+import org.onap.sdc.api.notification.IArtifactInfo;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
+import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.utils.CaseInsensitiveMap;
 
 public class SdcConnectorClientTest {

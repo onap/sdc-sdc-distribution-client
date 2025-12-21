@@ -21,13 +21,13 @@ package org.onap.test.core.service;
 
 import org.onap.sdc.api.consumer.IDistributionStatusMessage;
 import org.onap.sdc.api.consumer.INotificationCallback;
+import org.onap.sdc.api.notification.DistributionStatusEnum;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 import org.onap.sdc.http.HttpSdcClient;
 import org.onap.sdc.http.SdcConnectorClient;
 import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
-import org.onap.sdc.utils.DistributionStatusEnum;
 import org.onap.test.core.config.DistributionClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

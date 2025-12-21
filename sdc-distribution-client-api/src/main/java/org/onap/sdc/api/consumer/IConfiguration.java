@@ -22,9 +22,6 @@ package org.onap.sdc.api.consumer;
 
 import java.util.List;
 
-import org.apache.kafka.common.KafkaException;
-import org.onap.sdc.api.notification.INotificationData;
-
 public interface IConfiguration {
     /**
      * SDC Distribution Engine address. Value can be either hostname (with or
@@ -62,7 +59,7 @@ public interface IConfiguration {
         if(saslJaasConfFromEnv != null) {
             return saslJaasConfFromEnv;
         } else {
-            throw new KafkaException("sasl.jaas.config not set for Kafka Consumer");
+            throw new RuntimeException("sasl.jaas.config not set for Kafka Consumer");
         }
     }
 
@@ -242,7 +239,7 @@ public interface IConfiguration {
      * configured and {@link #isUseHttpsWithSDC()} is false then SDC Distribution
      * Client will register the proxy configuration with the HttpClient instance
      * using HTTP and route requests through the proxy.
-     * 
+     *
      * @return Hostname of the http proxy
      */
     String getHttpProxyHost();
@@ -253,7 +250,7 @@ public interface IConfiguration {
      * {@link #isUseHttpsWithSDC()} is false then SDC Distribution Client will
      * register the proxy configuration with the HttpClient instance using HTTP and
      * route requests through the proxy.
-     * 
+     *
      * @return Port of the http proxy
      */
     int getHttpProxyPort();
@@ -263,7 +260,7 @@ public interface IConfiguration {
      * configured and {@link #isUseHttpsWithSDC()} is true then SDC Distribution
      * Client will register the proxy configuration with the HttpClient instance
      * using HTTPS and route requests through the proxy.
-     * 
+     *
      * @return Hostname of the https proxy
      */
     String getHttpsProxyHost();
@@ -274,7 +271,7 @@ public interface IConfiguration {
      * {@link #isUseHttpsWithSDC()} is true then SDC Distribution Client will
      * register the proxy configuration with the HttpClient instance using HTTPS and
      * route requests through the proxy.
-     * 
+     *
      * @return Port of the https proxy
      */
     int getHttpsProxyPort();

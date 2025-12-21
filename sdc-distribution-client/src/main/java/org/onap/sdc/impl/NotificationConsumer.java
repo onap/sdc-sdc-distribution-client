@@ -24,6 +24,7 @@ package org.onap.sdc.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
+
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
 class NotificationConsumer implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationConsumer.class.getName());
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private final SdcKafkaConsumer kafkaConsumer;
     private final INotificationCallback clientCallback;
@@ -46,9 +48,8 @@ class NotificationConsumer implements Runnable {
     @Override
     public void run() {
         try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
             long currentTimeMillis = System.currentTimeMillis();
-            log.info("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
+            log.debug("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
             for (String notificationMsg : kafkaConsumer.poll()) {
                 log.debug("received message from topic");
                 log.debug("received notification from broker: {}", notificationMsg);

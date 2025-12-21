@@ -18,8 +18,12 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.sdc.utils;
+package org.onap.sdc.api.results;
 
+/**
+ * Use {@link org.onap.sdc.api.compat.results.DistributionActionResultEnum} instead
+ */
+@Deprecated
 public enum DistributionActionResultEnum {
     SUCCESS,
     FAIL,

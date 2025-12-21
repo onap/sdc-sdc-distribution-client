@@ -31,6 +31,7 @@ import java.util.concurrent.Future;
 import nl.altindag.log.LogCaptor;
 import org.apache.kafka.common.KafkaException;
 import org.junit.jupiter.api.Test;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.impl.DistributionClientResultImpl;
 import org.onap.sdc.utils.kafka.SdcKafkaProducer;
@@ -87,4 +88,3 @@ class NotificationSenderTest {
     }
 
 }
-

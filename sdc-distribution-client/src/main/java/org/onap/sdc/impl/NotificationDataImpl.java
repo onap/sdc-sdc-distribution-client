@@ -23,12 +23,11 @@ package org.onap.sdc.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.onap.sdc.api.notification.IArtifactInfo;
+import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 
 import lombok.Data;
-
-import org.onap.sdc.api.notification.IArtifactInfo;
-import org.onap.sdc.api.notification.INotificationData;
 
 @Data
 public class NotificationDataImpl implements INotificationData {
