@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '2.2.0'
+project: 'sdc-distribution-client'
+log_dir: 'sdc-sdc-distribution-client-maven-stage-master/1379'
