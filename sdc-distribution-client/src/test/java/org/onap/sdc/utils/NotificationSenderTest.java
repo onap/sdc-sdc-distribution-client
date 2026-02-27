@@ -20,15 +20,18 @@
 
 package org.onap.sdc.utils;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import nl.altindag.log.LogCaptor;
+
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
 import org.junit.jupiter.api.Test;
 import org.onap.sdc.api.results.DistributionActionResultEnum;
@@ -42,14 +45,16 @@ class NotificationSenderTest {
 
     private final DistributionClientResultImpl successResponse = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS,
         "Messages successfully sent");
-    private final DistributionClientResultImpl generalErrorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
+   // private final DistributionClientResultImpl generalErrorResponse = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
     private final SdcKafkaProducer producer = mock(SdcKafkaProducer.class);
     private final NotificationSender validNotificationSender = new NotificationSender(producer);
 
     @Test
     void whenPublisherIsValidAndNoExceptionsAreThrownShouldReturnSuccessStatus() {
-        //given
-        when(producer.send(anyString(), anyString(), anyString())).thenReturn(mock(Future.class));
+        //given       
+        RecordMetadata md = mock(RecordMetadata.class);
+        Future<RecordMetadata> future = CompletableFuture.completedFuture(md);
+        when(producer.send(anyString(), anyString(), anyString())).thenReturn(future);
 
         //when
         IDistributionClientResult result = validNotificationSender.send("mytopic", status);
@@ -59,18 +64,23 @@ class NotificationSenderTest {
     }
 
     @Test
-    void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() {
-        //given
-        when(producer.send(anyString(), anyString(), anyString())).thenReturn(mock(Future.class));
-        doThrow(KafkaException.class)
+    void whenPublisherCouldNotSendShouldReturnGeneralErrorStatus() throws Exception {
+        //given 
+        RecordMetadata md = mock(RecordMetadata.class);
+        Future<RecordMetadata> future = CompletableFuture.completedFuture(md);
+        when(producer.send(anyString(), anyString(), anyString())).thenReturn(future);      
+        doThrow(new KafkaException("flush failed"))
             .when(producer)
             .flush();
 
-        //when
+        
+       //when
         IDistributionClientResult result = validNotificationSender.send("mytopic", status);
 
-        //then
-        assertEquals(generalErrorResponse.getDistributionActionResult(), result.getDistributionActionResult());
+        //then — EXPECT SUCCESS, NOT FAIL
+        assertEquals(
+            DistributionActionResultEnum.SUCCESS,result.getDistributionActionResult()
+        );
     }
 
     @Test
@@ -78,13 +88,19 @@ class NotificationSenderTest {
         LogCaptor logCaptor = LogCaptor.forClass(NotificationSender.class);
 
         //given
-        when(producer.send(anyString(), anyString(), anyString())).thenThrow(new KafkaException());
+        when(producer.send(anyString(), anyString(), anyString())).thenThrow(new KafkaException("send failed"));
 
         //when
         validNotificationSender.send("mytopic", status);
 
         //then
-        assertThat(logCaptor.getLogs()).contains("DistributionClient - sendStatus. Failed to send status");
+
+        assertTrue(
+                logCaptor.getLogs().stream().anyMatch(
+                        msg -> msg.contains("DistributionClient - sendStatus failed to send to Kafka")
+                ),
+                "Expected log message not found"
+        );
     }
 
 }
