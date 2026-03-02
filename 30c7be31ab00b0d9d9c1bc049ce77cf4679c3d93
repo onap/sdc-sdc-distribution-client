@@ -18,6 +18,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "847c1430_cfabd0d7",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T13:43:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58f1033_f054261d",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23b0a984_cb34f9ff",
@@ -35,6 +53,24 @@
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "edcde6ce_f4d65d1f",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T13:43:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23b0a984_cb34f9ff",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f52df278_c9c11e53",
@@ -48,6 +84,24 @@
       "writtenOn": "2026-03-02T12:43:45Z",
       "side": 1,
       "message": "I think would be helpful here for understanding to replace `EXPECT SUCCESS, NOT FAIL` with some explanatory comment like `// a failed flush should not result in a failure, because ...` to provide some context as to why an exception in the process still results in a `SUCCESS` response",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23f18431_d335eed5",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T13:43:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f52df278_c9c11e53",
       "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
     },
