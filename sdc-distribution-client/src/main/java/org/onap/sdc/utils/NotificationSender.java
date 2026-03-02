@@ -20,7 +20,12 @@
 
 package org.onap.sdc.utils;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.KafkaException;
 import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
@@ -32,7 +37,6 @@ import org.slf4j.LoggerFactory;
 public class NotificationSender {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationSender.class);
-    private static final long SLEEP_TIME = 1;
     private final SdcKafkaProducer producer;
 
     public NotificationSender(SdcKafkaProducer producer) {
@@ -42,27 +46,40 @@ public class NotificationSender {
     public IDistributionClientResult send(String topic, String status) {
         log.info("DistributionClient - sendStatus");
         DistributionClientResultImpl distributionResult;
+        boolean sendFailed = false;
         try {
             log.debug("Publisher server list: {}", producer.getMsgBusAddresses());
-            log.info("Trying to send status: {} \n to topic {}", status, producer.getTopicName());
-            producer.send(topic, "MyPartitionKey", status);
-            TimeUnit.SECONDS.sleep(SLEEP_TIME);
-        } catch (KafkaException | InterruptedException e) {
-            log.error("DistributionClient - sendStatus. Failed to send status", e);
-        } finally {
-            distributionResult = closeProducer();
+            log.info("Trying to send status: {} \n to topic {}", status, producer.getTopicName());    
+            Future<RecordMetadata> future = producer.send(topic, "MyPartitionKey", status);
+            RecordMetadata md = future.get(10, TimeUnit.SECONDS);
+            log.debug("Kafka ack received. topic={}, partition={}, offset={}, ts={}",
+                  md.topic(), md.partition(), md.offset(), md.timestamp());
+
+        } catch ( InterruptedException ie) {         
+            Thread.currentThread().interrupt();
+            sendFailed = true;
+            log.error("DistributionClient - sendStatus interrupted while waiting for Kafka ack", ie);
+        } catch (TimeoutException | ExecutionException | KafkaException e) {
+            sendFailed = true;
+            log.error("DistributionClient - sendStatus failed to send to Kafka", e);
+       }  finally {
+            
+                try {
+                        producer.flush();
+                    } catch (KafkaException e) {
+                        log.error("DistributionClient - flush encountered an error", e);
+                    }
+                
+                if (sendFailed) {
+                            distributionResult = new DistributionClientResultImpl(
+                                        DistributionActionResultEnum.FAIL, "Failed to send status");
+                        } else {
+                            distributionResult = new DistributionClientResultImpl(
+                                    DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
+                        }
+
         }
         return distributionResult;
     }
 
-    private DistributionClientResultImpl closeProducer() {
-        DistributionClientResultImpl distributionResult = new DistributionClientResultImpl(DistributionActionResultEnum.GENERAL_ERROR, "Failed to send status");
-        try {
-            producer.flush();
-            distributionResult = new DistributionClientResultImpl(DistributionActionResultEnum.SUCCESS, "Messages successfully sent");
-        } catch (KafkaException | IllegalArgumentException e) {
-            log.error("DistributionClient - sendDownloadStatus. Failed to send messages and close publisher.", e);
-        }
-        return distributionResult;
-    }
 }
