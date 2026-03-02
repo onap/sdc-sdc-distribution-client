@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23b0a984_cb34f9ff",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T11:11:27Z",
+      "side": 1,
+      "message": "The name of the test case is not accurate anymore with the changes you are doing here",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ad849ac_660e1ef5",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T11:11:27Z",
+      "side": 1,
+      "message": "Can you explain here what it means from the business logic side? We are now ignoring a flush failure right?\nCan you spend a word on what consequences it has when flushing fails?",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    }
+  ]
+}
