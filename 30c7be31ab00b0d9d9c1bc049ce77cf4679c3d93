@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a58f1033_f054261d",
+        "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7849
+      },
+      "writtenOn": "2026-03-02T12:39:16Z",
+      "side": 1,
+      "message": "Leftover",
+      "revId": "30c7be31ab00b0d9d9c1bc049ce77cf4679c3d93",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "23b0a984_cb34f9ff",
         "filename": "sdc-distribution-client/src/test/java/org/onap/sdc/utils/NotificationSenderTest.java",
         "patchSetId": 1
