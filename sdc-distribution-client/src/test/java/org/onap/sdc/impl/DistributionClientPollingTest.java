@@ -40,6 +40,9 @@ import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,8 +53,8 @@ import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.api.results.IDistributionClientResult;
 import org.onap.sdc.http.SdcConnectorClient;
 import org.onap.sdc.utils.TestConfiguration;
+import org.onap.sdc.utils.kafka.KafkaCommonConfig;
 import org.onap.sdc.utils.kafka.KafkaDataResponse;
-import org.onap.sdc.utils.kafka.SdcKafkaProducer;
 
 @Timeout(120)
 class DistributionClientPollingTest {
@@ -65,7 +68,7 @@ class DistributionClientPollingTest {
     private final BlockingQueue<String> receivedDistributionIds = new LinkedBlockingQueue<>();
     private final List<DistributionClientImpl> clients = new ArrayList<>();
     private final String consumerGroup = "group-" + UUID.randomUUID();
-    private SdcKafkaProducer producer;
+    private KafkaProducer<String, String> producer;
 
     static {
         System.setProperty("java.security.auth.login.config", "src/test/resources/jaas.conf");
@@ -89,6 +92,9 @@ class DistributionClientPollingTest {
     @AfterEach
     void stopClients() {
         clients.forEach(DistributionClientImpl::stop);
+        if (producer != null) {
+            producer.close();
+        }
     }
 
     @Test
@@ -144,7 +150,10 @@ class DistributionClientPollingTest {
         clients.add(client);
 
         if (producer == null) {
-            producer = new SdcKafkaProducer(client.configuration);
+            Properties props = new KafkaCommonConfig(client.configuration).getProducerProperties();
+            // not idempotent: InitProducerId can time out against the freshly started test broker
+            props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false);
+            producer = new KafkaProducer<>(props);
         }
         return client;
     }
@@ -163,9 +172,9 @@ class DistributionClientPollingTest {
     }
 
     private void publish(String distributionId) {
-        producer.send(NOTIFICATION_TOPIC, "key", "{\"distributionID\":\"" + distributionId + "\","
+        producer.send(new ProducerRecord<>(NOTIFICATION_TOPIC, "key", "{\"distributionID\":\"" + distributionId + "\","
             + "\"serviceArtifacts\":[{\"artifactName\":\"heat.yaml\",\"artifactType\":\"HEAT\","
-            + "\"artifactURL\":\"/heat.yaml\",\"artifactChecksum\":\"abc\",\"artifactUUID\":\"u1\"}],\"resources\":[]}");
+            + "\"artifactURL\":\"/heat.yaml\",\"artifactChecksum\":\"abc\",\"artifactUUID\":\"u1\"}],\"resources\":[]}"));
         producer.flush();
     }
 
