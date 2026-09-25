@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- add `IDistributionOperations` to the api module: `download` and all `send*Status` methods without the client lifecycle. `IDistributionClient` extends it, so existing callers keep working unchanged, including binaries compiled against 2.3.0 or earlier
+
 ## [2.3.0] - 25/09/2026
 
 ### Changed

@@ -22,16 +22,10 @@ package org.onap.sdc.api;
 
 import java.util.List;
 
-import org.onap.sdc.api.consumer.IComponentDoneStatusMessage;
 import org.onap.sdc.api.consumer.IConfiguration;
-import org.onap.sdc.api.consumer.IDistributionStatusMessage;
-import org.onap.sdc.api.consumer.IFinalDistrStatusMessage;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.consumer.IStatusCallback;
-import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.IVfModuleMetadata;
-import org.onap.sdc.api.notification.StatusMessage;
-import org.onap.sdc.api.results.IDistributionClientDownloadResult;
 import org.onap.sdc.api.results.IDistributionClientResult;
 
 /**
@@ -39,7 +33,7 @@ import org.onap.sdc.api.results.IDistributionClientResult;
  This client uses Kafka for communication with the topics.
  For communication using DMAAP MR use latest version with major version = 1 (e.g. 1.4.5)
  **/
-public interface IDistributionClient {
+public interface IDistributionClient extends IDistributionOperations {
 
     /**
      * Update the configuration of the distribution client <br>
@@ -73,14 +67,6 @@ public interface IDistributionClient {
      * @return IDistributionClientResult
      */
     IDistributionClientResult stop();
-
-    /**
-     * Downloads an artifact from SDC Catalog <br>
-     *
-     * @param artifactInfo - the info about the Artifact to be downloaded
-     * @return IDistributionClientDownloadResult
-     */
-    IDistributionClientDownloadResult download(IArtifactInfo artifactInfo);
 
     /**
      * Initialize the distribution client <br>
@@ -125,85 +111,6 @@ public interface IDistributionClient {
                                    IStatusCallback statusCallback);
 
     /**
-     * Build and publish Distribution Download Status event to Distribution
-     * Status Topic
-     *
-     * @param statusMessage - the status message to be published
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage);
-
-    /**
-     * Build and publish Distribution Download Status event to Distribution
-     * Status Topic With Error Reason.
-     *
-     * @param statusMessage - the status message to be published
-     * @param errorReason - the error details
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendDownloadStatus(IDistributionStatusMessage statusMessage, String errorReason);
-
-    /**
-     * Build and publish Distribution Deployment Status event to Distribution
-     * Status Topic
-     *
-     * @param statusMessage - the status message to be published
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage);
-
-    /**
-     * Build and publish Distribution Deployment Status event to Distribution
-     * Status Topic With Error Reason.
-     *
-     * @param statusMessage - the status message to be published
-     * @param errorReason - the error details
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendDeploymentStatus(IDistributionStatusMessage statusMessage, String errorReason);
-
-    /**
-     * Build and publish Distribution Component Status event to Distribution
-     * Status Topic
-     *
-     * @param statusMessage - the status message to be published
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage);
-
-    /**
-     * Build and publish Distribution Component Status event to Distribution
-     * Status Topic With Error Reason.
-     *
-     * @param statusMessage - the status message to be published
-     * @param errorReason - the error details
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendComponentDoneStatus(IComponentDoneStatusMessage statusMessage, String errorReason);
-
-
-    /**
-     * Build and publish Distribution Final Status event to Distribution
-     * Status Topic
-     *
-     * @param statusMessage - the status message to be published
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage);
-
-
-    /**
-     * Build and publish Distribution Final Status event to Distribution
-     * Status Topic With Error Reason.
-     *
-     * @param statusMessage - the status message to be published
-     * @param errorReason - the error details
-     * @return IDistributionClientResult
-     */
-    IDistributionClientResult sendFinalDistrStatus(IFinalDistrStatusMessage statusMessage, String errorReason);
-
-
-    /**
      * This method parses artifact of type VF_MODULES_METADATA payload data
      * .<br>
      * @deprecated Method is deprecated due to VF Module changes. Only backward
@@ -214,7 +121,4 @@ public interface IDistributionClient {
      */
     @Deprecated
     List<IVfModuleMetadata> decodeVfModuleArtifact(byte[] artifactPayload);
-
-    IDistributionClientResult sendNotificationStatus(StatusMessage statusMessage);
-
 }
