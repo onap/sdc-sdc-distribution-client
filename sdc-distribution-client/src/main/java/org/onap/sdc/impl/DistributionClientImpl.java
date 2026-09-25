@@ -29,14 +29,16 @@ import com.google.gson.reflect.TypeToken;
 import fj.data.Either;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import org.apache.http.HttpHost;
 import org.apache.kafka.common.KafkaException;
 import org.onap.sdc.api.IDistributionClient;
@@ -73,7 +75,8 @@ public class DistributionClientImpl implements IDistributionClient {
     private final Logger log;
 
     private SdcConnectorClient sdcConnector;
-    private ScheduledExecutorService executorPool = null;
+    private ExecutorService executorPool = null;
+    private final List<PollingLoop> pollingLoops = new ArrayList<>();
     private SdcKafkaProducer producer;
     protected Configuration configuration;
     private INotificationCallback callback;
@@ -226,7 +229,7 @@ public class DistributionClientImpl implements IDistributionClient {
         }
         if (errorWrapper.isEmpty()) {
             startNotificationConsumer(kafkaConsumer);
-            startStatusConsumer(errorWrapper, executorPool);
+            startStatusConsumer(errorWrapper);
         }
         if (!errorWrapper.isEmpty()) {
             startResult = errorWrapper.getInnerElement();
@@ -243,21 +246,34 @@ public class DistributionClientImpl implements IDistributionClient {
         // Remove nulls from list - workaround for how configuration is built
         relevantArtifactTypes.removeAll(Collections.singleton(null));
         NotificationConsumer consumer = new NotificationConsumer(kafkaConsumer, callback, relevantArtifactTypes, this);
-        executorPool = Executors.newScheduledThreadPool(DistributionClientConstants.POOL_SIZE);
-        executorPool.scheduleAtFixedRate(consumer, 0, configuration.getPollingInterval(), TimeUnit.SECONDS);
+        executorPool = Executors.newCachedThreadPool();
+        startPolling(kafkaConsumer, consumer::pollOnce);
     }
 
-    private void startStatusConsumer(Wrapper<IDistributionClientResult> errorWrapper, ScheduledExecutorService executorPool) {
+    private void startStatusConsumer(Wrapper<IDistributionClientResult> errorWrapper) {
         if (configuration.isConsumeProduceStatusTopic()) {
             try {
                 SdcKafkaConsumer kafkaConsumer = new SdcKafkaConsumer(configuration);
                 kafkaConsumer.subscribe(configuration.getStatusTopicName());
                 StatusConsumer statusConsumer = new StatusConsumer(kafkaConsumer, statusCallback);
-                executorPool.scheduleAtFixedRate(statusConsumer, 0, configuration.getPollingInterval(), TimeUnit.SECONDS);
+                startPolling(kafkaConsumer, statusConsumer::pollOnce);
             } catch (KafkaException | IllegalArgumentException e) {
                 handleMessagingClientInitFailure(errorWrapper, e);
             }
         }
+    }
+
+    private void startPolling(SdcKafkaConsumer kafkaConsumer, BooleanSupplier pollOnce) {
+        PollingLoop pollingLoop = new PollingLoop(pollOnce, kafkaConsumer::wakeup,
+            Duration.ofSeconds(configuration.getPollingInterval()));
+        pollingLoops.add(pollingLoop);
+        executorPool.execute(() -> {
+            try {
+                pollingLoop.run();
+            } finally {
+                kafkaConsumer.close();
+            }
+        });
     }
 
     @Override
@@ -432,6 +448,8 @@ public class DistributionClientImpl implements IDistributionClient {
             return;
         }
 
+        pollingLoops.forEach(PollingLoop::stop);
+        pollingLoops.clear();
         executorPool.shutdown(); // Disable new tasks from being submitted
         try {
             // Wait a while for existing tasks to terminate

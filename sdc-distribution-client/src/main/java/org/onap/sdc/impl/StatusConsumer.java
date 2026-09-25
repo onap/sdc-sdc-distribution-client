@@ -23,6 +23,7 @@ package org.onap.sdc.impl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.kafka.common.errors.WakeupException;
 import org.onap.sdc.api.consumer.IStatusCallback;
 import org.onap.sdc.api.notification.IStatusData;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
@@ -44,7 +45,13 @@ class StatusConsumer implements Runnable {
 
     @Override
     public void run() {
+        pollOnce();
+    }
 
+    /**
+     * @return false if polling or handling a status message failed
+     */
+    boolean pollOnce() {
         try {
             log.debug("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
             for (String statusMsg : kafkaConsumer.poll()) {
@@ -53,9 +60,14 @@ class StatusConsumer implements Runnable {
                 IStatusData statusData = gson.fromJson(statusMsg, StatusDataImpl.class);
                 clientCallback.activateCallback(statusData);
             }
+            return true;
+        } catch (WakeupException e) {
+            log.debug("Polling of topic {} was woken up", kafkaConsumer.getTopicName());
+            return true;
         } catch (Exception e) {
             log.error("Error exception occurred when fetching with Kafka Consumer:{}", e.getMessage());
             log.debug("Error exception occurred when fetching with Kafka Consumer:{}", e.getMessage(), e);
+            return false;
         }
     }
 

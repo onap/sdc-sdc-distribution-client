@@ -30,6 +30,7 @@ import com.salesforce.kafka.test.listeners.SaslPlainListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import org.apache.kafka.common.errors.WakeupException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,6 +85,16 @@ class SdcKafkaTest {
         List<String> events = consumer.poll();
 
         assertThat(events).hasSize(3);
+    }
+
+    @Test
+    void wakeupAbortsPoll() {
+        SdcKafkaConsumer consumer = new SdcKafkaConsumer(configuration);
+        consumer.subscribe(topicName);
+
+        consumer.wakeup();
+
+        Assertions.assertThrows(WakeupException.class, consumer::poll);
     }
 
     private static void startKafkaService() throws Exception {

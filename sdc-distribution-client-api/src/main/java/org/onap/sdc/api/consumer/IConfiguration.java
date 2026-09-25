@@ -107,8 +107,9 @@ public interface IConfiguration {
     String getPassword();
 
     /**
-     * Distribution Client Polling Interval towards messaging bus in seconds. Can Be
-     * reconfigured in runtime.
+     * Delay in seconds before the messaging bus is polled again after a failed poll. Successful polls
+     * follow each other without delay, so notifications are delivered as soon as they are published.
+     * Can Be reconfigured in runtime.
      *
      * @return Distribution Client Polling Interval.
      */

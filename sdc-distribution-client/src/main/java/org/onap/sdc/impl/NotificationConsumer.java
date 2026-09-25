@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.util.List;
 
+import org.apache.kafka.common.errors.WakeupException;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.slf4j.Logger;
@@ -47,6 +48,13 @@ class NotificationConsumer implements Runnable {
 
     @Override
     public void run() {
+        pollOnce();
+    }
+
+    /**
+     * @return false if polling or handling a notification failed
+     */
+    boolean pollOnce() {
         try {
             long currentTimeMillis = System.currentTimeMillis();
             log.debug("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
@@ -62,10 +70,14 @@ class NotificationConsumer implements Runnable {
                     clientCallback.activateCallback(notificationForCallback);
                 }
             }
-
+            return true;
+        } catch (WakeupException e) {
+            log.debug("Polling of topic {} was woken up", kafkaConsumer.getTopicName());
+            return true;
         } catch (Exception e) {
             log.error("Error exception occurred when fetching with Kafka Consumer:{}", e.getMessage());
             log.debug("Error exception occurred when fetching with Kafka Consumer:{}", e.getMessage(), e);
+            return false;
         }
     }
 

@@ -23,6 +23,8 @@
 package org.onap.sdc.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -34,6 +36,8 @@ import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.errors.WakeupException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -264,6 +268,25 @@ class NotificationConsumerTest {
 			 + "          \"artifactChecksum\" : \"NGIzMjExZTM1NDc2NjBjOTQyMGJmMWNiMmU0NTE5NzM\\u003d\",\r\n" + "          \"artifactDescription\" : \"Auto-generated HEAT Environment deployment artifact\",\r\n"
 			 + "          \"artifactTimeout\" : 0,\r\n" + "          \"artifactUUID\" : \"ce65d31c-35c0-43a9-90c7-596fc51d0c86\",\r\n" + "          \"artifactVersion\" : \"1\",\r\n"
 			 + "          \"generatedFromUUID\" : \"8df6123c-f368-47d3-93be-1972cefbcc35\"\r\n" + "        }\r\n" + "      ]\r\n" + "    }\r\n" + "  ]\r\n" + "}";
+	 }
+
+	 @Test
+	 void pollOnceReportsSuccessfulPoll() {
+		 assertTrue(createNotificationConsumer().pollOnce());
+	 }
+
+	 @Test
+	 void pollOnceReportsFailedPoll() {
+		 when(consumer.poll()).thenThrow(new KafkaException("broker unavailable"));
+
+		 assertFalse(createNotificationConsumer().pollOnce());
+	 }
+
+	 @Test
+	 void pollOnceTreatsWakeupAsSuccess() {
+		 when(consumer.poll()).thenThrow(new WakeupException());
+
+		 assertTrue(createNotificationConsumer().pollOnce());
 	 }
 
 	 private <T> int countInstances(List<T> list, T element) {

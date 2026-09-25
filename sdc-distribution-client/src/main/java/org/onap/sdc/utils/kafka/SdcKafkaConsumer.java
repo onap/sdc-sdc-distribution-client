@@ -87,6 +87,21 @@ public class SdcKafkaConsumer {
     }
 
     /**
+     * Aborts a blocking {@link #poll()}, or the next one, with a {@link org.apache.kafka.common.errors.WakeupException}.
+     * Safe to call from any thread.
+     */
+    public void wakeup() {
+        consumer.wakeup();
+    }
+
+    /**
+     * Leaves the consumer group and releases the connection. Must be called by the thread that polls.
+     */
+    public void close() {
+        consumer.close();
+    }
+
+    /**
      *
      * @return The topic being polled by the consumer
      */

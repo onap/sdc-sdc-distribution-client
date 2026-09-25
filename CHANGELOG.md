@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- poll the notification and status topics continuously instead of once per `pollingInterval`, so that notifications are delivered as soon as they are published. `pollingInterval` is now the delay before polling again after a failed poll
+- `stop()` returns without waiting for a blocking poll to time out
+
+### Fixed
+
+- `stop()` closes the Kafka consumers, so that a stopped client leaves its consumer group instead of holding its partitions until `max.poll.interval.ms` expires
+
 ## [2.2.0] - 11/01/2025
 
 ### Added
