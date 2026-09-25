@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.3.0] - 25/09/2026
+
 ### Changed
 
 - poll the notification and status topics continuously instead of once per `pollingInterval`, so that notifications are delivered as soon as they are published. `pollingInterval` is now the delay before polling again after a failed poll
