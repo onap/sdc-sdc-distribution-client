@@ -56,21 +56,12 @@ class NotificationConsumer implements Runnable {
      */
     boolean pollOnce() {
         try {
-            long currentTimeMillis = System.currentTimeMillis();
             log.debug("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
+            boolean allHandled = true;
             for (String notificationMsg : kafkaConsumer.poll()) {
-                log.debug("received message from topic");
-                log.debug("received notification from broker: {}", notificationMsg);
-
-                final NotificationDataImpl notificationFromMessageBus = gson.fromJson(notificationMsg, NotificationDataImpl.class);
-                NotificationDataImpl notificationForCallback = callbackBuilder.buildCallbackNotificationLogic(currentTimeMillis, notificationFromMessageBus);
-                if (isActivateCallback(notificationForCallback)) {
-                    String stringNotificationForCallback = gson.toJson(notificationForCallback);
-                    log.debug("sending notification to client: {}", stringNotificationForCallback);
-                    clientCallback.activateCallback(notificationForCallback);
-                }
+                allHandled &= handleNotification(notificationMsg);
             }
-            return true;
+            return allHandled;
         } catch (WakeupException e) {
             log.debug("Polling of topic {} was woken up", kafkaConsumer.getTopicName());
             return true;
@@ -81,7 +72,28 @@ class NotificationConsumer implements Runnable {
         }
     }
 
-    private boolean isActivateCallback(NotificationDataImpl notificationForCallback) {
+    private boolean handleNotification(String notificationMsg) {
+        try {
+            long currentTimeMillis = System.currentTimeMillis();
+            log.debug("received message from topic");
+            log.debug("received notification from broker: {}", notificationMsg);
+
+            final NotificationDataImpl notificationFromMessageBus = gson.fromJson(notificationMsg, NotificationDataImpl.class);
+            NotificationDataImpl notificationForCallback = callbackBuilder.buildCallbackNotificationLogic(currentTimeMillis, notificationFromMessageBus);
+            if (isActivateCallback(notificationForCallback)) {
+                String stringNotificationForCallback = gson.toJson(notificationForCallback);
+                log.debug("sending notification to client: {}", stringNotificationForCallback);
+                clientCallback.activateCallback(notificationForCallback);
+            }
+            return true;
+        } catch (Exception e) {
+            log.error("Error exception occurred when handling notification from topic {}:{}", kafkaConsumer.getTopicName(), e.getMessage());
+            log.debug("Error exception occurred when handling notification from topic {}:{}", kafkaConsumer.getTopicName(), e.getMessage(), e);
+            return false;
+        }
+    }
+
+        private boolean isActivateCallback(NotificationDataImpl notificationForCallback) {
         boolean hasRelevantArtifactsInResourceInstance = notificationForCallback.getResources() != null && !notificationForCallback.getResources().isEmpty();
         boolean hasRelevantArtifactsInService = notificationForCallback.getServiceArtifacts() != null && !notificationForCallback.getServiceArtifacts().isEmpty();
 

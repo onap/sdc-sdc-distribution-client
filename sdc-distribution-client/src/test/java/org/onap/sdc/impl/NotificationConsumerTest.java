@@ -172,6 +172,40 @@ class NotificationConsumerTest {
 
 	 }
 
+	 @Test
+	 void testNotifiedTimestampIsTakenWhenTheNotificationArrives() {
+		 final long[] pollReturnedAt = new long[1];
+		 when(consumer.poll()).then((Answer<Iterable<String>>) invocation -> {
+			 Thread.sleep(200);
+			 pollReturnedAt[0] = System.currentTimeMillis();
+			 return List.of(getSdcServiceNotificationWithHeatArtifact());
+		 });
+		 List<Long> timestamps = new ArrayList<>();
+		 when(distributionClient.sendNotificationStatus(Mockito.any(StatusMessage.class))).then(
+			 (Answer<IDistributionClientResult>) invocation -> {
+				 timestamps.add(((StatusMessage) invocation.getArguments()[0]).getTimestamp());
+				 return DISTRIBUTION_SUCCESS_RESULT;
+			 });
+
+		 assertTrue(createNotificationConsumer().pollOnce());
+
+		 assertEquals(3, timestamps.size());
+		 timestamps.forEach(timestamp -> assertTrue(timestamp >= pollReturnedAt[0],
+			 "timestamp " + timestamp + " is before the notification arrived at " + pollReturnedAt[0]));
+	 }
+
+	 @Test
+	 void testFailingNotificationDoesNotDropTheRestOfTheBatch() {
+		 when(consumer.poll()).thenReturn(
+			 List.of(getSdcServiceNotificationWithHeatArtifact(), getSdcServiceNotificationWithHeatArtifact()));
+		 Mockito.doThrow(new IllegalStateException("callback failed")).doNothing()
+			 .when(clientCallback).activateCallback(Mockito.any(INotificationData.class));
+
+		 assertFalse(createNotificationConsumer().pollOnce());
+
+		 Mockito.verify(clientCallback, Mockito.times(2)).activateCallback(Mockito.any(INotificationData.class));
+	 }
+
 	 private void simulateNotificationFromMessageBus(final String notificationFromMessageBus) throws InterruptedException {
 		 ScheduledExecutorService executorPool = Executors.newScheduledThreadPool(DistributionClientConstants.POOL_SIZE);
 		 executorPool.scheduleAtFixedRate(createNotificationConsumer(), 0, 100, TimeUnit.MILLISECONDS);
