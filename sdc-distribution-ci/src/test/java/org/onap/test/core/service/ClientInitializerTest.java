@@ -30,17 +30,22 @@ import java.util.Map;
 import java.util.Properties;
 import lombok.SneakyThrows;
 import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junitpioneer.jupiter.SetEnvironmentVariable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.onap.sdc.api.results.DistributionActionResultEnum;
 import org.onap.sdc.impl.DistributionClientDownloadResultImpl;
 import org.onap.sdc.impl.DistributionClientImpl;
 import org.onap.test.core.config.DistributionClientConfig;
@@ -60,7 +65,7 @@ import org.testcontainers.utility.DockerImageName;
 class ClientInitializerTest {
 
     private static final int EXPECTED_HEAT_ARTIFACTS = 4;
-    private static final DistributionClientConfig clientConfig = new DistributionClientConfig();
+    private static final String NOTIFICATION_TOPIC = "SDC-DIST-NOTIF-TOPIC";
     private static final Logger testLog = LoggerFactory.getLogger(ClientInitializerTest.class);
 
     @Container
@@ -79,15 +84,23 @@ class ClientInitializerTest {
     private ClientNotifyCallback clientNotifyCallback;
 
     @BeforeEach
-    public void initializeClient() throws InterruptedException {
+    public void initializeClient() {
+        DistributionClientConfig clientConfig = new DistributionClientConfig();
         clientConfig.setSdcAddress(mockSdc.getHost() + ":" + mockSdc.getFirstMappedPort());
+        setUpTopicsAndSendData();
+        setInitialConsumerOffset(clientConfig.getConsumerGroup());
         List<ArtifactsValidator> validators = new ArrayList<>();
         DistributionClientImpl client = new DistributionClientImpl(distClientLog);
-        clientNotifyCallback = new ClientNotifyCallback(validators, client);
+        clientNotifyCallback = new ClientNotifyCallback(validators, client, clientConfig);
         clientInitializer = new ClientInitializer(clientConfig, clientNotifyCallback, client);
         clientInitializer.initialize();
-        Thread.sleep(1000);
-        setUpTopicsAndSendData();
+    }
+
+    @AfterEach
+    public void stopClient() {
+        if (clientInitializer != null) {
+            clientInitializer.stop();
+        }
     }
 
     @Test
@@ -95,14 +108,15 @@ class ClientInitializerTest {
         waitForArtifacts();
         List<DistributionClientDownloadResultImpl> calls = clientNotifyCallback.getPulledArtifacts();
         Assertions.assertEquals(EXPECTED_HEAT_ARTIFACTS, calls.size());
-        clientInitializer.stop();
+        calls.forEach(result -> Assertions.assertEquals(DistributionActionResultEnum.SUCCESS,
+            result.getDistributionActionResult(), result.getDistributionMessageResult()));
     }
 
     private void waitForArtifacts() {
         testLog.info("Waiting for artifacts");
         await()
             .atMost(Durations.ONE_MINUTE)
-            .until(() -> !clientNotifyCallback.getPulledArtifacts().isEmpty());
+            .until(() -> clientNotifyCallback.getPulledArtifacts().size() == EXPECTED_HEAT_ARTIFACTS);
     }
 
     private CustomKafkaContainer buildBrokerInstance() {
@@ -134,7 +148,21 @@ class ClientInitializerTest {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         try (KafkaProducer<String, String> producer = new KafkaProducer<>(props)) {
             String content = Files.readString(Path.of("src/test/resources/artifacts.json"));
-            producer.send(new ProducerRecord<>("SDC-DIST-NOTIF-TOPIC", "testcontainers", content)).get();
+            producer.send(new ProducerRecord<>(NOTIFICATION_TOPIC, "testcontainers", content)).get();
+        }
+    }
+
+    @SneakyThrows
+    private void setInitialConsumerOffset(String consumerGroup) {
+        Properties props = new Properties();
+        props.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
+        props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
+        props.put(SaslConfigs.SASL_JAAS_CONFIG,
+            "org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin-secret';");
+        try (AdminClient admin = AdminClient.create(props)) {
+            admin.alterConsumerGroupOffsets(consumerGroup,
+                Map.of(new TopicPartition(NOTIFICATION_TOPIC, 0), new OffsetAndMetadata(0))).all().get();
         }
     }
 }

@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ClientNotifyCallback implements INotificationCallback {
 
@@ -44,19 +44,24 @@ public class ClientNotifyCallback implements INotificationCallback {
 
     private final List<ArtifactsValidator> validators;
     private final DistributionClientImpl distributionClient;
-    private final List<DistributionClientDownloadResultImpl> pulledArtifacts = new ArrayList<>();
-    DistributionClientConfig config = new DistributionClientConfig();
-    HttpSdcClient sdcClient = new HttpSdcClient(config);
-    SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config, sdcClient);
-    ArtifactsDownloader artifactsDownloader = new ArtifactsDownloader("/app/path", sdcConnectorClient);
+    private final List<DistributionClientDownloadResultImpl> pulledArtifacts = new CopyOnWriteArrayList<>();
+    private final ArtifactsDownloader artifactsDownloader;
 
     public List<DistributionClientDownloadResultImpl> getPulledArtifacts() {
         return List.copyOf(pulledArtifacts);
     }
 
     public ClientNotifyCallback(List<ArtifactsValidator> validators, DistributionClientImpl distributionClient) {
+        this(validators, distributionClient, new DistributionClientConfig());
+    }
+
+    public ClientNotifyCallback(List<ArtifactsValidator> validators, DistributionClientImpl distributionClient,
+                                DistributionClientConfig config) {
         this.validators = validators;
         this.distributionClient = distributionClient;
+        HttpSdcClient sdcClient = new HttpSdcClient(config);
+        SdcConnectorClient sdcConnectorClient = new SdcConnectorClient(config, sdcClient);
+        this.artifactsDownloader = new ArtifactsDownloader("/app/path", sdcConnectorClient);
     }
 
     @Override
