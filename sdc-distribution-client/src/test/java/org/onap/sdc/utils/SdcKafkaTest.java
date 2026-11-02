@@ -35,11 +35,14 @@ import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.errors.WakeupException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.onap.sdc.impl.Configuration;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.onap.sdc.utils.kafka.SdcKafkaProducer;
@@ -118,6 +121,28 @@ class SdcKafkaTest {
                 assertThat(new String(record.headers().lastHeader("traceparent").value(), StandardCharsets.UTF_8))
                         .isEqualTo(traceparent);
             });
+        } finally {
+            consumer.close();
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"snappy", "lz4"})
+    void compressedRecordsRetainPayload(String compressionType) throws Exception {
+        Configuration isolatedConfiguration = new Configuration(new TestConfiguration());
+        isolatedConfiguration.setMsgBusAddress(kafkaTestCluster.getKafkaConnectString());
+        isolatedConfiguration.setConsumerGroup("compression-test-" + compressionType);
+        Properties producerProperties = new KafkaCommonConfig(isolatedConfiguration).getProducerProperties();
+        producerProperties.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, compressionType);
+        String payload = String.join("", Collections.nCopies(100, "distribution-notification-"));
+        SdcKafkaConsumer consumer = new SdcKafkaConsumer(isolatedConfiguration);
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(producerProperties)) {
+            consumer.subscribe(topicName);
+            consumer.pollRecords();
+            producer.send(new ProducerRecord<>(topicName, "key", payload)).get(10, TimeUnit.SECONDS);
+
+            assertThat(consumer.pollRecords()).singleElement().satisfies(record ->
+                assertThat(record.value()).isEqualTo(payload));
         } finally {
             consumer.close();
         }
