@@ -25,6 +25,7 @@ package org.onap.sdc.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,8 @@ import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.nio.charset.StandardCharsets;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.WakeupException;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,9 +73,9 @@ class NotificationConsumerTest {
 	 @BeforeEach
 	 public void beforeTest() {
 		 Mockito.reset(clientCallback, distributionClient);
-		 when(consumer.poll()).then((Answer<Iterable<String>>) invocation -> {
+		 when(consumer.pollRecords()).then((Answer<List<ConsumerRecord<String, String>>>) invocation -> {
 			 if (!notificationsQueue.isEmpty()) {
-				 return notificationsQueue.remove();
+				 return records(notificationsQueue.remove());
 			 } else {
 				 return new ArrayList<>();
 			 }
@@ -103,6 +106,62 @@ class NotificationConsumerTest {
 				 return DistributionActionResultEnum.SUCCESS;
 			 }
 		 };
+	 }
+
+	 @Test
+	 void testKafkaContextSurvivesFilteringIntoTheCallback() throws Exception {
+		 ConsumerRecord<String, String> record = new ConsumerRecord<>("SDC-DISTR-NOTIF", 2, 42,
+			 "key", getSdcServiceNotificationWithHeatArtifact());
+		 String traceparent = "00-11111111111111111111111111111111-2222222222222222-01";
+		 record.headers().add("traceparent", traceparent.getBytes(StandardCharsets.UTF_8));
+		 when(consumer.pollRecords()).thenReturn(List.of(record));
+		 List<INotificationData> received = new ArrayList<>();
+
+		 assertTrue(new NotificationConsumer(consumer, received::add, artifactsTypes, distributionClient).pollOnce());
+
+		 assertEquals(1, received.size());
+		 assertEquals(traceparent, received.get(0).getMessageContext().getHeaders().get("traceparent"));
+		 assertEquals("SDC-DISTR-NOTIF", received.get(0).getMessageContext().getTopic());
+		 assertEquals(2, received.get(0).getMessageContext().getPartition());
+		 assertEquals(42, received.get(0).getMessageContext().getOffset());
+		 String gsonJson = new com.google.gson.Gson().toJson(received.get(0));
+		 String jacksonJson = new com.fasterxml.jackson.databind.ObjectMapper().writeValueAsString(received.get(0));
+		 assertFalse(gsonJson.contains("messageContext"));
+		 assertFalse(gsonJson.contains("traceparent"));
+		 assertFalse(jacksonJson.contains("messageContext"));
+		 assertFalse(jacksonJson.contains("traceparent"));
+		 record.headers().add("traceparent", "changed".getBytes(StandardCharsets.UTF_8));
+		 assertEquals(traceparent, received.get(0).getMessageContext().getHeaders().get("traceparent"));
+		 assertThrows(UnsupportedOperationException.class,
+			 () -> received.get(0).getMessageContext().getHeaders().put("traceparent", "changed"));
+	 }
+
+	 @Test
+	 void testEachRecordRetainsItsOwnContextAndLastHeaderValue() {
+		 List<ConsumerRecord<String, String>> batch = records(List.of(
+			 getSdcServiceNotificationWithHeatArtifact(), getSdcServiceNotificationWithHeatArtifact()));
+		 batch.get(0).headers().add("traceparent", "old".getBytes(StandardCharsets.UTF_8));
+		 batch.get(0).headers().add("traceparent", "first".getBytes(StandardCharsets.UTF_8));
+		 batch.get(0).headers().add("nullable", null);
+		 batch.get(0).headers().add("tracestate", "obsolete".getBytes(StandardCharsets.UTF_8));
+		 batch.get(0).headers().add("tracestate", null);
+		 batch.get(1).headers().add("traceparent", "second".getBytes(StandardCharsets.UTF_8));
+		 when(consumer.pollRecords()).thenReturn(batch);
+		 List<INotificationData> received = new ArrayList<>();
+
+		 assertTrue(new NotificationConsumer(consumer, received::add, artifactsTypes, distributionClient).pollOnce());
+
+		 assertEquals(2, received.size());
+		 assertEquals("first", received.get(0).getMessageContext().getHeaders().get("traceparent"));
+		 assertEquals("second", received.get(1).getMessageContext().getHeaders().get("traceparent"));
+		 assertFalse(received.get(0).getMessageContext().getHeaders().containsKey("nullable"));
+		 assertFalse(received.get(0).getMessageContext().getHeaders().containsKey("tracestate"));
+	 }
+
+	 private static List<ConsumerRecord<String, String>> records(Iterable<String> messages) {
+		 List<ConsumerRecord<String, String>> records = new ArrayList<>();
+		 messages.forEach(message -> records.add(new ConsumerRecord<>("SDC-DISTR-NOTIF", 0, records.size(), "key", message)));
+		 return records;
 	 }
 
 	 @Test
@@ -175,10 +234,10 @@ class NotificationConsumerTest {
 	 @Test
 	 void testNotifiedTimestampIsTakenWhenTheNotificationArrives() {
 		 final long[] pollReturnedAt = new long[1];
-		 when(consumer.poll()).then((Answer<Iterable<String>>) invocation -> {
+		 when(consumer.pollRecords()).then((Answer<List<ConsumerRecord<String, String>>>) invocation -> {
 			 Thread.sleep(200);
 			 pollReturnedAt[0] = System.currentTimeMillis();
-			 return List.of(getSdcServiceNotificationWithHeatArtifact());
+			 return records(List.of(getSdcServiceNotificationWithHeatArtifact()));
 		 });
 		 List<Long> timestamps = new ArrayList<>();
 		 when(distributionClient.sendNotificationStatus(Mockito.any(StatusMessage.class))).then(
@@ -196,8 +255,8 @@ class NotificationConsumerTest {
 
 	 @Test
 	 void testFailingNotificationDoesNotDropTheRestOfTheBatch() {
-		 when(consumer.poll()).thenReturn(
-			 List.of(getSdcServiceNotificationWithHeatArtifact(), getSdcServiceNotificationWithHeatArtifact()));
+		 when(consumer.pollRecords()).thenReturn(
+			 records(List.of(getSdcServiceNotificationWithHeatArtifact(), getSdcServiceNotificationWithHeatArtifact())));
 		 Mockito.doThrow(new IllegalStateException("callback failed")).doNothing()
 			 .when(clientCallback).activateCallback(Mockito.any(INotificationData.class));
 
@@ -311,14 +370,14 @@ class NotificationConsumerTest {
 
 	 @Test
 	 void pollOnceReportsFailedPoll() {
-		 when(consumer.poll()).thenThrow(new KafkaException("broker unavailable"));
+		 when(consumer.pollRecords()).thenThrow(new KafkaException("broker unavailable"));
 
 		 assertFalse(createNotificationConsumer().pollOnce());
 	 }
 
 	 @Test
 	 void pollOnceTreatsWakeupAsSuccess() {
-		 when(consumer.poll()).thenThrow(new WakeupException());
+		 when(consumer.pollRecords()).thenThrow(new WakeupException());
 
 		 assertTrue(createNotificationConsumer().pollOnce());
 	 }

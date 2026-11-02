@@ -78,4 +78,8 @@ public interface INotificationData {
     String getWorkloadContext();
 
     void setWorkloadContext(String workloadContext);
+
+    default NotificationMessageContext getMessageContext() {
+        return NotificationMessageContext.EMPTY;
+    }
 }

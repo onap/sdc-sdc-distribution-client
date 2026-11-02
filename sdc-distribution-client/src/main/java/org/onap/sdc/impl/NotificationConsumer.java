@@ -23,10 +23,15 @@ package org.onap.sdc.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.errors.WakeupException;
 import org.onap.sdc.api.consumer.INotificationCallback;
+import org.onap.sdc.api.notification.NotificationMessageContext;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +63,8 @@ class NotificationConsumer implements Runnable {
         try {
             log.debug("Polling for messages from topic: {}", kafkaConsumer.getTopicName());
             boolean allHandled = true;
-            for (String notificationMsg : kafkaConsumer.poll()) {
-                allHandled &= handleNotification(notificationMsg);
+            for (ConsumerRecord<String, String> record : kafkaConsumer.pollRecords()) {
+                allHandled &= handleNotification(record);
             }
             return allHandled;
         } catch (WakeupException e) {
@@ -72,14 +77,25 @@ class NotificationConsumer implements Runnable {
         }
     }
 
-    private boolean handleNotification(String notificationMsg) {
+    private boolean handleNotification(ConsumerRecord<String, String> record) {
         try {
+            String notificationMsg = record.value();
             long currentTimeMillis = System.currentTimeMillis();
             log.debug("received message from topic");
             log.debug("received notification from broker: {}", notificationMsg);
 
             final NotificationDataImpl notificationFromMessageBus = gson.fromJson(notificationMsg, NotificationDataImpl.class);
             NotificationDataImpl notificationForCallback = callbackBuilder.buildCallbackNotificationLogic(currentTimeMillis, notificationFromMessageBus);
+            Map<String, String> headers = new HashMap<>();
+            record.headers().forEach(header -> {
+                if (header.value() != null) {
+                    headers.put(header.key(), new String(header.value(), StandardCharsets.UTF_8));
+                } else {
+                    headers.remove(header.key());
+                }
+            });
+            notificationForCallback.setMessageContext(new NotificationMessageContext(
+                record.topic(), record.partition(), record.offset(), headers));
             if (isActivateCallback(notificationForCallback)) {
                 String stringNotificationForCallback = gson.toJson(notificationForCallback);
                 log.debug("sending notification to client: {}", stringNotificationForCallback);

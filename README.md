@@ -25,6 +25,21 @@ Every client that wants to use the JAR, need to implement IConfiguration interfa
 See the SDC ONAP read the docs for more detail in relation to the sdc-distribution-client usage.
 https://docs.onap.org/projects/onap-sdc/en/kohn/sdcsdks.html#sdc-tosca-and-sdc-distribution-client
 
+### Notification message context
+
+Kafka notifications expose `INotificationData.getMessageContext()` to the callback.
+The immutable context contains the source topic, partition, offset and UTF-8 header
+values, including W3C `traceparent` and `tracestate`. Duplicate headers use the last
+value; a final null value removes the header. Each notification has its own context,
+retained after artifact filtering and excluded from Gson/Jackson notification JSON.
+Do not log the header map, which may contain private transport metadata.
+
+Consumers can use this carrier to extract their tracing context and scope a
+messaging consumer span around processing. The SDK does not require a tracing
+library. Existing notification implementations return `NotificationMessageContext.EMPTY`
+by default. The Kafka utility's payload-only `poll()` remains available; notification
+dispatch uses `pollRecords()` to preserve transport metadata.
+
 ## Logging
 
 Loggin can be done using log4j

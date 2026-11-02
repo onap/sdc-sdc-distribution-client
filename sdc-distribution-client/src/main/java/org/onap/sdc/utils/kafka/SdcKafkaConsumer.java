@@ -29,7 +29,6 @@ import java.util.UUID;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
@@ -79,11 +78,16 @@ public class SdcKafkaConsumer {
      */
     public List<String> poll() {
         List<String> msgs = new ArrayList<>();
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(pollTimeout));
-        for (ConsumerRecord<String, String> rec : records) {
+        for (ConsumerRecord<String, String> rec : pollRecords()) {
             msgs.add(rec.value());
         }
         return msgs;
+    }
+
+    public List<ConsumerRecord<String, String>> pollRecords() {
+        List<ConsumerRecord<String, String>> records = new ArrayList<>();
+        consumer.poll(Duration.ofSeconds(pollTimeout)).forEach(records::add);
+        return records;
     }
 
     /**

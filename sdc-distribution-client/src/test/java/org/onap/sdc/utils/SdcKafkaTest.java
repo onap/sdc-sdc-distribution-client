@@ -30,6 +30,11 @@ import com.salesforce.kafka.test.listeners.SaslPlainListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.WakeupException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
@@ -38,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import org.onap.sdc.impl.Configuration;
 import org.onap.sdc.utils.kafka.SdcKafkaConsumer;
 import org.onap.sdc.utils.kafka.SdcKafkaProducer;
+import org.onap.sdc.utils.kafka.KafkaCommonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +91,36 @@ class SdcKafkaTest {
         List<String> events = consumer.poll();
 
         assertThat(events).hasSize(3);
+    }
+
+    @Test
+    void recordPollingRetainsKafkaHeadersAndCoordinates() throws Exception {
+        Configuration isolatedConfiguration = new Configuration(new TestConfiguration());
+        isolatedConfiguration.setMsgBusAddress(kafkaTestCluster.getKafkaConnectString());
+        isolatedConfiguration.setConsumerGroup("metadata-polling-test");
+        SdcKafkaConsumer consumer = new SdcKafkaConsumer(isolatedConfiguration);
+        try (KafkaProducer<String, String> producer = new KafkaProducer<>(
+            new KafkaCommonConfig(isolatedConfiguration).getProducerProperties())) {
+            consumer.subscribe(topicName);
+            consumer.pollRecords();
+            ProducerRecord<String, String> message = new ProducerRecord<>(topicName, "key", "notification");
+            String traceparent = "00-11111111111111111111111111111111-2222222222222222-01";
+            message.headers().add("traceparent", traceparent.getBytes(StandardCharsets.UTF_8));
+            long offset = producer.send(message).get(10, TimeUnit.SECONDS).offset();
+
+            List<ConsumerRecord<String, String>> records = consumer.pollRecords();
+
+            assertThat(records).singleElement().satisfies(record -> {
+                assertThat(record.value()).isEqualTo("notification");
+                assertThat(record.topic()).isEqualTo(topicName);
+                assertThat(record.partition()).isZero();
+                assertThat(record.offset()).isEqualTo(offset);
+                assertThat(new String(record.headers().lastHeader("traceparent").value(), StandardCharsets.UTF_8))
+                        .isEqualTo(traceparent);
+            });
+        } finally {
+            consumer.close();
+        }
     }
 
     @Test

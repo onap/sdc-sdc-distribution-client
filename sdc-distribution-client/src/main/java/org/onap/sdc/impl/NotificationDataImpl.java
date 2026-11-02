@@ -20,11 +20,13 @@
 
 package org.onap.sdc.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
+import org.onap.sdc.api.notification.NotificationMessageContext;
 import org.onap.sdc.api.notification.IResourceInstance;
 
 import lombok.Data;
@@ -41,6 +43,8 @@ public class NotificationDataImpl implements INotificationData {
     private List<JsonContainerResourceInstance> resources;
     private List<ArtifactInfo> serviceArtifacts;
     private String workloadContext;
+    @JsonIgnore
+    private transient NotificationMessageContext messageContext = NotificationMessageContext.EMPTY;
 
     @Override
     public List<IResourceInstance> getResources() {
