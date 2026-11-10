@@ -135,8 +135,15 @@ jobs:
       # from the packaged output than from source alone. Neither the
       # tests nor the container image affect the dependency set, so both
       # are skipped.
+      #
+      # The CLI scans only files in the workspace, and this project
+      # builds thin jars, so copy the compile and runtime dependencies
+      # into each module's target/dependency for it to find. That is the
+      # set the Jenkins job's clm-maven-plugin index goal reports.
       build_type: 'maven'
-      mvn_params: '-DskipTests -Djib.skip=true --fail-at-end'
+      mvn_phases: 'clean package dependency:copy-dependencies'
+      # yamllint disable-line rule:line-length
+      mvn_params: '-DskipTests -Djib.skip=true --fail-at-end -DincludeScope=runtime'
       # Surface a broken pre-scan build instead of scanning whatever
       # happens to have compiled. The reusable defaults this to true, on
       # the reasoning that a partial dependency tree still yields a
